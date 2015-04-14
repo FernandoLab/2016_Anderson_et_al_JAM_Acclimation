@@ -117,7 +117,7 @@ Now, going to go through several steps to pick OTUs:
 	python intermediate_files/usearch_python_scripts/fasta_number.py usearch_results/rumen.adaptation.otus1.nonchimera.fasta > usearch_results/rumen.adaptation.otus2.fasta
 	./usearch -usearch_global rumen.adaptation.format.fasta -db usearch_results/rumen.adaptation.otus2.fasta -strand plus -id 0.97 -uc usearch_results/rumen.adaptation.otu_map.uc
 	python intermediate_files/usearch_python_scripts/uc2otutab.py usearch_results/rumen.adaptation.otu_map.uc > usearch_results/rumen.adaptation.otu_table.txt
-	cp usearch_results/rumen.adaptation.otu_table.txt ~
+	cp usearch_results/rumen.adaptation.otu_table.txt ./
 	
 Output files from above commands can be found at intermediate_files/usearch_result
 
