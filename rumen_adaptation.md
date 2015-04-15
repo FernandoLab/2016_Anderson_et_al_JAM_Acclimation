@@ -94,6 +94,7 @@ Reverse complement the sequences since we seqeunced off the 518 primer towards 2
 
 Output can be found at intermediate_files/rumen.adaptation.qc.trim.rc.fasta
 
+##Pick OTUs, assign taxonomy, and align sequences
 We use UPARSE to pick OTUs and remove chimeras, etc.  First, we need to get the seqeunces into a format more compatible with UPARSE.  Can use a cutom perl script to do so:
 
 	intermediate_files/./qiime_to_usearch.pl -fasta=rumen.adaptation.qc.trim.rc.fasta -prefix=rumen
@@ -123,6 +124,89 @@ Output files from above commands can be found at intermediate_files/usearch_resu
 
 Assign taxonomy to the representative sequences for each OTU:
 
+	macqiime
+	assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t /macqiime/greengenes/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r /macqiime/greengenes/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa
+	exit
+
+Outputs from above command can be found at intermediate_files/assign_gg_taxa
+
+Add the taxa outputted to the OTU table with the column header "taxonomy".
+
+	awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
+	sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
+	{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
+	paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
+	rm rumen.adaptation.otu_table.sort.txt
+
+Outputs from above command can be found at intermediate_files/rumen.adaptation.otu_table.tax.txt
+
+You may need to install biom tools if you have not used the software that utilizes biom formats in the past.  Easiest way I found is just:
 	
+	pip install biom-format
+	biom convert --table-type "otu table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy
+	
+Two of the samples have duplicates that were seqeunced...not quite sure why...but lets remove the duplicates with the lower depth - samples R6 and R19.
+	
+	vi remove_samples.txt
+	#add samples R6 and R19 on seperate lines and save
+	macqiime
+	filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
+	biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
+	
+Outputs from above command can be found at intermediate_files/rumen.adaptation.otu_table.tax.biom, intermediate_files/rumen.adaptation.otu_table.tax.filter.biom, and intermediate_files/rumen.adaptation.otu_table.tax.filter.summary.txt
+	
+Need to create an alignment of the 16S seqeunces for each OTU. Our lab prefers to do so using the RDP aligner. Go to https://pyro.cme.msu.edu/aligner/form.spr and type in  a job name (I used rumen) to download file from later. Then select Bacteria 16S for the gene and upload file usearch_results/rumen.adaptation.otus2.fasta for alignment. Click on my jobs near upper right of the webpage to check the status of the job...it should be pretty quick. When the job is completed, hit Download Zip to save the results. Move the results to current directory:
+
+	mv ~/Downloads/rumen.zip ./
+	
+The alignment results can be found at intermediate_files/rumen.zip
+
+	unzip rumen.zip
+
+RDP over the past year has been misaligning a bit even when we use files that have worked in the past.
+
+If you were to look at file alignment/aligned_rumen.adaptation.otus2.fasta_alignment_summary you would notice OTU 630 does not align very well. So, we need to remove it before continuing on...While we are removing OTUs if were to look at the taxonomy, we would see five OTUs with a cyanobacteria classification.  We also want to remove those as they should not be present in the rumen and are likely derivatives of chloroplast sequences. Since we are removing OTUs we also want to remove any singletons that may have resulted (-n2 option)
+
+	vi remove_otus.txt
+	#add 1148,371,554,616,489,630 on seperate lines
+	filter_otus_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.biom -e remove_otus.txt -n 2
+
+Resulting files can be found at intermediate_files/rumen.adaptation.otu_table.tax.filter.filter.biom and intermediate_files/remove_otus.txt
+
+Take the aligned file from the unziped results at alignment/aligned_rumen.adaptation.otus2.fasta and open it in a text editor (the files is small).  We need to replace the dots created by RDP with dashes to work best in mothur.  Just do a simple find and replace.  Also, the clearcut command in mothur we are going to use requires seqeunce names to be longer than 10 characters.  So search and replace '>' with '>AAAAAAAAAA' and later we will remove these again. For some reason, there is a strang seqeunce at the bottom of these aligned files always, remove the seqeunce and header for it.
+
+Move the reformated file to the current directory.
+
+	cp alignment/aligned_rumen.adaptation.otus2.fasta ./
+
+This reformatted file can be found at intermediate_files/aligned_rumen.adaptation.otus2.fasta
+
+Use mothur to calculate form a distance matrix:
+
+	mothur/mothur
+	dist.seqs(fasta=aligned_rumen.adaptation.otus2.fasta, countends=F, output=lt)
+ 
+Use mothur to generate a phylogenetic tree:
+
+	clearcut(phylip=aligned_rumen.adaptation.otus2.phylip.dist)
+	quit()
+
+Replace the string of 10As from the .tre file with nothing in a text editor.
+
+Resulting files are found at intermediate_files/aligned_rumen.adaptation.otus2.phylip.dist and intermediate_files/aligned_rumen.adaptation.otus2.phylip.tre
+
+##Beta Diversity
+
+
+
+##Defining Core Measureable Microbiota
+
+
+
+
+##Core Beta Diversity
+
 	
 
+	
+ 
