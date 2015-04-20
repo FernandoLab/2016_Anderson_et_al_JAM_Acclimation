@@ -6,7 +6,7 @@ Author: Christopher L. Anderson (canderson30@unl.edu)
 To recreate the analysis from Anderson et al. manuscript.  All commands below were ran on Mac OS X 10.9.5. Other software needed are listed, and when they are needed I try to demonstrate how to install.
 
 - MacQIIME 1.9.0-20140227
-- R v.
+- R 3.1.1
 - USEARCH v7.0.1090
 - mothur v.1.35.1
 - python
@@ -16,20 +16,10 @@ To recreate the analysis from Anderson et al. manuscript.  All commands below we
 ##Retrieve Raw Data and Intermediate Files
 Seqeuncing was done on 454.  Initial QC was done before I recieved files - need to find out what was done...just trimmed to 200 bp, but no .qual files either?
 
-To make things easier for us, lets set a shortcut the directory you are going to work on this analysis:
-
-	cd ~
-	vim .bash_profile
-
-Then add something like this to the file and type 'esc' ':wq' to save
-
-	alias RumenAdaptation='cd <path_to_directory>'
-
-Then you can automatically jump to that directory during the analysis and run commands exactly as I ahve them without worrying about altering the path. You can delete the above from your bash_profile after you are done working on recreating the analysis.
+Information about study...
 
 To download the raw data and intermediate files/scripts for the analysis:
 	
-	cd RumenAdaptation
     scp -r canderson3@crane.unl.edu:/work/samodha/canderson3/rumen_adaptation_2015/intermediate_files/ ./
 
 ##Install MacQIIME:
@@ -191,11 +181,237 @@ Use mothur to generate a phylogenetic tree:
 	clearcut(phylip=aligned_rumen.adaptation.otus2.phylip.dist)
 	quit()
 
-Replace the string of 10As from the .tre file with nothing in a text editor.
+Replace the string of 10 'A' from the .tre file with nothing in a text editor.
 
 Resulting files are found at intermediate_files/aligned_rumen.adaptation.otus2.phylip.dist and intermediate_files/aligned_rumen.adaptation.otus2.phylip.tre
 
+##Alpha Diversity
+	alpha_diversity.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -m observed_species,chao1,shannon -o alpha_div.txt
+
+Output can be found at intermediate_files/alpha_div.txt
+
+##Taxonomy
+	summarize_taxa.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o summarize_taxa -L 2,3,4,5,6,7
+	plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
+
+Outputs can be found at intermediate_files/summarize_taxa and intermediate_files/plot_taxa
+
 ##Beta Diversity
+	
+split the OTU table into RAMP and Control:
+
+	split_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o split_total -m intermediate_files/mapping.txt -f Diet
+	
+	biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.biom -o split_total/control.summarize.txt
+	
+	biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.biom -o split_total/ramp.summarize.txt
+	
+	beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.biom -o control_beta_div -t aligned_rumen.adaptation.otus2.phylip.tre -m intermediate_files/mapping.txt -p intermediate_files/qiime_parameters_working.txt -e 2164
+	
+	beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.biom -o ramp_beta_div -t aligned_rumen.adaptation.otus2.phylip.tre -m intermediate_files/mapping.txt -p intermediate_files/qiime_parameters_working.txt -e 2966
+	
+	
+Output can be found at intermediate_files/control_beta_div
+Output can be found at intermediate_files/ramp_beta_div
+	
+	
+##Statistics
+Community level statistics:
+	
+	#install R and dependencies (phyloseq, biom, ggplot2, vegan,...)
+	R
+	
+	control_unweighted <- read.table("control_beta_div/unweighted_unifrac_dm.txt", sep="\t", header=TRUE)
+	row.names(control_unweighted) <- control_unweighted$X
+	control_unweighted <- control_unweighted[,-1]
+	control_unweighted <- as.dist(control_unweighted)
+	
+	control_weighted <- read.table("control_beta_div/weighted_unifrac_dm.txt", sep="\t", header=TRUE)
+	row.names(control_weighted) <- control_weighted$X
+	control_weighted <- control_weighted[,-1]
+	control_weighted <- as.dist(control_weighted)
+	
+	ramp_unweighted <- read.table("ramp_beta_div/unweighted_unifrac_dm.txt", sep="\t", header=TRUE)
+	row.names(ramp_unweighted) <- ramp_unweighted$X
+	ramp_unweighted <- ramp_unweighted[,-1]
+	ramp_unweighted <- as.dist(ramp_unweighted)
+	
+	ramp_weighted <- read.table("ramp_beta_div/weighted_unifrac_dm.txt", sep="\t", header=TRUE)
+	row.names(ramp_weighted) <- ramp_weighted$X
+	ramp_weighted <- ramp_weighted[,-1]
+	ramp_weighted <- as.dist(ramp_weighted)
+	
+	control_map <- read.table("split_total/mapping__Diet_Control__.txt", sep="\t", header=FALSE)
+	colnames(control_map) <- c("SampleID","BarcodeSequence","LinkerPrimerSequence","ReversePrimer","Treatment","Diet","Step","Individual","Description")
+	
+	ramp_map <- read.table("split_total/mapping__Diet_Ramp__.txt", sep="\t", header=FALSE)
+	colnames(ramp_map) <- c("SampleID","BarcodeSequence","LinkerPrimerSequence","ReversePrimer","Treatment","Diet","Step","Individual","Description")
+	
+	library(vegan)
+	
+	adonis(control_unweighted ~ Treatment + Individual, permutations=999, data=control_map)
+Treatment   4   1.42318 0.35579  2.0295 0.59941  0.015  </br>
+Individual  1   0.24988 0.24988  1.4254 0.10525  0.170  
+Residuals   4   0.70123 0.17531         0.29534         
+Total       9   2.37429                 1.00000    
+
+	adonis(control_weighted ~ Treatment + Individual, permutations=999, data=control_map)
+Treatment   4  0.097088 0.024272  1.7632 0.55599  0.043  </br>
+Individual  1  0.022471 0.022471  1.6324 0.12868  0.119  
+Residuals   4  0.055063 0.013766         0.31533         
+Total       9  0.174621                  1.00000 
+
+	adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map)
+Treatment   4    1.2561 0.31403  1.6796 0.38151  0.002  </br>
+Individual  1    0.3536 0.35364  1.8914 0.10741  0.006  </br>
+Residuals   9    1.6827 0.18697         0.51108          
+Total      14    3.2925                 1.00000     
+
+	adonis(ramp_weighted ~ Treatment + Individual, permutations=999, data=ramp_map)
+Treatment   4  0.099273 0.024818  1.6398 0.36763  0.066 </br>
+Individual  1  0.034546 0.034546  2.2825 0.12793  0.056 </br>
+Residuals   9  0.136216 0.015135         0.50444         
+Total      14  0.270035                  1.00000
+
+
+	#Need to check assumptions:
+
+Post-Hoc Pairwise Distance Comparisons (on unweighted only in future?):
+	
+	library(reshape)
+	
+	control_unweighted_matrix <- as.matrix(control_unweighted)
+	m <- as.matrix(control_unweighted)
+	m2 <- melt(m)[melt(upper.tri(m))$value,]
+	names(m2) <- c("Sample1", "Sample2", "distance")
+	write.table(m2, "control_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
+	
+	control_weighted_matrix <- as.matrix(control_weighted)
+	m <- as.matrix(control_weighted)
+	m2 <- melt(m)[melt(upper.tri(m))$value,]
+	names(m2) <- c("Sample1", "Sample2", "distance")
+	write.table(m2, "control_weighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
+	
+	ramp_unweighted_matrix <- as.matrix(ramp_unweighted)
+	m <- as.matrix(ramp_unweighted)
+	m2 <- melt(m)[melt(upper.tri(m))$value,]
+	names(m2) <- c("Sample1", "Sample2", "distance")
+	write.table(m2, "ramp_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
+	
+	ramp_weighted_matrix <- as.matrix(ramp_weighted)
+	m <- as.matrix(ramp_weighted)
+	m2 <- melt(m)[melt(upper.tri(m))$value,]
+	names(m2) <- c("Sample1", "Sample2", "distance")
+	write.table(m2, "ramp_weighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
+	
+	quit()
+	n
+	
+	intermediate_files/./treatment_distances.pl -mapping_file=intermediate_files/mapping.txt -distance_file=control_unweighted_pariwise_dist.txt -category=Treatment
+	mv treatment_distances.txt control_unweighted_treatment_distances.txt
+	
+	intermediate_files/./treatment_distances.pl -mapping_file=intermediate_files/mapping.txt -distance_file=control_weighted_pariwise_dist.txt -category=Treatment
+	mv treatment_distances.txt control_weighted_treatment_distances.txt
+	
+	
+	
+
+Intermediate outputs can be found in intermediate_files directory
+
+Look at pairwise ttests for different steps:
+
+	R
+	control_unweighted <- read.table("control_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+	control_unweighted_pairs <- split(control_unweighted, control_unweighted$Sample1Diet_Sample2Diet)
+	c1c2_c1c3 <- rbind(control_unweighted_pairs$C1_C2, control_unweighted_pairs$C1_C3)
+	c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
+	c1c2_c1c3_test
+	lapply(c1c2_c1c3_test, write, "control_unweighted_c1c2_c1c3_ttest.txt", append=TRUE)
+
+	c1c3_c1c4 <- rbind(control_unweighted_pairs$C1_C3, control_unweighted_pairs$C1_C4)
+	c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
+	c1c3_c1c4_test
+	lapply(c1c3_c1c4_test, write, "control_unweighted_c1c3_c1c4_ttest.txt", append=TRUE)
+	
+	c1c4_c1cf <- rbind(control_unweighted_pairs$C1_C4, control_unweighted_pairs$C1_CF)
+	c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
+	c1c4_c1cf_test
+	lapply(c1c4_c1cf_test, write, "control_unweighted_c1c4_c1cf_ttest.txt", append=TRUE)
+	
+	
+	
+	control_weighted <- read.table("control_weighted_treatment_distances.txt", sep="\t", header=TRUE)
+	control_weighted_pairs <- split(control_weighted, control_weighted$Sample1Diet_Sample2Diet)
+	c1c2_c1c3 <- rbind(control_weighted_pairs$C1_C2, control_weighted_pairs$C1_C3)
+	c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
+	c1c2_c1c3_test
+	lapply(c1c2_c1c3_test, write, "control_weighted_c1c2_c1c3_ttest.txt", append=TRUE)
+	
+	c1c3_c1c4 <- rbind(control_weighted_pairs$C1_C3, control_weighted_pairs$C1_C4)
+	c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
+	c1c3_c1c4_test
+	lapply(c1c3_c1c4_test, write, "control_weighted_c1c3_c1c4_ttest.txt", append=TRUE)
+	
+	c1c4_c1cf <- rbind(control_weighted_pairs$C1_C4, control_weighted_pairs$C1_CF)
+	c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
+	c1c4_c1cf_test
+	lapply(c1c4_c1cf_test, write, "control_weighted_c1c4_c1cf_ttest.txt", append=TRUE)
+	
+	
+	
+	ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+	ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
+	r1r1_r1r2 <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2)
+	r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
+	r1r1_r1r2_test
+	lapply(r1r1_r1r2_test, write, "ramp_unweighted_r1r1_r1r2_ttest.txt", append=TRUE)
+	
+	r1r2_r1r3 <- rbind(ramp_unweighted_pairs$R1_R2, ramp_unweighted_pairs$R1_R3)
+	r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
+	r1r2_r1r3_test
+	lapply(r1r2_r1r3_test, write, "ramp_unweighted_r1r2_r1r3_ttest.txt", append=TRUE)
+	
+	r1r3_r1r4 <- rbind(ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4)
+	r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
+	r1r3_r1r4_test
+	lapply(r1r3_r1r4_test, write, "ramp_unweighted_r1r3_r1r4_ttest.txt", append=TRUE)
+	
+	r1r4_r1rf <- rbind(ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
+	r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
+	r1r4_r1rf_test
+	lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append=TRUE)
+	
+	
+	
+	ramp_weighted <- read.table("ramp_weighted_treatment_distances.txt", sep="\t", header=TRUE)
+	ramp_weighted_pairs <- split(ramp_weighted, ramp_weighted$Sample1Diet_Sample2Diet)
+	r1r1_r1r2 <- rbind(ramp_weighted_pairs$R1_R1, ramp_weighted_pairs$R1_R2)
+	r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
+	r1r1_r1r2_test
+	lapply(r1r1_r1r2_test, write, "ramp_weighted_r1r1_r1r2_ttest.txt", append=TRUE)
+	
+	r1r2_r1r3 <- rbind(ramp_weighted_pairs$R1_R2, ramp_weighted_pairs$R1_R3)
+	r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
+	r1r2_r1r3_test
+	lapply(r1r2_r1r3_test, write, "ramp_weighted_r1r2_r1r3_ttest.txt", append=TRUE)
+	
+	r1r3_r1r4 <- rbind(ramp_weighted_pairs$R1_R3, ramp_weighted_pairs$R1_R4)
+	r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
+	r1r3_r1r4_test
+	lapply(r1r3_r1r4_test, write, "ramp_weighted_r1r3_r1r4_ttest.txt", append=TRUE)
+	
+	r1r4_r1rf <- rbind(ramp_weighted_pairs$R1_R4, ramp_weighted_pairs$R1_RF)
+	r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
+	r1r4_r1rf_test
+	lapply(r1r4_r1rf_test, write, "ramp_weighted_r1r4_r1rf_ttest.txt", append=TRUE)
+
+
+
+Intermediate outputs can be found in intermediate_files directory
+
+
+
+
 
 
 
