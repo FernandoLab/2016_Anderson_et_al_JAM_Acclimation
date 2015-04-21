@@ -442,6 +442,7 @@ For some reason file is not reading as JSON
 
 Control Venn:
 ![Alt text](/Volumes/LaCie/rumen_adaptation_2015/control_venn.pdf)
+![Alt text](https://github.com/chrisLanderson/rumen_adaptation/blob/master/figures/control_venn.pdf)
 
 RAMP Venn:
 ![Alt text](/Volumes/LaCie/rumen_adaptation_2015/ramp_venn.pdf)
