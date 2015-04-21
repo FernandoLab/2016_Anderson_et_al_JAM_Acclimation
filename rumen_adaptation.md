@@ -441,8 +441,7 @@ For some reason file is not reading as JSON
 	ramp_venn <- venn(ramp_boolean_df)
 	
 	
-![Image of ramp]
-(/Volumes/LaCie/rumen_adaptation_2015/ramp_venn.pdf)
+![RAMP VENN](https://github.com/chrisLanderson/rumen_adaptation/blob/master/figures/ramp_venn.pdf)
 
 
 
