@@ -417,7 +417,7 @@ Collapse samples together based on diet
 
 	macqiime
 	
-	collapse_samples.py -b rumen.adaptation.otu_table.tax.filter.filter.biom -m intermediate_files/mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp intermediate_files/mapping_collapse.txt --collapse_fields Treatment --collapse_mode median
+	collapse_samples.py -b rumen.adaptation.otu_table.tax.filter.filter.biom -m intermediate_files/mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp intermediate_files/mapping_collapse.txt --collapse_fields Treatment --collapse_mode sum
 	split_otu_table.py -i rumen.adaptation.collapse_samples.biom -m intermediate_files/mapping_collapse.txt -f Diet -o split_collapse_samples
 	
 For some reason file is not reading as JSON
@@ -433,10 +433,8 @@ For some reason file is not reading as JSON
 	ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
 	control_df <- as.data.frame(as(biom_data(control_biom), "matrix"))
 	ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
-	control_df_update <- control_df[rowSums(control_df[, -1])>0, ]
-	ramp_df_update <- ramp_df[rowSums(control_df[, -1])>0, ]
-	control_boolean_df <- as.data.frame(control_df_update > 0 + 0)
-	ramp_boolean_df <- as.data.frame(ramp_df_update > 0 + 0)
+	control_boolean_df <- as.data.frame(control_df > 0 + 0)
+	ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 	control_boolean_df <- control_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
 	ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 	pdf("control_venn.pdf")
@@ -445,7 +443,15 @@ For some reason file is not reading as JSON
 	pdf("ramp_venn.pdf")
 	ramp_venn <- venn(ramp_boolean_df)
 	dev.off()
+	
+	
+Figures saved to intermediate_files
 
+Get the number of OTUs shared pairwise:
+
+	shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
+
+Saved to intermediate_files/
 
 ##Plot Principle Components in R
 I went ahead and manually made file to uploa into R with PC1 and PC2 from beta diversity command ran earlier on both the RAMP and Control datasets.  Right now, just doing this with unweighted unifrac.  The files can be found in intermediate_files. It has the SampleID, Treatment (or step), PC1 and PC2.
@@ -455,8 +461,21 @@ I went ahead and manually made file to uploa into R with PC1 and PC2 from beta d
 	control_pc <- read.table("intermediate_files/control_unweighted_pcs.txt", header=TRUE, sep="\t")
 	ramp_pc <- read.table("intermediate_files/ramp_unweighted_pcs.txt", header=TRUE, sep="\t")
 	
+	plot_control <- ggplot(control_pc, aes(PC1, PC2)) +
+	geom_point(aes(colour = Treatment, size=4)) +
+	xlab("PC1 (37.1%)") +
+	ylab("PC2 (13.7%)") +
+	guides(size=FALSE)
+	ggsave(plot_control, file="control_unweighted_pc.pdf", w=6, h=6)
 
+	plot_ramp <- ggplot(ramp_pc, aes(PC1, PC2)) +
+	geom_point(aes(colour = Treatment, size=4)) +
+	xlab("PC1 (20.3%)") +
+	ylab("PC2 (12.9%)") +
+	guides(size=FALSE)
+	ggsave(plot_ramp, file="ramp_unweighted_pc.pdf", w=6, h=6)
+
+Figures saved to intermediate_files
 	
-
 	
  
