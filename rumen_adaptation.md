@@ -439,12 +439,12 @@ For some reason file is not reading as JSON
 	ramp_boolean_df <- as.data.frame(ramp_df_update > 0 + 0)
 	control_venn <- venn(control_boolean_df)
 	ramp_venn <- venn(ramp_boolean_df)
-	
-	
-![RAMP VENN](https://github.com/chrisLanderson/rumen_adaptation/blob/master/figures/ramp_venn.pdf)
 
+Control Venn:
+![Alt text](/Volumes/LaCie/rumen_adaptation_2015/control_venn.pdf)
 
-
+RAMP Venn:
+![Alt text](/Volumes/LaCie/rumen_adaptation_2015/ramp_venn.pdf)
 
 
 ##Defining Core Measureable Microbiota
