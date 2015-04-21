@@ -19,8 +19,9 @@ Seqeuncing was done on 454.  Initial QC was done before I recieved files - need 
 Information about study...
 
 To download the raw data and intermediate files/scripts for the analysis:
-	
-    scp -r canderson3@crane.unl.edu:/work/samodha/canderson3/rumen_adaptation_2015/intermediate_files/ ./
+
+    scp -r canderson3@crane.unl.edu:/work/samodha/canderson3/rumen_adaptation_2015/intermediate_files.tar.gz ./
+    tar -zxvf intermediate_files.tar.gz
 
 ##Install MacQIIME:
 
@@ -410,6 +411,38 @@ Look at pairwise ttests for different steps:
 Intermediate outputs can be found in intermediate_files directory
 
 
+##Venns
+	
+Collapse samples together based on diet
+
+	macqiime
+	
+	collapse_samples.py -b rumen.adaptation.otu_table.tax.filter.filter.biom -m intermediate_files/mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp intermediate_files/mapping_collapse.txt --collapse_fields Treatment --collapse_mode median
+	split_otu_table.py -i rumen.adaptation.collapse_samples.biom -m intermediate_files/mapping_collapse.txt -f Diet -o split_collapse_samples
+	
+For some reason file is not reading as JSON
+
+	biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Control__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Control__.json.biom --to-json
+	biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json
+	
+	R
+	library(biom)
+	library(gplots)
+	
+	control_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Control__.json.biom")
+	ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
+	control_df <- as.data.frame(as(biom_data(control_biom), "matrix"))
+	ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+	control_df_update <- control_df[rowSums(control_df[, -1])>0, ]
+	ramp_df_update <- ramp_df[rowSums(control_df[, -1])>0, ]
+	control_boolean_df <- as.data.frame(control_df_update > 0 + 0)
+	ramp_boolean_df <- as.data.frame(ramp_df_update > 0 + 0)
+	control_venn <- venn(control_boolean_df)
+	ramp_venn <- venn(ramp_boolean_df)
+	
+	
+![Image of ramp]
+(/Volumes/LaCie/rumen_adaptation_2015/ramp_venn.pdf)
 
 
 
