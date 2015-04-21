@@ -411,7 +411,7 @@ Look at pairwise ttests for different steps:
 Intermediate outputs can be found in intermediate_files directory
 
 
-##Venns
+##Venn Diagrams
 	
 Collapse samples together based on diet
 
@@ -437,23 +437,24 @@ For some reason file is not reading as JSON
 	ramp_df_update <- ramp_df[rowSums(control_df[, -1])>0, ]
 	control_boolean_df <- as.data.frame(control_df_update > 0 + 0)
 	ramp_boolean_df <- as.data.frame(ramp_df_update > 0 + 0)
+	control_boolean_df <- control_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
+	ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
+	pdf("control_venn.pdf")
 	control_venn <- venn(control_boolean_df)
+	dev.off()
+	pdf("ramp_venn.pdf")
 	ramp_venn <- venn(ramp_boolean_df)
-
-Control Venn:
-![Alt text](/Volumes/LaCie/rumen_adaptation_2015/control_venn.pdf)
-![Alt text](https://github.com/chrisLanderson/rumen_adaptation/blob/master/figures/control_venn.pdf)
-
-RAMP Venn:
-![Alt text](/Volumes/LaCie/rumen_adaptation_2015/ramp_venn.pdf)
+	dev.off()
 
 
-##Defining Core Measureable Microbiota
+##Plot Principle Components in R
+I went ahead and manually made file to uploa into R with PC1 and PC2 from beta diversity command ran earlier on both the RAMP and Control datasets.  Right now, just doing this with unweighted unifrac.  The files can be found in intermediate_files. It has the SampleID, Treatment (or step), PC1 and PC2.
 
-
-
-
-##Core Beta Diversity
+	R
+	library(ggplot2)
+	control_pc <- read.table("intermediate_files/control_unweighted_pcs.txt", header=TRUE, sep="\t")
+	ramp_pc <- read.table("intermediate_files/ramp_unweighted_pcs.txt", header=TRUE, sep="\t")
+	
 
 	
 
