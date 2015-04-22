@@ -506,6 +506,41 @@ Figures saved to intermediate_files
 	pdf("heatmap.pdf")
 	heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
 	dev.off()
+
+##Cytoscape
+
+	make_otu_network.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o network/ -m intermediate_files/mapping.txt 
+
+	#Insert notes on what to do in cytoscape with node colors, sizes, etc and uploading attribute tables.
 	
+
+##Distance Box and Whisker
+
+	R
+	library(ggplot2)
+	ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+	control_unweighted <- read.table("control_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+	
+	control_unweighted_pairs <- split(control_unweighted, control_unweighted$Sample1Diet_Sample2Diet)
+	control_1_pairs <- rbind(control_unweighted_pairs$C1_C1, control_unweighted_pairs$C1_C2,control_unweighted_pairs$C1_C3,control_unweighted_pairs$C1_C4,control_unweighted_pairs$C1_CF)
+	
+	ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
+	ramp_1_pairs <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2,ramp_unweighted_pairs$R1_R3,ramp_unweighted_pairs$R1_R4,ramp_unweighted_pairs$R1_RF)
+	
+	plot_control <- ggplot(control_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
+	geom_boxplot() +
+	labs(x="", y = "Unweighted UniFrac Distance\n") +
+	guides(fill=FALSE) +
+	theme(axis.text.x = element_text( colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
+	ggsave(plot_control, file="control_distances_box_whisker.pdf", w=5, h=5)
+	
+	plot_ramp <- ggplot(ramp_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
+	geom_boxplot() +
+	labs(x="", y = "Unweighted UniFrac Distance\n") +
+	guides(fill=FALSE) +
+	theme(axis.text.x = element_text(colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
+	ggsave(plot_ramp, file="ramp_distances_box_whisker.pdf", w=5, h=5)
+	
+
 
  
