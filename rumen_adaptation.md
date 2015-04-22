@@ -447,9 +447,10 @@ For some reason file is not reading as JSON
 	
 Figures saved to intermediate_files
 
-Get the number of OTUs shared pairwise:
+Get the number of OTUs and sequences shared pairwise:
 
 	shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
+	intermediate_files/./pairwise_seq_comparison.pl
 
 Saved to intermediate_files/
 
@@ -477,7 +478,34 @@ I went ahead and manually made file to uploa into R with PC1 and PC2 from beta d
 
 Figures saved to intermediate_files
 
-##Cytoscape
+##Heatmap
 
+	biom convert -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.txt --to-tsv --table-type="OTU table"
+	vi rumen.adaptation.otu_table.tax.filter.filter.txt 
+	#remove the first line about Created from biom and remove comment sign on second line
 	
+	R
+	library(gplots)
+	library(Heatplus)
+	library(vegan)
+	library(RColorBrewer)
+	otu_table <- read.table("rumen.adaptation.otu_table.tax.filter.filter.txt", header=TRUE, sep="\t")
+	row.names(otu_table) <- otu_table$OTU.ID
+	otu_table <- otu_table[,-1]
+	colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+	otu_table_trans <- as.data.frame(t(otu_table))
+	otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
+	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+	otu_dist <- vegdist(otu_table_rel, method = "bray")
+	row.clus <- hclust(otu_dist, "aver")
+	maxab <- apply(otu_table_rel, 2, max)
+	n1 <- names(which(maxab < 0.01))
+	otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
+	otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
+	col.clus <- hclust(otu_dist_col, "aver")
+	pdf("heatmap.pdf")
+	heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+	dev.off()
+	
+
  
