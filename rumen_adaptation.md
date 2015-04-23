@@ -472,8 +472,9 @@ I went ahead and manually made a file to upload into R with PC1 and PC2 from bet
 	geom_point(aes(colour = Treatment, size=4)) +
 	xlab("PC1 (9.68%)") +
 	ylab("PC2 (7.72%)") +
-	guides(size=FALSE, fill=guide_legend(title=NULL)) +
-	scale_colour_manual(values = cols)
+	guides(size=FALSE) + 
+	scale_colour_manual(name = "", values = cols) + 
+	labs(fill="")
 	ggsave(plot_pc, file="unweighted_pc.pdf", w=6, h=6)
 
 Figure saved to intermediate_files
