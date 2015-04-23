@@ -455,28 +455,28 @@ Get the number of OTUs and sequences shared pairwise:
 Saved to intermediate_files/
 
 ##Plot Principle Components in R
-I went ahead and manually made file to uploa into R with PC1 and PC2 from beta diversity command ran earlier on both the RAMP and Control datasets.  Right now, just doing this with unweighted unifrac.  The files can be found in intermediate_files. It has the SampleID, Treatment (or step), PC1 and PC2.
+Want to plot them together, so need to have a beta diversity with all samples.
+
+	beta_diversity_through_plots.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -m intermediate_files/mapping.txt -t aligned_rumen.adaptation.otus2.phylip.tre -o beta_div -e 2164 -p intermediate_files/qiime_parameters_working.txt 
+
+
+I went ahead and manually made a file to upload into R with PC1 and PC2 from beta diversity command.  Right now, just doing this with unweighted unifrac.  The file can be found in intermediate_files. It has the SampleID, Treatment (or step), Diet (control or ramp), PC1 and PC2.
 
 	R
 	library(ggplot2)
-	control_pc <- read.table("intermediate_files/control_unweighted_pcs.txt", header=TRUE, sep="\t")
-	ramp_pc <- read.table("intermediate_files/ramp_unweighted_pcs.txt", header=TRUE, sep="\t")
+	pc <- read.table("intermediate_files/beta_div_unweighted_pc.txt", header=TRUE, sep="\t")
 	
-	plot_control <- ggplot(control_pc, aes(PC1, PC2)) +
+	cols <- c("CF" = "#FFB5B3", "R3" = "#0087ff", "R2" = "#0055dd", "R4" = "#00c1ff", "R4" = "#00c1ff", "C3" = "#C75A5C", "C4" = "#E38787", "R1" = "#0039a4", "CF" = "#FFB5B3", "RF" = "#00fcff", "RF" = "#00fcff", "C3" = "#C75A5C", "R2" = "#0055dd", "R1" = "#0039a4", "R3" = "#0087ff", "C1" = "#8F0005", "C2" = "#AB2D30", "R2" = "#0055dd", "R3" = "#0087ff", "C1" = "#8F0005", "C2" = "#AB2D30", "R4" = "#00c1ff", "RF" = "#00fcff", "R1" = "#0039a4", "C4" = "#E38787")
+	
+	plot_pc <- ggplot(pc, aes(PC1, PC2)) +
 	geom_point(aes(colour = Treatment, size=4)) +
-	xlab("PC1 (37.1%)") +
-	ylab("PC2 (13.7%)") +
-	guides(size=FALSE)
-	ggsave(plot_control, file="control_unweighted_pc.pdf", w=6, h=6)
+	xlab("PC1 (9.68%)") +
+	ylab("PC2 (7.72%)") +
+	guides(size=FALSE, fill=guide_legend(title=NULL)) +
+	scale_colour_manual(values = cols)
+	ggsave(plot_pc, file="unweighted_pc.pdf", w=6, h=6)
 
-	plot_ramp <- ggplot(ramp_pc, aes(PC1, PC2)) +
-	geom_point(aes(colour = Treatment, size=4)) +
-	xlab("PC1 (20.3%)") +
-	ylab("PC2 (12.9%)") +
-	guides(size=FALSE)
-	ggsave(plot_ramp, file="ramp_unweighted_pc.pdf", w=6, h=6)
-
-Figures saved to intermediate_files
+Figure saved to intermediate_files
 
 ##Heatmap
 
