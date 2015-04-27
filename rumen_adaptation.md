@@ -454,31 +454,6 @@ Get the number of OTUs and sequences shared pairwise:
 
 Saved to intermediate_files/
 
-##Plot Principle Components in R
-Want to plot them together, so need to have a beta diversity with all samples.
-
-	beta_diversity_through_plots.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -m intermediate_files/mapping.txt -t aligned_rumen.adaptation.otus2.phylip.tre -o beta_div -e 2164 -p intermediate_files/qiime_parameters_working.txt 
-
-
-I went ahead and manually made a file to upload into R with PC1 and PC2 from beta diversity command.  Right now, just doing this with unweighted unifrac.  The file can be found in intermediate_files. It has the SampleID, Treatment (or step), Diet (control or ramp), PC1 and PC2.
-
-	R
-	library(ggplot2)
-	pc <- read.table("intermediate_files/beta_div_unweighted_pc.txt", header=TRUE, sep="\t")
-	
-	cols <- c("CF" = "#FFB5B3", "R3" = "#0087ff", "R2" = "#0055dd", "R4" = "#00c1ff", "R4" = "#00c1ff", "C3" = "#C75A5C", "C4" = "#E38787", "R1" = "#0039a4", "CF" = "#FFB5B3", "RF" = "#00fcff", "RF" = "#00fcff", "C3" = "#C75A5C", "R2" = "#0055dd", "R1" = "#0039a4", "R3" = "#0087ff", "C1" = "#8F0005", "C2" = "#AB2D30", "R2" = "#0055dd", "R3" = "#0087ff", "C1" = "#8F0005", "C2" = "#AB2D30", "R4" = "#00c1ff", "RF" = "#00fcff", "R1" = "#0039a4", "C4" = "#E38787")
-	
-	plot_pc <- ggplot(pc, aes(PC1, PC2)) +
-	geom_point(aes(colour = Treatment, size=4)) +
-	xlab("PC1 (9.68%)") +
-	ylab("PC2 (7.72%)") +
-	guides(size=FALSE) + 
-	scale_colour_manual(name = "", values = cols) + 
-	labs(fill="")
-	ggsave(plot_pc, file="unweighted_pc.pdf", w=6, h=6)
-
-Figure saved to intermediate_files
-
 ##Heatmap
 
 	biom convert -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.txt --to-tsv --table-type="OTU table"
@@ -515,7 +490,7 @@ Figure saved to intermediate_files
 	#Insert notes on what to do in cytoscape with node colors, sizes, etc and uploading attribute tables.
 	
 
-##Distance Box and Whisker
+##Distance Box and Whisker and Principle Component
 
 	R
 	library(ggplot2)
@@ -528,20 +503,76 @@ Figure saved to intermediate_files
 	ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
 	ramp_1_pairs <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2,ramp_unweighted_pairs$R1_R3,ramp_unweighted_pairs$R1_R4,ramp_unweighted_pairs$R1_RF)
 	
-	plot_control <- ggplot(control_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
+	control_distance <- ggplot(control_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
 	geom_boxplot() +
 	labs(x="", y = "Unweighted UniFrac Distance\n") +
 	guides(fill=FALSE) +
 	theme(axis.text.x = element_text( colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
-	ggsave(plot_control, file="control_distances_box_whisker.pdf", w=5, h=5)
+	#ggsave(control_distance, file="control_distances_box_whisker.pdf", w=5, h=5)
 	
-	plot_ramp <- ggplot(ramp_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
+	ramp_distance <- ggplot(ramp_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
 	geom_boxplot() +
 	labs(x="", y = "Unweighted UniFrac Distance\n") +
 	guides(fill=FALSE) +
 	theme(axis.text.x = element_text(colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
-	ggsave(plot_ramp, file="ramp_distances_box_whisker.pdf", w=5, h=5)
+	#ggsave(ramp_distance, file="ramp_distances_box_whisker.pdf", w=5, h=5)
 	
 
+I went ahead and manually made a file to upload into R with PC1 and PC2 from beta diversity command before for both control and ramp datasets.  Right now, just doing this with unweighted unifrac.  The file can be found in intermediate_files. It has the SampleID, Treatment (or step), PC1, and PC2. control_unweighted_pc.txt and ramp_unweighted_pc.txt
+
+	R
+	library(ggplot2)
+	
+	control_pc <- read.table("intermediate_files/control_unweighted_pc.txt", header=TRUE, sep="\t")
+	ramp_pc <- read.table("intermediate_files/ramp_unweighted_pc.txt", header=TRUE, sep="\t")
+	
+	
+	shape_control <- c("C1" = 15, "C2" = 16, "C3" = 17, "C4" = 18, "CF" = 8)
+	control_pc_plot <- ggplot(control_pc, aes(PC1, PC2)) +
+	geom_point(aes(size=4, shape = factor(Treatment))) +
+	xlab("PC1 (37.1%)") +
+	ylab("PC2 (13.7%)") +
+	guides(size=FALSE) +
+	scale_shape_manual(name = "", values = shape_control) +
+	labs(fill="")
+	#ggsave(control_pc_plot, file="control_unweighted_pc.pdf", w=6, h=6)
+	
+	shape_ramp <- c("R1" = 15, "R2" = 16, "R3" = 17, "R4" = 18, "RF" = 8)
+	ramp_pc_plot <- ggplot(ramp_pc, aes(PC1, PC2)) +
+	geom_point(aes(size=4, shape = factor(Treatment))) +	xlab("PC1 (20.3%)") +
+	ylab("PC2 (12.9%)") +
+	guides(size=FALSE) + 
+	scale_shape_manual(name = "", values = shape_ramp) +
+	labs(fill="")
+	#ggsave(ramp_pc_plot, file="ramp_unweighted_pc.pdf", w=6, h=6)
+
+
+Now I want to tile all 4 plots together:
+	
+	 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+		library(grid)
+		plots <- c(list(...), plotlist)
+		numPlots = length(plots)
+		if (is.null(layout)) {
+			layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),ncol = cols, nrow = ceiling(numPlots/cols))
+		}
+
+		if (numPlots==1) {
+			print(plots[[1]])
+
+		} else {
+			grid.newpage()
+			pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+			for (i in 1:numPlots) {
+				matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+				print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,layout.pos.col = matchidx$col))
+    		}
+    	}
+	}
+
+
+	pdf("unweighted_pc_distance.pdf", height=12, width=12)
+	multiplot(control_pc_plot, ramp_pc_plot, control_distance, ramp_distance, cols=2)
+	dev.off()
 
  
