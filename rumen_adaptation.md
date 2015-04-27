@@ -505,6 +505,7 @@ Saved to intermediate_files/
 	
 	control_distance <- ggplot(control_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
 	geom_boxplot() +
+	geom_point(position = position_jitter(width = 0.15)) +
 	labs(x="", y = "Unweighted UniFrac Distance\n") +
 	guides(fill=FALSE) +
 	theme(axis.text.x = element_text( colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
@@ -512,6 +513,7 @@ Saved to intermediate_files/
 	
 	ramp_distance <- ggplot(ramp_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
 	geom_boxplot() +
+	geom_point(position = position_jitter(width = 0.15)) +
 	labs(x="", y = "Unweighted UniFrac Distance\n") +
 	guides(fill=FALSE) +
 	theme(axis.text.x = element_text(colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
