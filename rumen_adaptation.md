@@ -216,7 +216,7 @@ Output can be found at intermediate_files/control_beta_div
 Output can be found at intermediate_files/ramp_beta_div
 	
 	
-##Statistics
+##Community Statistics
 Community level statistics:
 	
 	#install R and dependencies (phyloseq, biom, ggplot2, vegan,...)
@@ -577,4 +577,181 @@ Now I want to tile all 4 plots together:
 	multiplot(control_pc_plot, ramp_pc_plot, control_distance, ramp_distance, cols=2)
 	dev.off()
 
- 
+
+##OTU-Level Statistics
+Look at differential OTUs at break points in ramp and control based on pairwise t-statstiics before.  We use LEfSe to compare samples - first need to be in relative abundance though.
+
+	macqiime
+	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.biom
+	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom
+
+	biom convert -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.biom -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.txt --table-type="OTU table" --to-tsv
+	biom convert -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.txt --table-type="OTU table" --to-tsv
+	exit
+	
+	Delete the first line and comment from second line on both outputs
+	
+	
+	
+	R
+	control <- read.table("split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.txt", header=TRUE, sep="\t")
+	rownames(control) <- control$OTU.ID
+	control <- control[, -1]
+	control_rel <- control/rowSums(control)
+	write.table(control_rel, sep="\t", file="split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.relative.txt", row.names=TRUE, col.names=TRUE, quote = FALSE)
+	
+	ramp <- read.table("split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.txt", header=TRUE, sep="\t")
+	rownames(ramp) <- ramp$OTU.ID
+	ramp <- ramp[, -1]
+	ramp_rel <- ramp/rowSums(ramp)
+	write.table(ramp_rel, sep="\t", file="split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.relative.txt", row.names=TRUE, col.names=TRUE, quote = FALSE)
+	quit()
+	
+Now, need to alter relative abundance tables to upload to LEfSe - I did so manually, but files control.lefse.txt, ramp.lefse.break1.txt, and ramp.lefse.break2.txt  can be found in the intermediate files to be uploaded.  Only changes from relative abundance OTU tables were removing sampleIDs and replacing with one row for Break identifier and another row with animal ID.
+
+Unfortunately, I had troubles getting LEfSe to work on command line, so we still use the version hosted on Galaxy. LEfSe on Galaxy can be found at
+http://huttenhower.sph.harvard.edu/galaxy/
+
+Upload each file using the Get Data Module as a tabular file. Then run Format Data for LEfSe with BREAK as class, no subclass, and ANIMAL as subject.  Use option Yes for per-sample normalization.
+
+Next, run LDA Effect Size with the output from Format Data with default values and download the results. The outputs I generated can be found in intermediate_files as control.lefse_output.txt, ramp.break1.lefse_output.txt, and ramp.break2.lefse_otuput.txt.  If repreating yourself, you may get a slightly different answer because of changes in LEfSe script on Galaxy.
+
+Manually created a list of OTUs for each break from the LEfSe output.  Simply sorted by fourth column (LDA score) largest to smallest and copied OTUs into text editor and replaced f_ with nothing. Files are named control_break_otus.txt, ramp_break1_otus.txt, and ramp_break2_otus.txt.
+
+	macqiime
+	
+	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.biom -o control.break.biom -e control_break_otus.txt --negate_ids_to_exclude
+	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom -o ramp.break1.biom -e ramp_break1_otus.txt --negate_ids_to_exclude
+	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom -o ramp.break2.biom -e ramp_break2_otus.txt --negate_ids_to_exclude
+	biom convert -i control.break.biom -o control.break.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+	biom convert -i ramp.break1.biom -o ramp.break1.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+	biom convert -i ramp.break2.biom -o ramp.break2.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+	
+
+Delete first row of convert file and uncomment second row.
+	
+Then I am going to sort those new OTU tables by break and LDA score.  So, I created files with OTU ID, break number, and LDA from LEfSe output - control_break_LDA.txt, ramp_break1_LDA.txt, and ramp_break2_LDA.txt.  Using those files I added break number and LDA score to the new OTU tables so we can order the OTU rows in the subsequent heatmaps.
+
+	awk 'NR==1; NR > 1 {print $0 | "sort"}' control.break.txt > control.break.sort.txt
+	sort control_break_LDA.txt > control_break_LDA_sort.txt
+	{ printf '\tbreak\tLDA\n'; cat control_break_LDA_sort.txt ; }  > control_break_LDA_sort_label.txt
+	paste control.break.sort.txt <(cut -f 2,3 control_break_LDA_sort_label.txt) > control.break.LDA.txt
+	
+	awk 'NR==1; NR > 1 {print $0 | "sort"}' ramp.break1.txt > ramp.break1.sort.txt
+	sort ramp_break1_LDA.txt > ramp_break1_LDA_sort.txt
+	{ printf '\tbreak\tLDA\n'; cat ramp_break1_LDA_sort.txt ; }  > ramp_break1_LDA_sort_label.txt
+	paste ramp.break1.sort.txt <(cut -f 2,3 ramp_break1_LDA_sort_label.txt) > ramp.break1.LDA.txt
+
+	awk 'NR==1; NR > 1 {print $0 | "sort"}' ramp.break2.txt > ramp.break2.sort.txt
+	sort ramp_break2_LDA.txt > ramp_break2_LDA_sort.txt
+	{ printf '\tbreak\tLDA\n'; cat ramp_break2_LDA_sort.txt ; }  > ramp_break2_LDA_sort_label.txt
+	paste ramp.break2.sort.txt <(cut -f 2,3 ramp_break2_LDA_sort_label.txt) > ramp.break2.LDA.txt
+	
+	
+	exit
+	
+Use R to sort by break and LDA score then make the heatmaps
+
+	R
+	library(gplots)
+	library(Heatplus)
+	library(vegan)
+	library(RColorBrewer)
+	control <- read.table("control.break.LDA.txt", header=TRUE, sep="\t")
+	control <- control[with(control, order(break., -LDA)), ]
+	control_samples <- subset(control, select = -c(taxonomy,break.,LDA))
+	row.names(control_samples) <- control_samples$OTU.ID
+	control_samples <- control_samples[,-1]
+	colnames(control_samples) <- c("CF_332", "C3_346", "C4_332", "CF_346", "C3_332", "C1_346", "C2_332", "C1_332", "C2_346", "C4_346")
+	control_samples <- control_samples[c("C1_346", "C1_332", "C2_346", "C2_332", "C3_346", "C3_332", "C4_346", "C4_332", "CF_346", "CF_332")]
+	control_trans <- as.data.frame(t(control_samples))
+	control_rel <- control_trans/rowSums(control_trans)
+	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+	maxab <- apply(control_rel, 2, max)
+	n1 <- names(which(maxab < 0.03))
+	control_rel2 <- control_rel[, -which(names(control_rel) %in% n1)]
+	otus <- colnames(control_rel2)
+	write.table(otus, "control_break_figure_otus.txt", quote=FALSE, sep="\n", row.names = FALSE, col.names=FALSE)
+	
+	
+
+The last command makes OTUs, so we can go get taxonomy of the printed OTUs on the figure and add them.  Keep the R window open and use a different terminal window to follow these commands:
+	
+	intermediate_files/parse_taxonomy.pl -otu_text_file=control.break.LDA.txt -figure_otus=control_break_figure_otus.txt 
+	
+Now, back in R, run the commands inserting taxnomy output from above in the last line of heatmap.2 command:
+	
+	lmat = rbind(c(4,0,0),c(2,1,3))
+	lwid = c(0.60,1.9,0.3)
+	lhei = c(0.3,1.5)
+	pdf("control_break_heatmap.pdf", width=12, height=9)
+	heatmap.2(as.matrix(control_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("S24-7", "Spirochaetaceae", "S24-7", "S24-7", "S24-7", "No Assigned Family", "No Assigned Family", "No Assigned Family", "No Assigned Family", "Pirellulaceae", "No Assigned Family", "Prevotellaceae", "Prevotellaceae", "Ruminococcaceae", "No Assigned Family", "Lachnospiraceae", "Anaerolinaceae", "Mogibacteriaceae", "Clostridiaceae", "No Assigned Family", "Veillonellaceae", "Prevotellaceae", "Lachnospiraceae", "Veillonellaceae", "Veillonellaceae", "Paraprevotellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Ruminococcaceae", "Prevotellaceae", "Prevotellaceae", "Succinivibrionaceae", "Veillonellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Lachnospiraceae", "Lachnospiraceae"))
+	dev.off()
+
+
+Repeat the above for ramp break 1:
+	
+	ramp1 <- read.table("ramp.break1.LDA.txt", header=TRUE, sep="\t")
+	ramp1 <- ramp1[with(ramp1, order(break., -LDA)), ]
+	ramp1_samples <- subset(ramp1, select = -c(taxonomy,break.,LDA))
+	ramp1_samples <- subset(ramp1, select = c(OTU.ID,R18,R8,R24,R23,R38,R12))
+	row.names(ramp1_samples) <- ramp1_samples$OTU.ID
+	ramp1_samples <- ramp1_samples[,-1]
+	colnames(ramp1_samples) <- c("R1_222","R1_259","R1_343","R2_222","R2_259","R2_343")
+	ramp1_trans <- as.data.frame(t(ramp1_samples))
+	ramp1_rel <- ramp1_trans/rowSums(ramp1_trans)
+	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+	maxab <- apply(ramp1_rel, 2, max)
+	n1 <- names(which(maxab < 0.03))
+	ramp1_rel2 <- ramp1_rel[, -which(names(ramp1_rel) %in% n1)]
+	otus <- colnames(ramp1_rel2)
+	write.table(otus, "ramp_break1_figure_otus.txt", quote=FALSE, sep="\n", row.names = FALSE, col.names=FALSE)
+
+Use seperate terminal window to generate taxonomy:
+	
+	intermediate_files/parse_taxonomy.pl -otu_text_file=ramp.break1.LDA.txt -figure_otus=ramp_break1_figure_otus.txt 
+	
+Now, back in R, run the commands inserting taxnomy output from above in the last line of heatmap.2 command:
+
+	lmat = rbind(c(4,0,0),c(2,1,3))
+	lwid = c(0.60,1.9,0.3)
+	lhei = c(0.3,1.5)
+	pdf("ramp_break1_heatmap.pdf", width=12, height=9)
+	heatmap.2(as.matrix(ramp1_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("S24-7", "Ruminococcaceae", "Prevotellaceae", "No Assigned Family", "Lachnospiraceae", "Lachnospiraceae", "Ruminococcaceae", "No Assigned Family", "Coriobacteriaceae", "Ruminococcaceae", "Lachnospiraceae", "Prevotellaceae", "Prevotellaceae", "Eubacteriaceae", "Erysipelotrichaceae", "Prevotellaceae", "No Assigned Family", "No Assigned Family", "Fibrobacteraceae", "Prevotellaceae"))
+	dev.off()
+	
+
+
+Do all the above for ramp break 2:
+
+	ramp2 <- read.table("ramp.break2.LDA.txt", header=TRUE, sep="\t")
+	ramp2 <- ramp2[with(ramp2, order(break., -LDA)), ]
+	ramp2_samples <- subset(ramp2, select = -c(taxonomy,break.,LDA))
+	ramp2_samples <- subset(ramp2, select = c(OTU.ID,R23,R38,R12,R4,R11,R3,R5,R14,R13,R21,R7,R20))
+	row.names(ramp2_samples) <- ramp2_samples$OTU.ID
+	ramp2_samples <- ramp2_samples[,-1]
+	colnames(ramp2_samples) <- c("R2_222","R2_259","R2_343","R3_222","R3_259","R3_343","R4_222","R4_259","R4_343","RF_222","RF_259","RF_343")
+	ramp2_trans <- as.data.frame(t(ramp2_samples))
+	ramp2_rel <- ramp2_trans/rowSums(ramp2_trans)
+	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+	maxab <- apply(ramp2_rel, 2, max)
+	n1 <- names(which(maxab < 0.03))
+	ramp2_rel2 <- ramp2_rel[, -which(names(ramp2_rel) %in% n1)]
+	otus <- colnames(ramp2_rel2)
+	write.table(otus, "ramp_break2_figure_otus.txt", quote=FALSE, sep="\n", row.names = FALSE, col.names=FALSE)
+
+Use seperate terminal window to generate taxonomy:
+	
+	intermediate_files/parse_taxonomy.pl -otu_text_file=ramp.break2.LDA.txt -figure_otus=ramp_break2_figure_otus.txt 
+	
+Now, back in R, run the commands inserting taxnomy output from above in the last line of heatmap.2 command:
+
+	lmat = rbind(c(4,0,0),c(2,1,3))
+	lwid = c(0.60,1.9,0.3)
+	lhei = c(0.3,1.5)
+	pdf("ramp_break2_heatmap.pdf", width=12, height=9)
+	heatmap.2(as.matrix(ramp2_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("Prevotellaceae", "Lachnospiraceae", "Prevotellaceae", "Lachnospiraceae", "Prevotellaceae", "Paraprevotellaceae", "No Assigned Family", "No Assigned Family", "Prevotellaceae", "Lachnospiraceae", "Mogibacteriaceae", "Mogibacteriaceae", "Lachnospiraceae", "No Assigned Family", "Lachnospiraceae", "Mogibacteriaceae", "Prevotellaceae", "Prevotellaceae", "Paraprevotellaceae", "No Assigned Family", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "RF16", "Prevotellaceae", "Erysipelotrichaceae"))
+	dev.off()
+
+
+	
