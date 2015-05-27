@@ -192,9 +192,12 @@ Want to look at the sequencing depth of each sample by monitoring the number of 
 "If the lines for some categories do not extend all the way to the right end of the x-axis, that means that at least one of the samples in that category does not have that many sequences." Error bars are standard deviation
 
 	macqiime
-	alpha_rarefaction.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -o alpha_rarefaction -m intermediate_files/mapping.txt -t aligned_rumen.adaptation.otus2.phylip.tre -e 6500 --retain_intermediate_files
+	multiple_rarefactions.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o alpha_rare -m 10 -x 6600 -s 500 -n 10
+	alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu -m observed_otus 
+	collate_alpha.py -i alpha_rare_otu/ -o alpha_rare_otu_collate
+	make_rarefaction_plots.py -i alpha_rare_otu_collate/ -m intermediate_files/mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_otu_collate_avgtable	
 	exit
-	To get the results I want to plot in R, I opened the html file alpha_rarefaction/alpha_rarefaction_plots/rarefaction_plots.html and copied the table on the bottom of the page for observed OTUs by Treatment to a txt file.  The txt file is alpha_rarefaction_table.txt
+The calculations I need to plot are already in the generated html file.  I opened alpha_rare_otu_collate_avgtable/rarefaction_plots.html, picked observed OTUs by Treatment, and copied the table at the bottom of the page to txt file and saved as alpha_rarefaction_table.txt
 
 Plot this result in R:
 
@@ -207,7 +210,7 @@ Plot this result in R:
 	control_rare$Diet <- "CON"
 	ramp_rare$Diet <- "RAMP"
 	alpha_rare <- rbind(control_rare,ramp_rare)
-	pd <- position_dodge(width = 250)
+	pd <- position_dodge(width = 275)
 	rare_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
 	geom_line(position = pd) +
 	geom_pointrange(position=pd) +
@@ -216,12 +219,22 @@ Plot this result in R:
 	theme(legend.title=element_blank()) +
 	facet_grid(~Diet)
 	ggsave(rare_plot, file="alpha_rarefaction.pdf", w=6, h=6)
+	quit()
 
 ##Alpha Diversity
 Want to compare alpha diversity, but with all samples at the sample depth.	
 
+	macqiime
+	multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -d 2966 -o mult_rare
+	alpha_diversity.py -i mult_rare/ -o mult_rare_alpha_div -m chao1 
+	collate_alpha.py -i mult_rare_alpha_div/ -o collate_alpha 
 
+Now, going to use R to plot the results:
 
+	R
+	library(ggplot2)
+	alpha <- read.table("collate_alpha/chao1.txt", header=TRUE, sep="\t")
+	
 
 
 ##Taxonomy Plots
