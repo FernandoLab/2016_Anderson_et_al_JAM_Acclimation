@@ -215,7 +215,7 @@ Plot this result in R:
 	geom_line(position = pd) +
 	geom_pointrange(position=pd) +
 	scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
-	labs(x = "Sequences per Sample", y="Average Observed OTUs") +
+	labs(x = "Sequences per Sample", y="Mean Observed OTUs") +
 	theme(legend.title=element_blank()) +
 	facet_grid(~Diet)
 	ggsave(rare_plot, file="alpha_rarefaction.pdf", w=6, h=6)
@@ -225,15 +225,32 @@ Plot this result in R:
 Want to compare alpha diversity, but with all samples at the sample depth.	
 
 	macqiime
-	multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -d 2966 -o mult_rare
-	alpha_diversity.py -i mult_rare/ -o mult_rare_alpha_div -m chao1 
-	collate_alpha.py -i mult_rare_alpha_div/ -o collate_alpha 
+	multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -d 2164 -o mult_rare
+	alpha_diversity.py -i mult_rare/ -o mult_rare_chao1 -m chao1 
+	collate_alpha.py -i mult_rare_chao1/ -o mult_rare_chao1_collate
+	exit
 
 Now, going to use R to plot the results:
 
 	R
 	library(ggplot2)
-	alpha <- read.table("collate_alpha/chao1.txt", header=TRUE, sep="\t")
+	library(matrixStats)
+	alpha <- read.table("mult_rare_chao1_collate/chao1.txt", header=TRUE, sep="\t")
+	alpha <- alpha[-c(1:3)]
+	colnames(alpha) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+	alpha_means <- data.frame(ID=colnames(alpha), Means=colMeans(alpha_matrix), SD=colSds(alpha_matrix))
+	 steps <- data.frame(step=c("Finisher","Step3","Step2","Step4","Step4","Step3","Step4","Step1","Finisher","Finisher","Finisher","Step3","Step2","Step1","Step3","Step1","Step2","Step2","Step3","Step1","Step2","Step4","Finisher","Step1","Step4"))
+	 diets <- data.frame(diet=c("CON","RAMP","RAMP","RAMP","RAMP","CON","CON","RAMP","CON","RAMP","RAMP","CON","RAMP","RAMP","RAMP","CON","CON","RAMP","RAMP","CON","CON","RAMP","RAMP","RAMP","CON"))
+	 alpha_means <- cbind(alpha_means,steps,diets)
+	alpha_means$step <- factor(alpha_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
+	chao_plot <- ggplot(alpha_means, aes(x=step, y=Means)) +
+	#geom_point(size=5) +
+	geom_jitter(size=5) +
+	labs(x = "", y="Mean Chao1 Index") +
+	facet_wrap(~diet)
+	ggsave(chao_plot, file="chao1.pdf", w=6, h=6)
+	quit()
+
 	
 
 
