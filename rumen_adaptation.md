@@ -186,12 +186,45 @@ Replace the string of 10 'A' from the .tre file with nothing in a text editor.
 
 Resulting files are found at intermediate_files/aligned_rumen.adaptation.otus2.phylip.dist and intermediate_files/aligned_rumen.adaptation.otus2.phylip.tre
 
+##Rarefaction Curves
+Want to look at the sequencing depth of each sample by monitoring the number of novel OTUs encountered as depth is increased.  Setup here for a depth roughly equivalent to least sample seqeunced within a step-up diet in our study so we can visually see full depth to give us an idea if the curves were plateauing....
+
+"If the lines for some categories do not extend all the way to the right end of the x-axis, that means that at least one of the samples in that category does not have that many sequences." Error bars are standard deviation
+
+	macqiime
+	alpha_rarefaction.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -o alpha_rarefaction -m intermediate_files/mapping.txt -t aligned_rumen.adaptation.otus2.phylip.tre -e 6500 --retain_intermediate_files
+	exit
+	To get the results I want to plot in R, I opened the html file alpha_rarefaction/alpha_rarefaction_plots/rarefaction_plots.html and copied the table on the bottom of the page for observed OTUs by Treatment to a txt file.  The txt file is alpha_rarefaction_table.txt
+
+Plot this result in R:
+
+	R
+	library(ggplot2)
+	alpha_rare <- read.table("alpha_rarefaction_table.txt", header=TRUE, sep="\t")
+	alpha_rare <- na.omit(alpha_rare)
+	control_rare <- subset(alpha_rare, Treatment %in% c("C1","C2","C3","C4","CF"))
+	ramp_rare <- subset(alpha_rare, Treatment %in% c("R1","R2","R3","R4","RF"))
+	control_rare$Diet <- "CON"
+	ramp_rare$Diet <- "RAMP"
+	alpha_rare <- rbind(control_rare,ramp_rare)
+	pd <- position_dodge(width = 250)
+	rare_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
+	geom_line(position = pd) +
+	geom_pointrange(position=pd) +
+	scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
+	labs(x = "Sequences per Sample", y="Average Observed OTUs") +
+	theme(legend.title=element_blank()) +
+	facet_grid(~Diet)
+	ggsave(rare_plot, file="alpha_rarefaction.pdf", w=6, h=6)
+
 ##Alpha Diversity
-	alpha_diversity.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -m observed_species,chao1,shannon -o alpha_div.txt
+Want to compare alpha diversity, but with all samples at the sample depth.	
 
-Output can be found at intermediate_files/alpha_div.txt
 
-##Taxonomy
+
+
+
+##Taxonomy Plots
 	summarize_taxa.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o summarize_taxa -L 2,3,4,5,6,7
 	plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
 
@@ -517,7 +550,7 @@ Saved to intermediate_files/
 	labs(x="", y = "Unweighted UniFrac Distance\n") +
 	guides(fill=FALSE) +
 	theme(axis.text.x = element_text(colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
-	#ggsave(ramp_distance, file="ramp_distances_box_whisker.pdf", w=5, h=5)
+	ggsave(ramp_distance, file="ramp_distances_box_whisker.pdf", w=5, h=5)
 	
 
 I went ahead and manually made a file to upload into R with PC1 and PC2 from beta diversity command before for both control and ramp datasets.  Right now, just doing this with unweighted unifrac.  The file can be found in intermediate_files. It has the SampleID, Treatment (or step), PC1, and PC2. control_unweighted_pc.txt and ramp_unweighted_pc.txt
@@ -752,6 +785,6 @@ Now, back in R, run the commands inserting taxnomy output from above in the last
 	pdf("ramp_break2_heatmap.pdf", width=12, height=9)
 	heatmap.2(as.matrix(ramp2_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("Prevotellaceae", "Lachnospiraceae", "Prevotellaceae", "Lachnospiraceae", "Prevotellaceae", "Paraprevotellaceae", "No Assigned Family", "No Assigned Family", "Prevotellaceae", "Lachnospiraceae", "Mogibacteriaceae", "Mogibacteriaceae", "Lachnospiraceae", "No Assigned Family", "Lachnospiraceae", "Mogibacteriaceae", "Prevotellaceae", "Prevotellaceae", "Paraprevotellaceae", "No Assigned Family", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "RF16", "Prevotellaceae", "Erysipelotrichaceae"))
 	dev.off()
+	quit()
 
 
-	
