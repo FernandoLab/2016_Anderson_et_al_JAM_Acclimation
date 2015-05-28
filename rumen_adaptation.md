@@ -818,3 +818,19 @@ Now, back in R, run the commands inserting taxnomy output from above in the last
 	quit()
 
 
+##Bacteroidetes:Firmicutes
+
+Wanted to look at the ratio of Bacteroidetes to Firmicutes over the course of adaptation.
+
+	macqiime
+	filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.bacteroidetes.biom -p p__Bacteroidetes
+	filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.firmicutes.biom -p p__Firmicutes
+	biom summarize-table -i rumen.adaptation.otu_table.tax.filter.filter.bacteroidetes.biom -o summarize_bacteroidetes.txt
+	biom summarize-table -i rumen.adaptation.otu_table.tax.filter.filter.firmicutes.biom -o summarize_firmicutes.txt
+
+I used the two summary files to look at the number of seqeunces assigned to each phyla and relabelled the sample identifiers as their diet, step, and animal ID.  The collated summary file used to generate the table in the manuscript is bacteroidetes_firmicutes.txt.
+
+
+
+	
+
