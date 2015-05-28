@@ -186,23 +186,31 @@ Replace the string of 10 'A' from the .tre file with nothing in a text editor.
 
 Resulting files are found at intermediate_files/aligned_rumen.adaptation.otus2.phylip.dist and intermediate_files/aligned_rumen.adaptation.otus2.phylip.tre
 
-##Rarefaction Curves
-Want to look at the sequencing depth of each sample by monitoring the number of novel OTUs encountered as depth is increased.  Setup here for a depth roughly equivalent to least sample seqeunced within a step-up diet in our study so we can visually see full depth to give us an idea if the curves were plateauing....
+##Rarefaction Curves and Alpha Diversity
+Want to look at the sequencing depth of each sample by monitoring the number of novel OTUs encountered as depth is increased.  Setup here for a depth roughly equivalent to least sample seqeunced within a step-up diet in our study so we can visually see full depth to give us an idea if the curves were plateauing....Also, want to compare alpha diversity (observed OTUs and chao1 index), but with all samples at the sample depth.	
 
-"If the lines for some categories do not extend all the way to the right end of the x-axis, that means that at least one of the samples in that category does not have that many sequences." Error bars are standard deviation
+"If the lines for some categories do not extend all the way to the right end of the x-axis, that means that at least one of the samples in that category does not have that many sequences."
 
 	macqiime
 	multiple_rarefactions.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o alpha_rare -m 10 -x 6600 -s 500 -n 10
-	alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu -m observed_otus 
-	collate_alpha.py -i alpha_rare_otu/ -o alpha_rare_otu_collate
-	make_rarefaction_plots.py -i alpha_rare_otu_collate/ -m intermediate_files/mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_otu_collate_avgtable	
-	exit
-The calculations I need to plot are already in the generated html file.  I opened alpha_rare_otu_collate_avgtable/rarefaction_plots.html, picked observed OTUs by Treatment, and copied the table at the bottom of the page to txt file and saved as alpha_rarefaction_table.txt
+	alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1 
+	collate_alpha.py -i alpha_rare_otu_chao/ -o alpha_rare_collate
+	make_rarefaction_plots.py -i alpha_rare_collate/ -m intermediate_files/mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_collate_avgtable	
+	
+The calculations I need to plot are already in the generated html file.  I opened alpha_rare_collate_avgtable/rarefaction_plots.html, picked observed OTUs by Treatment, and copied the table at the bottom of the page to txt file and saved as alpha_rarefaction_table.txt
 
-Plot this result in R:
+Also, want to plot the raw data for each sample at an even depth for both observed OTUs and Chao1 index:
+
+	multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -d 2164 -o mult_even
+	alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
+	collate_alpha.py -i alpha_even -o alpha_even_collate
+	exit
+
+Plot results as 4 diagrams in R:
 
 	R
 	library(ggplot2)
+	library(matrixStats)
 	alpha_rare <- read.table("alpha_rarefaction_table.txt", header=TRUE, sep="\t")
 	alpha_rare <- na.omit(alpha_rare)
 	control_rare <- subset(alpha_rare, Treatment %in% c("C1","C2","C3","C4","CF"))
@@ -211,50 +219,89 @@ Plot this result in R:
 	ramp_rare$Diet <- "RAMP"
 	alpha_rare <- rbind(control_rare,ramp_rare)
 	pd <- position_dodge(width = 275)
-	rare_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
+	
+	rare_otu_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
 	geom_line(position = pd) +
 	geom_pointrange(position=pd) +
 	scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
 	labs(x = "Sequences per Sample", y="Mean Observed OTUs") +
 	theme(legend.title=element_blank()) +
 	facet_grid(~Diet)
-	ggsave(rare_plot, file="alpha_rarefaction.pdf", w=6, h=6)
-	quit()
+	
+	rare_chao1_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=chao1.Ave., colour=Treatment, group=Treatment, ymin=chao1.Ave.-chao1.Err., ymax=chao1.Ave.+chao1.Err.)) +
+	geom_line(position = pd) +
+	geom_pointrange(position=pd) +
+	scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
+	labs(x = "Sequences per Sample", y="Mean Chao1 Index") +
+	theme(legend.title=element_blank()) +
+	facet_grid(~Diet)
+	
+	
+	alpha_chao1 <- read.table("alpha_even_collate/chao1.txt", header=TRUE, sep="\t")
+	alpha_otu <- read.table("alpha_even_collate/observed_otus.txt", header=TRUE, sep="\t")
+	
+	alpha_chao1 <- alpha_chao1[-c(1:3)]
+	colnames(alpha_chao1) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+	alpha_chao1_matrix <- as.matrix(alpha_chao1)
+	alpha_chao1_means <- data.frame(Means=colMeans(alpha_chao1_matrix), SD=colSds(alpha_chao1_matrix))
+	
+	alpha_otu <- alpha_otu[-c(1:3)]
+	colnames(alpha_otu) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+	alpha_otu_matrix <- as.matrix(alpha_otu)
+	alpha_otu_means <- data.frame(Means=colMeans(alpha_otu_matrix), SD=colSds(alpha_otu_matrix))
 
-##Alpha Diversity
-Want to compare alpha diversity, but with all samples at the sample depth.	
-
-	macqiime
-	multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -d 2164 -o mult_rare
-	alpha_diversity.py -i mult_rare/ -o mult_rare_chao1 -m chao1 
-	collate_alpha.py -i mult_rare_chao1/ -o mult_rare_chao1_collate
-	exit
-
-Now, going to use R to plot the results:
-
-	R
-	library(ggplot2)
-	library(matrixStats)
-	alpha <- read.table("mult_rare_chao1_collate/chao1.txt", header=TRUE, sep="\t")
-	alpha <- alpha[-c(1:3)]
-	colnames(alpha) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
-	alpha_means <- data.frame(ID=colnames(alpha), Means=colMeans(alpha_matrix), SD=colSds(alpha_matrix))
 	 steps <- data.frame(step=c("Finisher","Step3","Step2","Step4","Step4","Step3","Step4","Step1","Finisher","Finisher","Finisher","Step3","Step2","Step1","Step3","Step1","Step2","Step2","Step3","Step1","Step2","Step4","Finisher","Step1","Step4"))
 	 diets <- data.frame(diet=c("CON","RAMP","RAMP","RAMP","RAMP","CON","CON","RAMP","CON","RAMP","RAMP","CON","RAMP","RAMP","RAMP","CON","CON","RAMP","RAMP","CON","CON","RAMP","RAMP","RAMP","CON"))
-	 alpha_means <- cbind(alpha_means,steps,diets)
-	alpha_means$step <- factor(alpha_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
-	chao_plot <- ggplot(alpha_means, aes(x=step, y=Means)) +
-	#geom_point(size=5) +
-	geom_jitter(size=5) +
+	 
+	alpha_chao1_means <- cbind(alpha_chao1_means,steps,diets)
+	alpha_chao1_means$step <- factor(alpha_chao1_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
+	alpha_chao1_plot <- ggplot(alpha_chao1_means, aes(x=step, y=Means)) +
+	geom_point(size=4) +
 	labs(x = "", y="Mean Chao1 Index") +
 	facet_wrap(~diet)
-	ggsave(chao_plot, file="chao1.pdf", w=6, h=6)
+	
+	alpha_otu_means <- cbind(alpha_otu_means,steps,diets)
+	alpha_otu_means$step <- factor(alpha_otu_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
+	alpha_otu_plot <- ggplot(alpha_otu_means, aes(x=step, y=Means)) +
+	geom_point(size=4) +
+	labs(x = "", y="Mean Observed OTUs") +
+	facet_wrap(~diet)
+	
+	
+	
+	multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+		library(grid)
+		plots <- c(list(...), plotlist)
+		numPlots = length(plots)
+		if (is.null(layout)) {
+			layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),ncol = cols, nrow = ceiling(numPlots/cols))
+		}
+
+		if (numPlots==1) {
+			print(plots[[1]])
+
+		} else {
+			grid.newpage()
+			pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+			for (i in 1:numPlots) {
+				matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+				print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,layout.pos.col = matchidx$col))
+    		}
+    	}
+	}
+
+
+	pdf("alpha_diversity.pdf", height=12, width=12)
+	multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
+	dev.off()
+	
 	quit()
 
 	
 
 
 ##Taxonomy Plots
+	macqiime
 	summarize_taxa.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o summarize_taxa -L 2,3,4,5,6,7
 	plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
 
