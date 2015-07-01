@@ -18,11 +18,10 @@ cat /proc/version
 Linux version 2.6.32-504.23.4.el6.x86_64 (mockbuild@sl6.fnal.gov) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-11) (GCC) ) #1 SMP Tue Jun 9 11:55:03 CDT 2015
 
 
-##**BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran in linux enviornment (did not have root privileges).  Should work on Mac as well if you install a Mac version of R and USEARCH.
+##**BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran in linux enviornment (did not have root privileges).  Should work on Mac as well if you install a Mac version of R and USEARCH. Only dependency is perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts.
 
-  1. Run a bash script to create a virtual enironment and download/install the following programs:
+  1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** so everything is the same version used in the manuscript:
     + Python
-    + Perl
     + QIIME
     + FASTX
     + Mothur
