@@ -11,7 +11,6 @@ Simply download the shell script from the github repository and run it (**the sc
 
 
 **wget <shell script from github link>**
-
 **shell script**
 
 
