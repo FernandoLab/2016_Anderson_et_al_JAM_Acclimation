@@ -1,8 +1,9 @@
 #!/bin/bash
 
-echo -n "Provided download link (from email) for USEARCH: "
-	read USEARCH_LINK
-	
+if [ "$1" = "" ]; then
+    echo "Provide a link for USEARCH download as argument. Get a license from http://www.drive5.com/usearch/download.html"
+fi
+
 wget http://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
 tar -zxvf Python-2.7.9.tgz
 cd Python-2.7.9
@@ -32,7 +33,7 @@ make
 make install
 cd ..
 
-wget -O bin/usearch $USEARCH_LINK
+wget -O bin/usearch $1
 chmod 775 usearch
 
 mkdir fastx
