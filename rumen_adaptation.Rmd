@@ -12,7 +12,10 @@ Christopher L. Anderson, Samodha C. Fernando
 ##Introduction
 This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). All of the commands below have been ran in a linux environment.
 
-##**BEFORE BEGINNING**: Using the guidelines below, run the shell script (setup.sh) that will setup a virtual environment, download USEARCH, and download R before you render the provided R Markdown file:
+##**BEFORE BEGINNING**: To recreate the anlaysis used in the Anderson et al. manuscript, there are two steps (Follow the guidelines below):
+
+  1. Run a shell script to create a virtual enironment, download USEARCH, and download R.
+  2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
 Due to licensing issues, USEARCH can not be included or downloaded from a provided link. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for linux. **A link (expires after 30 days) will be sent to the provided email. The setup.sh script downloaded below will prompt you for the download link to make USEARCH available when rendering the R Markdown file**. 
 
