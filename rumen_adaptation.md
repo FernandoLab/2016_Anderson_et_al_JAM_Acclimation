@@ -290,15 +290,10 @@ Plot results as 4 diagrams in R:
     	}
 	}
 
-
 	pdf("alpha_diversity.pdf", height=12, width=12)
 	multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 	dev.off()
-	
 	quit()
-
-	
-
 
 ##Taxonomy Plots
 	macqiime

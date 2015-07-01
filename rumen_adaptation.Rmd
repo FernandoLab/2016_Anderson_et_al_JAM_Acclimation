@@ -1,0 +1,83 @@
+---
+title: "Adaptation of the rumen microbiota during a finishing study"
+author: "Christopher L. Anderson"
+date: ""
+output: html_document
+    keep_md: yes
+---
+
+#Adaptation of the rumen microbiota during a finishing study
+Christopher L. Anderson, Samodha C. Fernando
+
+##Introduction
+This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). All of the commands below have been ran in a linux environment.
+
+##**BEFORE BEGINNING**: Using the guidelines below, run the shell script (setup.sh) that will setup a virtual environment, download USEARCH, and download R before you render the provided R Markdown file:
+
+Due to licensing issues, USEARCH can not be included or downloaded from a provided link. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for linux. **A link (expires after 30 days) will be sent to the provided email. Change <link> in the setup.sh script downloaded below to make USEARCH available when rendering the R Markdown file**. 
+
+Simply download the shell script from the github repository and run the shell script (**need to insesrt usearch download link, see paragraph above**):
+
+
+**wget <shell script from github link>**
+**makefile**
+
+
+To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: knit2html("rumen_adaptation.Rmd")
+
+The following packages and knitR settings were used to compile this document:
+
+```{r, warning=FALSE}
+
+packages = c("knitr", "ggplot2", "vegan", "matrixStats", "grid", "reshape", "biom", "gplots", "Heatplus", "RColorBrewer", "checkpoint");
+
+for (package in packages){
+  if (package %in% installed.packages()[,"Package"] == FALSE){
+    install.packages(as.character(package), quiet=TRUE);
+  }
+  library(package, verbose=FALSE, character.only=TRUE)
+}
+
+sessionInfo()
+
+perm = 1e4
+```
+
+```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
+opts_chunk$set("fig.path"="figures/")
+opts_chunk$set("fig.align"="center")
+opts_chunk$set("dev" = c("png", "pdf"))
+
+opts_chunk$set("tidy" = TRUE)
+
+opts_chunk$set("echo" = TRUE)
+opts_chunk$set("eval" = TRUE)
+opts_chunk$set("warning" = FALSE)
+opts_chunk$set("cache" = TRUE)
+```
+
+##Download and install other bioinformatic tools
+
+```{r, engine='bash', results='hide'}
+wget 
+
+
+
+
+```
+
+## Data curation
+
+Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
+
+```{r, engine='bash', results='hide'}
+
+```
+
+Now  get the SILVA reference alignment and trim it to the V3 region of the 16S rRNA gene.
+```{r, engine='bash', results='hide'}
+wget http://www.mothur.org/w/images/9/98/Silva.bacteria.zip
+unzip *zip
+mv silva.bacteria/silva.bacteria.fasta ./
+rm -rf silva.bacteria __MACOSX Silva.bacteria.zip
+```
