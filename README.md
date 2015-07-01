@@ -1,6 +1,6 @@
 #Adaptation of the rumen microbiota during a finishing study
 
-To recreate the anlaysis used in the Anderson et al. manuscript, there are two steps (Follow the guidelines below):
+To recreate the anlaysis used in the Anderson et al. manuscript, there are two steps (follow the guidelines below):
 
   1. Run a shell script to create a virtual enironment, download USEARCH, and download R.
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
