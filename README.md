@@ -11,3 +11,5 @@ Simply download the shell script from the github repository and run the shell sc
 
 
 To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: knit2html("rumen_adaptation.Rmd")
+
+The html rendered version can be found [here]()
