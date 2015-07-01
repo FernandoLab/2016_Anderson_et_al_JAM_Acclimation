@@ -10,24 +10,27 @@ output: html_document
 Christopher L. Anderson, Samodha C. Fernando
 
 ##Introduction
-This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). All of the commands below have been ran in a linux environment.
+This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). All of the commands below have been ran in Mac OS X (version 10.9.5 but can use ealier). If you install a linux version of USEARCH and R instead, the R Markdown will (or should) render in a linux enviornment as well.
 
-##**BEFORE BEGINNING**: To recreate the anlaysis used in the Anderson et al. manuscript, there are two steps (follow the guidelines below):
+cat /proc/version
+Linux version 2.6.32-504.23.4.el6.x86_64 (mockbuild@sl6.fnal.gov) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-11) (GCC) ) #1 SMP Tue Jun 9 11:55:03 CDT 2015
 
-  1. Run a shell script to create a virtual enironment, download USEARCH, and download R.
+##**BEFORE BEGINNING**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below, other dependendies assumed are python (used version 2.7.5) and perl (used v5.16.3):
+
+ 1. Run a bash script to create a virtual enironment, download USEARCH, download R, download and install QIIME, and download the R Markdown file to render.
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
-Due to licensing issues, USEARCH can not be included or downloaded from a provided link. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for linux. **A link (expires after 30 days) will be sent to the provided email. The setup.sh script downloaded below will prompt you for the download link**.
+Due to licensing issues, USEARCH can not be included or downloaded from a provided link. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for Mac. **A link (expires after 30 days) will be sent to the provided email. The setup.sh script downloaded below will prompt you for the download link**.
 
-Simply download the shell script from the github repository and run it (**the script will prompt you for the link to download USEARCH**):
+Simply download the bash script from the github repository and run it (**the script will prompt you for the link to download USEARCH**):
 
 
 **wget <shell script from github link>**
 
-**shell script**
+**bash script**
 
 
-To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: knit2html("rumen_adaptation.Rmd").
+To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**.
 
 The html rendered version can be found [here]()
 
