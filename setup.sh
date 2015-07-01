@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ "$1" = "" ]; then
-    echo "Provide a link for USEARCH download as argument. Get a license from http://www.drive5.com/usearch/download.html"
+    printf "\nProvide a link for USEARCH download (from email) as argument.\nGet a license from http://www.drive5.com/usearch/download.html\nSee RMarkdown file for details.\n\n"
+    exit 1
 fi
 
 wget http://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz
