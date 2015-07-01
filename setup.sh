@@ -35,5 +35,17 @@ cd ..
 wget -O bin/usearch $USEARCH_LINK
 chmod 775 usearch
 
+mkdir fastx
+cd fastx
+wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+bzip2 -d fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
+tar -xvf fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar
+cd ..
+mv fastx/bin/* bin/
+
+wget https://github.com/mothur/mothur/releases/download/v1.35.1/Mothur.cen_64.zip
+unzip Mothur.cen_64.zip
+mv mothur/mothur bin/
+
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/rumen_adaptation.Rmd
 
