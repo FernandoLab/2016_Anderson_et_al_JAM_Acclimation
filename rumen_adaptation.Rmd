@@ -136,10 +136,14 @@ mv format.fasta rumen.adaptation.format.fasta
 
 Run the seqeunces through the UPARSE pipeline to pick OTUs:
 ```{r, engine='bash', results='hide'}
-https://github.com/chrisLanderson/rumen_adaptation/blob/master/usearch_python_scripts/uc2otutab.py
-https://github.com/chrisLanderson/rumen_adaptation/blob/master/usearch_python_scripts/fasta_number.py
+wget https://github.com/chrisLanderson/rumen_adaptation/blob/master/usearch_python_scripts/uc2otutab.py
+wget https://github.com/chrisLanderson/rumen_adaptation/blob/master/usearch_python_scripts/fasta_number.py
+wget https://github.com/chrisLanderson/rumen_adaptation/blob/master/gold.fasta.gz
 chmod 775 uc2otutab.py
 chmod 775 fasta_number.py
+gzip -d gold.fasta.gz
+chmod 775 gold.fasta
+
 
 mkdir usearch_results
 
@@ -149,7 +153,7 @@ usearch -sortbysize usearch_results/rumen.adaptation.derep.fasta -minsize 2 -out
 
 usearch -cluster_otus usearch_results/rumen.adaptation.derep.sort.fasta -otus usearch_results/rumen.adaptation.otus1.fasta
 
-usearch -uchime_ref usearch_results/rumen.adaptation.otus1.fasta -db intermediate_files/gold.fasta -strand plus -nonchimeras usearch_results/rumen.adaptation.otus1.nonchimera.fasta
+usearch -uchime_ref usearch_results/rumen.adaptation.otus1.fasta -db gold.fasta -strand plus -nonchimeras usearch_results/rumen.adaptation.otus1.nonchimera.fasta
 
 fasta_number.py usearch_results/rumen.adaptation.otus1.nonchimera.fasta > usearch_results/rumen.adaptation.otus2.fasta
 
