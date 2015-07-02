@@ -1,5 +1,5 @@
 To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
- there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran in linux enviornment (did not have root privileges).  Should work on Mac as well if you install a Mac version of R and USEARCH. Only dependency is perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts.
+ there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran on Mac OS X (10.9 but others will work I believe). You do not root to install a local version of R if you don't have gfortran. This all works in a linux enviornmnet as well but you should comment out lines 28-30 in the bash setup.sh script. Two dependencies are X11 (remember if logging onto server) and perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts here.
 
   1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** so everything is the same version used in the manuscript:
     + Python
@@ -7,6 +7,7 @@ To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of 
     + FASTX
     + Mothur
     + USEARCH
+    + R
     + R Markdown file to render
     
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
@@ -26,7 +27,7 @@ Simply download the bash script from the github repository and run it (**provide
 To start a R session, run these two commands from within the rumenEnv/ direcotry:
 
   1. source bin/activate
-  2. R
+  2. R-3.2.0/bin/R
 
 To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**.
 

@@ -23,6 +23,12 @@ wget https://pypi.python.org/packages/source/q/qiime/qiime-1.9.1.tar.gz
 pip install numpy-1.9.2.tar.gz
 pip install qiime-1.9.1.tar.gz
 
+#For Mac, take out following three lines 
+#if want to install linux that has gfortran already
+wget http://coudert.name/software/gfortran-4.8.2-Mavericks.dmg
+hdiutil attach gfortran-4.8.2-Mavericks.dmg
+sudo installer -pkg /Volumes/gfortran-4.8.2-Mavericks/gfortran-4.8.2-Mavericks/gfortran.pkg -target /
+
 cd rumenEnv/bin
 cur="$PWD"
 cd ..
@@ -31,29 +37,24 @@ tar -zxvf R-3.2.0.tar.gz
 cd R-3.2.0
 ./configure --prefix=$cur
 make
-make install
-cd ..
-mv bin/bin/R bin/
-mv bin/bin/Rscript bin/
-rm -rf bin/bin
 
 wget -O bin/usearch $1
 chmod 775 bin/usearch
 
 mkdir fastx
 cd fastx
-wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
-bzip2 -d fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2
-tar -xvf fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar
+wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_MacOSX.10.5.8_i386.tar.bz2
+bzip2 -d fastx_toolkit_0.0.13_binaries_MacOSX.10.5.8_i386.tar.bz2
+tar -xvf fastx_toolkit_0.0.13_binaries_MacOSX.10.5.8_i386.tar
 cd ..
 mv fastx/bin/* bin/
 
-wget https://github.com/mothur/mothur/releases/download/v1.35.1/Mothur.cen_64.zip
-unzip Mothur.cen_64.zip
+wget https://github.com/mothur/mothur/releases/download/v1.35.1/Mothur.mac_64.OSX-10.9.zip
+unzip Mothur.mac_64.OSX-10.9.zip
 mv mothur/mothur bin/
 
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/rumen_adaptation.Rmd
 
 rm R-3.2.0.tar.gz
-rm Mothur.cen_64.zip
+rm Mothur.mac_64.OSX-10.9.zip
 rm -rf fastx
