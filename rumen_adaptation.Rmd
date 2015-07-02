@@ -46,16 +46,16 @@ To convert the R markdown to html (or any other format) use the [knitr package](
 
 The following packages and knitR settings were used to compile this document:
 
-```{r, warning=FALSE}
+```{r}
 
 deps = c("knitr", "ggplot2", "vegan", "matrixStats", "grid", "reshape", "gplots", "biom", "RColorBrewer");
  
  for (dep in deps){
    if (dep %in% installed.packages()[,"Package"] == FALSE){
-     install.packages(as.character(dep), quiet=TRUE,
+     install.packages(as.character(dep),
                       repos='http://cran.us.r-project.org');
    }
-   library(dep, verbose=FALSE, character.only=TRUE)
+   library(dep, verbose=TRUE, character.only=TRUE)
  }
 
 source("http://bioconductor.org/biocLite.R")
@@ -63,7 +63,6 @@ biocLite("Heatplus")
 
 sessionInfo()
 
-perm = 1e4
 ```
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
