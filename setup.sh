@@ -54,3 +54,6 @@ mv mothur/mothur bin/
 
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/rumen_adaptation.Rmd
 
+rm R-3.2.0.tar.gz
+rm Mothur.cen_64.zip
+rm -rf fastx
