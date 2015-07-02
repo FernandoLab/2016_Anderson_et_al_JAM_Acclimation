@@ -138,7 +138,7 @@ Run the seqeunces through the UPARSE pipeline to pick OTUs:
 ```{r, engine='bash', results='hide'}
 wget https://github.com/chrisLanderson/rumen_adaptation/blob/master/usearch_python_scripts/uc2otutab.py
 wget https://github.com/chrisLanderson/rumen_adaptation/blob/master/usearch_python_scripts/fasta_number.py
-wget https://github.com/chrisLanderson/rumen_adaptation/blob/master/gold.fasta.gz
+wget https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
 chmod 775 uc2otutab.py
 chmod 775 fasta_number.py
 gzip -d gold.fasta.gz
