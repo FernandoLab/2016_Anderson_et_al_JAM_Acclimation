@@ -35,7 +35,7 @@ make install
 cd ..
 mv bin/bin/R bin/
 mv bin/bin/Rscript bin/
-
+rm -rf bin/bin
 
 wget -O bin/usearch $1
 chmod 775 bin/usearch

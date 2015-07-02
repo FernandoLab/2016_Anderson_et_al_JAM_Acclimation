@@ -23,7 +23,7 @@ Simply download the bash script from the github repository and run it (**provide
 **Note: It will take some time to install everything**
 
 
-If you use just used the above bash script to install R, then the R program can be simply started by typing R into your terminal. If you are starting a R session from a new terminal window, you can start R by running these two commands from within the rumenEnv/ direcotry:
+To start a R session, run these two commands from within the rumenEnv/ direcotry:
 
   1. source bin/activate
   2. R
