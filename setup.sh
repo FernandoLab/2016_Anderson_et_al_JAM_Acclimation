@@ -33,9 +33,12 @@ cd R-3.2.0
 make
 make install
 cd ..
+mv bin/bin/R bin/
+mv bin/bin/Rscript bin/
+
 
 wget -O bin/usearch $1
-chmod 775 usearch
+chmod 775 bin/usearch
 
 mkdir fastx
 cd fastx
