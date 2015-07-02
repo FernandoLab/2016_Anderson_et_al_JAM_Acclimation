@@ -1,15 +1,15 @@
 ---
 title: "Adaptation of the rumen microbiota during a finishing study"
-author: "Christopher L. Anderson"
+author: "Christopher L. Anderson (canderson30@unl.edu)"
 date: ""
 output: html_document
     keep_md: yes
 ---
 
-#Adaptation of the rumen microbiota during a finishing study
+# Adaptation of the rumen microbiota during a finishing study
 Christopher L. Anderson, Samodha C. Fernando
 
-##Introduction
+## Introduction
 This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). All of the commands below have been ran in linux environment (did not have root privileges).  Should work on Mac as well if you install a Mac version of R and USEARCH.
 
 
@@ -18,7 +18,7 @@ cat /proc/version
 Linux version 2.6.32-504.23.4.el6.x86_64 (mockbuild@sl6.fnal.gov) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-11) (GCC) ) #1 SMP Tue Jun 9 11:55:03 CDT 2015
 
 
-##**BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran in linux enviornment (did not have root privileges).  Should work on Mac as well if you install a Mac version of R and USEARCH. Only dependency is perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts.
+## **BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran in linux enviornment (did not have root privileges).  Should work on Mac as well if you install a Mac version of R and USEARCH. Only dependency is perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts.
 
   1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** so everything is the same version used in the manuscript:
     + Python
@@ -52,18 +52,26 @@ To convert the R markdown to html (or any other format) use the [knitr package](
 The following packages and knitR settings were used to compile this document:
 
 ```{r}
-cat("library(knitr)", "library(ggplot2)", "library(vegan)", "library(matrixStats)", "library(grid)", "library(reshape)", "library(biom)", "library(gplots)", "library(Heatplus)", "library(RColorBrewer)",
-    sep="\n", 
-    file="checkpoint_code.R")
+#cat("library(knitr)", "library(ggplot2)", "library(vegan)", #"library(matrixStats)", "library(grid)", "library(reshape)", #"library(biom)", "library(gplots)", "library(Heatplus)", #"library(RColorBrewer)",
+ #   sep="\n", 
+#    file="checkpoint_code.R")
 
-install.packages("checkpoint")
-library(checkpoint)
-checkpoint("2015-06-30",  checkpointLocation = getwd())
+#install.packages("checkpoint")
+#library(checkpoint)
+#checkpoint("2015-06-30",  checkpointLocation = getwd())
+
+deps = c("knitr", "ggplot2", "vegan", "matrixStats", "grid", "reshape", "gplots", "biom", "Heatplus", "RColorBrewer");
+
+for (dep in deps){
+  if (dep %in% installed.packages()[,"Package"] == FALSE){
+    install.packages(as.character(dep), quiet=TRUE);
+  }
+  library(dep, verbose=FALSE, character.only=TRUE)
+}
 
 sessionInfo()
 
 perm = 1e4
-
 ```
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
@@ -82,15 +90,36 @@ opts_chunk$set("cache" = TRUE)
 ## Data curation
 
 Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
-```{r, engine='bash', results='hide'}
+```{r, engine='bash'}
 wget 129.93.221.145:/public/rumen.adaptation.fasta
 ```
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
-```{r, engine='bash', results='hide'}
+```{r, engine='bash'}
 wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
 tar -zxvf Silva.nr_v119.tgz
 rm -rf Silva.nr_v119.tgz __MACOSX silva.silva.nr_v119.tax README.Rmd README.html README.md
+```
+
+## Demulitplex and Quality Control
+
+The code chunk below demulitplexes the seqeuncing library using the provided mapping file from github then trims off the reverse primer.  Subseqeuntly, we use a combination of mothur and FASTX to trim the seqeunces to a fixed length of 400 basepairs to improve OTU picking in UPARSE downstream. Finally, the sequences are reverse complemented in mothur.
+
+```{r, engine='bash'}
+
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
+
+split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
+
+truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
+
+
+mothur "#trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)"
+
+fastx_trimmer -i rumen_adaptation_rev_primer/seqs_rev_primer_truncated.trim.fasta -l 400 -o rumen.adaptation.qc.trim.fasta
+
+reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)
+
 ```
 
 
