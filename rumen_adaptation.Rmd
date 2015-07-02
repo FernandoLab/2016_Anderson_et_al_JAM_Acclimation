@@ -47,15 +47,8 @@ To convert the R markdown to html (or any other format) use the [knitr package](
 The following packages and knitR settings were used to compile this document:
 
 ```{r, warning=FALSE}
-#cat("library(knitr)", "library(ggplot2)", "library(vegan)", #"library(matrixStats)", "library(grid)", "library(reshape)", #"library(biom)", "library(gplots)", #"library(RColorBrewer)",
- #   sep="\n", 
-#    file="checkpoint_code.R")
 
-#install.packages("checkpoint")
-#library(checkpoint)
-#checkpoint("2015-06-30",  checkpointLocation = getwd())
-
- deps = c("knitr", "ggplot2", "vegan", "matrixStats", "grid", "reshape", "gplots", "biom", "RColorBrewer");
+deps = c("knitr", "ggplot2", "vegan", "matrixStats", "grid", "reshape", "gplots", "biom", "RColorBrewer");
  
  for (dep in deps){
    if (dep %in% installed.packages()[,"Package"] == FALSE){
@@ -65,7 +58,8 @@ The following packages and knitR settings were used to compile this document:
    library(dep, verbose=FALSE, character.only=TRUE)
  }
 
-install Heatplus from bioconductor
+source("http://bioconductor.org/biocLite.R")
+biocLite("Heatplus")
 
 sessionInfo()
 
