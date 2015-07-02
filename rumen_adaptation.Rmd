@@ -109,6 +109,8 @@ The code chunk below demulitplexes the seqeuncing library using the provided map
 
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
 
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
+
 split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
 
 truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
@@ -122,4 +124,21 @@ reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)
 
 ```
 
+Use a custom perl script from our lab to convert the fasta file from QIIME format to a format that works with UPARSE to generate the OTU table:
 
+```{r, engine='bash'}
+
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_to_usearch.pl
+
+chmod 775 qiime_to_usearch.pl
+
+./qiime_to_usearch.pl -fasta=rumen.adaptation.qc.trim.rc.fasta -prefix=rumen
+mv format.fasta rumen.adaptation.format.fasta
+```
+
+Run the seqeunces through the UPARSE pipeline to pick OTUs:
+```{r, engine='bash'}
+
+
+
+```
