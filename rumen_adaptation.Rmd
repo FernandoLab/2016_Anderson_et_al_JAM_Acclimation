@@ -12,9 +12,9 @@ Christopher L. Anderson, Samodha C. Fernando
 ## Introduction
 This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). 
 
-## **BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outpurs have been ran on Mac OS X (10.9 but others will work I believe). You do not root to install a local version of R if you don't have gfortran. This all works in a linux enviornmnet as well but you should comment out lines 28-30 in the bash setup.sh script. Two dependencies are X11 (remember if logging onto server) and perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts here.
+## **BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X (10.9 but others systems will work I believe). No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH. The only two dependencies I believe are X11 (remember if logging onto a server) and perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts here.
 
-  1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** so everything is the same version used in the manuscript:
+  1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** with the conda package manager. This helps to recreate the same enivronment I used.
     + Python
     + QIIME
     + FASTX
@@ -22,25 +22,33 @@ This is a R Markdown file to accompany the mansucript titled, "Adaptation of the
     + USEARCH
     + R
     + R Markdown file to render
-
+    
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
-Due to licensing issues, USEARCH can not be included in the setup. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for Mac OSX **A link (expires after 30 days) will be sent to the provided email. Use the link as an argument for shell script below**.
+Due to licensing issues, USEARCH can not be included in the setup. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for linux. **A link (expires after 30 days) will be sent to the provided email. Use the link as an argument for shell script below**.
 
-Simply download the bash script from the github repository and run it (**provide the link to download your licensed USEARCH version as an argument for setup.sh**):
+Simply download the bash script from the github repository and run it (provide the link to download your licensed USEARCH version as an argument for setup.sh):
 
   1. wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/setup.sh
   2. chmod 775 setup.sh 
   3. ./setup.sh usearch_link
 
+**Miniconda is downloaded and prompts you during installataion of the packages above. The prompts are as follows:**
 
-**Note: It will take some time to install everything**
-
+  1. Press enter to view the license agreement
+  2. Press enter to read the license and q to exit
+  3. Accept the terms
+  4. Prompts you where to install miniconda.  Simply type miniconda to create a directory within the current directory. Should be:
+  [/Users/user/miniconda] >>> miniconda
+  5. No to prepend miniconda to you path.  Choosing yes should not impact the installation I believe.
+  6. Will be asked a few times if you wish to proceed with installing the packages...agree to it.
+  7. After installation, enter source miniconda/bin/activate rumenEnv to activate the virtual enviornment with all dependencies.
+  
 
 To start a R session, run these two commands from within the rumenEnv/ direcotry:
 
-  1. source bin/activate
-  2. R-3.2.0/bin/R
+  1. source miniconda/bin/activate rumenEnv
+  2. R
 
 To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**.
 
@@ -70,7 +78,8 @@ opts_chunk$set("cache" = TRUE)
 
 Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
 ```{r, engine='bash', results='hide'}
-#wget 129.93.221.145:/public/rumen.adaptation.fasta
+source miniconda/bin/activate rumenEnv
+wget 129.93.221.145:/public/rumen.adaptation.fasta
 ```
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
@@ -85,20 +94,18 @@ Now  get the SILVA reference alignment and trim it to the V1-V3 region (region w
 The code chunk below demulitplexes the seqeuncing library using the provided mapping file from github then trims off the reverse primer.  Subseqeuntly, we use a combination of mothur and FASTX to trim the seqeunces to a fixed length of 400 basepairs to improve OTU picking in UPARSE downstream. Finally, the sequences are reverse complemented in mothur.
 
 ```{r, engine='bash'}
-  source bin/activate  
 
-  wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
   
-  wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
   
-  split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
+split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
   
-  truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
+truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
   
+mothur "#trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)"
   
-  mothur "#trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)"
-  
-  fastx_trimmer -i rumen_adaptation_rev_primer/seqs_rev_primer_truncated.trim.fasta -l 400 -o rumen.adaptation.qc.trim.fasta
+fastx_trimmer -i rumen_adaptation_rev_primer/seqs_rev_primer_truncated.trim.fasta -l 400 -o rumen.adaptation.qc.trim.fasta
  
 mothur "#reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)"
 ```
@@ -107,24 +114,29 @@ Use a custom perl script from our lab to convert the fasta file from QIIME forma
 
 ```{r, engine='bash', results='hide'}
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_to_usearch.pl
+
 chmod 775 qiime_to_usearch.pl
+
 ./qiime_to_usearch.pl -fasta=rumen.adaptation.qc.trim.rc.fasta -prefix=rumen
+
 mv format.fasta rumen.adaptation.format.fasta
 ```
 
 Run the seqeunces through the UPARSE pipeline to pick OTUs:
 ```{r, engine='bash'}
-
 svn export https://github.com/chrisLanderson/rumen_adaptation/trunk/usearch_python_scripts
 
 chmod -R 775 usearch_python_scripts
 
 wget https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
-chmod 775 uc2otutab.py
-chmod 775 fasta_number.py
-gzip -d gold.fasta.gz
-chmod 775 gold.fasta
 
+chmod 775 uc2otutab.py
+
+chmod 775 fasta_number.py
+
+gzip -d gold.fasta.gz
+
+chmod 775 gold.fasta
 
 mkdir usearch_results
 
@@ -143,11 +155,9 @@ usearch -usearch_global rumen.adaptation.format.fasta -db usearch_results/rumen.
 usearch_python_scripts/uc2otutab.py usearch_results/rumen.adaptation.otu_map.uc > usearch_results/rumen.adaptation.otu_table.txt
 
 cp usearch_results/rumen.adaptation.otu_table.txt ./
-
 ```
 
 Assign taxonomy to the OTU representative sequences.  Can't find the RDP jar file in the QIIME installation, if it was even there...so download it remotely:
 ```{r, engine='bash'}
 assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa -m mothur
-
 ```
