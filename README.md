@@ -1,14 +1,7 @@
 To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
- there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X (10.9 but others systems will work I believe). No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH. The only two dependencies I believe are X11 (remember if logging onto a server) and perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts here.
+ there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the miniconda package manager [download page](http://conda.pydata.org/miniconda.html). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
 
-  1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** with the conda package manager. This helps to recreate the same enivronment I used.
-    + Python
-    + QIIME
-    + FASTX
-    + Mothur
-    + USEARCH
-    + R
-    + R Markdown file to render
+  1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the conda package manager. This will recreate the same enivronment I used.
     
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
@@ -29,7 +22,7 @@ Simply download the bash script from the github repository and run it (provide t
   [/Users/user/miniconda] >>> miniconda
   5. No to prepend miniconda to your path.  Choosing yes should not impact the installation though.
   6. Will be asked a few times if you wish to proceed with installing the packages...agree to it.
-  7. After installation, enter source miniconda/bin/activate rumenEnv to activate the virtual enviornment with all dependencies.
+  7. After installation, enter 'source miniconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
   
 
 To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:

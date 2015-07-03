@@ -12,16 +12,11 @@ Christopher L. Anderson, Samodha C. Fernando
 ## Introduction
 This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). 
 
-## **BEFORE YOU RENDER WITH KNITR**: To recreate the anlaysis used in the Anderson et al. manuscript,  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X (10.9 but others systems will work I believe). No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH. The only two dependencies I believe are X11 (remember if logging onto a server) and perl, which comes on all Mac and linux systems and to my knowledge, the version shouldn't matter for running the few custom scripts here.
+## **BEFORE YOU RENDER WITH KNITR**: 
+To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
+ there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the miniconda package manager [download page](http://conda.pydata.org/miniconda.html). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
 
-  1. Run the bash script to create a virtual enironment and download/install the following programs **LOCALLY** with the conda package manager. This helps to recreate the same enivronment I used.
-    + Python
-    + QIIME
-    + FASTX
-    + Mothur
-    + USEARCH
-    + R
-    + R Markdown file to render
+  1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the conda package manager. This will recreate the same enivronment I used.
     
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
@@ -42,7 +37,8 @@ Simply download the bash script from the github repository and run it (provide t
   [/Users/user/miniconda] >>> miniconda
   5. No to prepend miniconda to your path.  Choosing yes should not impact the installation though.
   6. Will be asked a few times if you wish to proceed with installing the packages...agree to it.
-  7. After installation, enter source miniconda/bin/activate rumenEnv to activate the virtual enviornment with all dependencies.
+  7. After installation, enter 'source miniconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
+  
   
 
 To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
@@ -84,9 +80,9 @@ source miniconda/bin/activate rumenEnv
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
 ```{r, engine='bash', results='hide'}
-#wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
-#tar -zxvf Silva.nr_v119.tgz
-#rm -rf Silva.nr_v119.tgz __MACOSX silva.silva.nr_v119.tax README.Rmd README.html README.md
+wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
+tar -zxvf Silva.nr_v119.tgz
+rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
 ```
 
 ## Demulitplex and Quality Control
@@ -184,3 +180,41 @@ filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen
 
 biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
 ```
+
+Align the sequences using the SILVA reference within mothur and view the alignment summary. Note that this step will take quite a bit of RAM and hard drive space (I ran it on a machine 8GB RAM fine):
+```{r, engine='bash'}
+mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
+
+mv usearch_results/rumen.adaptation.otus2.align ./
+
+mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
+```
+
+I find it easiest to use R to collect the names of OTUs that are not aligning well. We can use the summary file to find this information. I decided to remove any OTU that did not end exactly at position 13125 (remember this is the end we sequenced off of) and started before position 1726:
+```{r}
+summary <- read.table("rumen.adaptation.otus2.summary", sep="\t", header=TRUE)
+
+summary_sub <- subset(summary, end==13125 & start>1726)
+
+write.table(summary_sub$seqname, file="remove_otus.txt", col.names = F, row.names = F)
+```
+
+Remove those seqeunces that did not align well from the OTU table and then remove OTUs with a Cyanobacteria classification. UPARSE should have removed sinlgeton OTUs, but while we are removing OTUs we want to double check this is the case (-n 2 parameter):
+```{r, engine='bash'}
+filter_otus_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.biom -e remove_otus.txt -n 2 --negate_ids_to_exclude
+
+filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.final.biom -n p__Cyanobacteria
+```
+
+Leaving the OTUs that we removed from the OTU table within the aligned file is fine for donwnstream. Now use that aligned file to generate a phylogenetic tree using clearcut in mothur. For this to work, clearcut requires ID lengths greater than ~10 characters. To account for this we simply add 10 'A's to the front of all sequence names. We then remove the 'A's after the tree is formed.
+
+```{r, engine='bash'}
+sed -i -e 's/>/>AAAAAAAAAA/g' rumen.adaptation.otus2.align
+
+mothur "#dist.seqs(fasta=rumen.adaptation.otus2.align, output=lt)"
+
+mothur "#clearcut(phylip=rumen.adaptation.otus2.phylip.dist)"
+
+sed -i -e 's/>AAAAAAAAAA/>/g' rumen.adaptation.otus2.align
+```
+
