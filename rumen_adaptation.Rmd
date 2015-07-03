@@ -84,7 +84,9 @@ Now  get the SILVA reference alignment and trim it to the V1-V3 region (region w
 
 The code chunk below demulitplexes the seqeuncing library using the provided mapping file from github then trims off the reverse primer.  Subseqeuntly, we use a combination of mothur and FASTX to trim the seqeunces to a fixed length of 400 basepairs to improve OTU picking in UPARSE downstream. Finally, the sequences are reverse complemented in mothur.
 
-```{r, engine='bash', results='hide'}
+```{r, engine='bash'}
+  source bin/activate  
+
   wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
   
   wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
