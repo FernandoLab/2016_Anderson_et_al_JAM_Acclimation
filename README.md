@@ -25,19 +25,19 @@ Simply download the bash script from the github repository and run it (provide t
   1. Press enter to view the license agreement
   2. Press enter to read the license and q to exit
   3. Accept the terms
-  **4. Prompts you where to install miniconda.  Simply type miniconda to create a directory within the current directory. Should be:
-  [/Users/user/miniconda] >>> miniconda**
-  5. No to prepend miniconda to you path.  Choosing yes should not impact the installation I believe.
+  4. Prompts you where to install miniconda.  Simply type miniconda to create a directory within the current directory. Should be:
+  [/Users/user/miniconda] >>> miniconda
+  5. No to prepend miniconda to your path.  Choosing yes should not impact the installation though.
   6. Will be asked a few times if you wish to proceed with installing the packages...agree to it.
   7. After installation, enter source miniconda/bin/activate rumenEnv to activate the virtual enviornment with all dependencies.
   
 
-To start a R session, run these two commands from within the rumenEnv/ direcotry:
+To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
 
   1. source miniconda/bin/activate rumenEnv
   2. R
-
-To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**.
+  3. install.packages("knitr")
+  4. knit2html("rumen_adaptation.Rmd")
 
 
 The html rendered version can be found [here]()
