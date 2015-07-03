@@ -159,20 +159,28 @@ Run the sequences through the UPARSE pipeline to pick OTUs:
 
 Assign taxonomy to the OTU representative sequences:
 ```{r, engine='bash'}
-assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t miniconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r miniconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa -m mothur
+#assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t miniconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r miniconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa -m mothur
 ```
 
 Add the taxa outputted to the OTU table with the column header "taxonomy" and output the resulting file to biom format:
 ```{r, engine='bash'}
-awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
-sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
-{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
+#awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
+#sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
+#{ printf '\ttaxonomy\t\t\n'; cat 
+#assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
 
-paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
-rm rumen.adaptation.otu_table.sort.txt
+#paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
 
-biom convert --table-type "otu table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy
+#rm rumen.adaptation.otu_table.sort.txt
+
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy --to-json
 ```
 
+Two of the samples were collected twice and seqeunced at a time point...not quite sure why...but lets remove the duplicate with the lower depth - samples R6 and R19.
+```{r, engine='bash'}
+printf "R6\nR19" > remove_samples.txt
 
+filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
 
+biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
+```
