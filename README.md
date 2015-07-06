@@ -29,8 +29,9 @@ To convert the R markdown to html (or any other format) use the [knitr package](
 
   1. source anaconda/bin/activate rumenEnv
   2. R
-  3. library("knitr")
-  4. knit2html("rumen_adaptation.Rmd")
+  3. install.packages("knitr")
+  4. library(knitr)
+  5. knit2html("rumen_adaptation.Rmd")
 
 
 The html rendered version can be found [here]()
