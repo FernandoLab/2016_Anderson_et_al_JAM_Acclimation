@@ -1,7 +1,7 @@
 To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
- there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the miniconda package manager [download page](http://conda.pydata.org/miniconda.html). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
+ there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
 
-  1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the conda package manager. This will recreate the same enivronment I used.
+  1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the anaconda package manager. This will recreate the same enivronment I used.
     
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
@@ -18,18 +18,18 @@ Simply download the bash script from the github repository and run it (provide t
   1. Press enter to view the license agreement
   2. Press enter to read the license and q to exit
   3. Accept the terms
-  4. Prompts you where to install miniconda.  Simply type miniconda to create a directory within the current directory. Should be:
-  [/Users/user/miniconda] >>> miniconda
-  5. No to prepend miniconda to your path.  Choosing yes should not impact the installation though.
+  4. Prompts you where to install anaconda.  Simply type anaconda to create a directory within the current directory. Should be:
+  [/Users/user/anaconda] >>> anaconda
+  5. No to prepend anaconda to your path. Choosing yes should not impact the installation though.
   6. Will be asked a few times if you wish to proceed with installing the packages...agree to it.
-  7. After installation, enter 'source miniconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
+  7. After installation, enter 'source anaconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
   
 
 To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
 
-  1. source miniconda/bin/activate rumenEnv
+  1. source anaconda/bin/activate rumenEnv
   2. R
-  3. install.packages("knitr")
+  3. library("knitr")
   4. knit2html("rumen_adaptation.Rmd")
 
 

@@ -10,7 +10,7 @@ bash Anaconda-2.3.0-MacOSX-x86_64.sh
 anaconda/bin/conda create -n rumenEnv python pip numpy matplotlib scipy pandas
 source anaconda/bin/activate rumenEnv
 pip install https://github.com/biocore/qiime/archive/1.9.0.tar.gz
-anaconda/bin/conda install -c r r r-xml r-ggplot2 r-matrix r-knitr r-reshape
+anaconda/bin/conda install -c r r r-xml
 
 
 wget -O anaconda/envs/rumenEnv/bin/usearch $1
