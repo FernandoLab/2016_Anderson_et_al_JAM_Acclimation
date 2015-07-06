@@ -163,33 +163,33 @@ Assign taxonomy to the OTU representative sequences:
 
 Add the taxa outputted to the OTU table with the column header "taxonomy" and output the resulting file to biom format:
 ```{r, engine='bash'}
-#awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
-#sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
-#{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
+awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
+sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
+{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
 
-#paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
+paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
 
-#rm rumen.adaptation.otu_table.sort.txt
+rm rumen.adaptation.otu_table.sort.txt
 
-#biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy --to-json
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy --to-json
 ```
 
 Two of the samples were collected twice and seqeunced at a time point...not quite sure why...but lets remove the duplicate with the lower depth - samples R6 and R19.
 ```{r, engine='bash'}
-#printf "R6\nR19" > remove_samples.txt
+printf "R6\nR19" > remove_samples.txt
 
-#filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
+filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
 
-#biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
+biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
 ```
 
 Align the sequences using the SILVA reference within mothur and view the alignment summary:
 ```{r, engine='bash'}
-#mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
+mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
 
-#mv usearch_results/rumen.adaptation.otus2.align ./
+mv usearch_results/rumen.adaptation.otus2.align ./
 
-#mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
+mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
 ```
 
 I find it easiest to use R to collect the names of OTUs that are not aligning well. We can use the summary file to find this information. I decided to remove any OTU that did not end exactly at position 13125 (remember this is the end we sequenced off of) and started before position 1726:
