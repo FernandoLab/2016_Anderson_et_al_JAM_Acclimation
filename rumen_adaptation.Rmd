@@ -5,7 +5,8 @@ date: "July 7, 2015"
 output: 
   html_document:
     keep_md: yes
-  pdf_document
+  pdf_document:
+    keep_tex: true
 ---
 
 
