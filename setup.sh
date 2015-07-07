@@ -11,6 +11,7 @@ anaconda/bin/conda create -n rumenEnv python pip numpy matplotlib scipy pandas
 source anaconda/bin/activate rumenEnv
 pip install https://github.com/biocore/qiime/archive/1.9.0.tar.gz
 anaconda/bin/conda install -c r r r-xml
+anaconda/bin/conda install -c https://conda.binstar.org/asmeurer pandoc
 
 
 wget -O anaconda/envs/rumenEnv/bin/usearch $1

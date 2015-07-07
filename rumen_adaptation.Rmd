@@ -658,11 +658,11 @@ guides(size=FALSE) +
 scale_shape_manual(name = "", values = shape_ramp) +
 labs(fill="")
 
-pdf("unweighted_pc_distance.pdf", height=12, width=12)
+pdf("unweighted_pc_distance.pdf", height=4, width=4)
 multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols=2)
 dev.off()
 
-png("unweighted_pc_distance.png", height=12, width=12, units='in', res=300)
+png("unweighted_pc_distance.png", height=4, width=4, units='in', res=300)
 multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols=2)
 dev.off()
 ```
