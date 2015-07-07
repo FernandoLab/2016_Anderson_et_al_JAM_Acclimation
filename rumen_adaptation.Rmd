@@ -253,7 +253,7 @@ collate_alpha.py -i alpha_even -o alpha_even_collate
 mkdir figures
 ```
 
-```{r figure1, height=12, width=12)}
+```{r figure1, height=12, width=12}
 library(XML)
 library(ggplot2)
 library(matrixStats)
@@ -494,7 +494,7 @@ biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_C
 biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json --table-type="OTU table"
 ```
 
-```{r figure2, height=12, width=12)}
+```{r figure2, height=12, width=12}
 library(biom)
 library(gplots)
 
@@ -511,7 +511,7 @@ corn_venn <- venn(corn_boolean_df)
 dev.off()
 ```
 
-```{r figure3, height=12, width=12)}
+```{r figure3, height=12, width=12}
 
 ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
 
