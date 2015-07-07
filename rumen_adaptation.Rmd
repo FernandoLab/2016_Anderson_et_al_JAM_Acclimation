@@ -56,6 +56,8 @@ install.packages("ggplot2")
 install.packages("matrixStats")
 install.packages("vegan")
 install.packages("reshape")
+install.packages("biom")
+install.packages("gplots")
 
 sessionInfo()
 
@@ -63,7 +65,7 @@ perm = 1e4
 ```
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
-opts_chunk$set("fig.path"="figure/")
+opts_chunk$set("fig.path"="figures/")
 opts_chunk$set("fig.align"="center")
 opts_chunk$set("dev" = c("png", "pdf"))
 
@@ -248,7 +250,7 @@ alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1
 
 collate_alpha.py -i alpha_even -o alpha_even_collate
 
-mkdir figure
+mkdir figures
 ```
 
 ```{r}
@@ -347,7 +349,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-pdf("figure/alpha_diversity.pdf", height=12, width=12)
+pdf("figures/alpha_diversity.pdf", height=12, width=12)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 dev.off()
 
@@ -404,4 +406,122 @@ adonis(corn_unweighted ~ Treatment + Individual, permutations=999, data=corn_map
 
 adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map)
 
+#Check for assumptions (DO!!):
+
 ```
+
+We used paired t-tests as a post-hoc method to compare stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
+```{r}
+corn_unweighted_matrix <- as.matrix(corn_unweighted)
+m <- as.matrix(corn_unweighted)
+m2 <- melt(m)[melt(upper.tri(m))$value,]
+names(m2) <- c("Sample1", "Sample2", "distance")
+write.table(m2, "corn_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
+
+ramp_unweighted_matrix <- as.matrix(ramp_unweighted)
+m <- as.matrix(ramp_unweighted)
+m2 <- melt(m)[melt(upper.tri(m))$value,]
+names(m2) <- c("Sample1", "Sample2", "distance")
+write.table(m2, "ramp_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
+
+```
+
+```{r, engine='bash'}
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
+
+chmod 775 treatment_distances.pl
+
+./treatment_distances.pl -mapping_file=mapping.txt -distance_file=corn_unweighted_pariwise_dist.txt -category=Treatment
+
+mv treatment_distances.txt corn_unweighted_treatment_distances.txt
+
+./treatment_distances.pl -mapping_file=mapping.txt -distance_file=ramp_unweighted_pariwise_dist.txt -category=Treatment
+
+mv treatment_distances.txt ramp_unweighted_treatment_distances.txt
+```
+
+```{r}
+corn_unweighted <- read.table("corn_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+corn_unweighted_pairs <- split(corn_unweighted, corn_unweighted$Sample1Diet_Sample2Diet)
+
+c1c2_c1c3 <- rbind(corn_unweighted_pairs$C1_C2, corn_unweighted_pairs$C1_C3)
+c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
+c1c2_c1c3_test
+lapply(c1c2_c1c3_test, write, "corn_unweighted_c1c2_c1c3_ttest.txt", append=TRUE)
+
+c1c3_c1c4 <- rbind(corn_unweighted_pairs$C1_C3, corn_unweighted_pairs$C1_C4)
+c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
+c1c3_c1c4_test
+lapply(c1c3_c1c4_test, write, "corn_unweighted_c1c3_c1c4_ttest.txt", append=TRUE)
+
+c1c4_c1cf <- rbind(corn_unweighted_pairs$C1_C4, corn_unweighted_pairs$C1_CF)
+c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
+c1c4_c1cf_test
+lapply(c1c4_c1cf_test, write, "corn_unweighted_c1c4_c1cf_ttest.txt", append=TRUE)
+
+ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
+
+r1r1_r1r2 <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2)
+r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
+r1r1_r1r2_test
+lapply(r1r1_r1r2_test, write, "ramp_unweighted_r1r1_r1r2_ttest.txt", append=TRUE)
+
+r1r2_r1r3 <- rbind(ramp_unweighted_pairs$R1_R2, ramp_unweighted_pairs$R1_R3)
+r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
+r1r2_r1r3_test
+lapply(r1r2_r1r3_test, write, "ramp_unweighted_r1r2_r1r3_ttest.txt", append=TRUE)
+
+r1r3_r1r4 <- rbind(ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4)
+r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
+r1r3_r1r4_test
+lapply(r1r3_r1r4_test, write, "ramp_unweighted_r1r3_r1r4_ttest.txt", append=TRUE)
+
+r1r4_r1rf <- rbind(ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
+r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
+r1r4_r1rf_test
+lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append=TRUE)
+
+```
+
+## Venn Diagrams
+```{r, engine='bash'}
+collapse_samples.py -b rumen.adaptation.otu_table.tax.final.biom -m mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp mapping_collapse.txt --collapse_fields Treatment --collapse_mode sum
+
+split_otu_table.py -i rumen.adaptation.collapse_samples.biom -m mapping_collapse.txt -f Diet -o split_collapse_samples
+
+biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.json.biom --to-json --table-type="OTU table"
+
+biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json --table-type="OTU table"
+```
+
+```{r}
+library(biom)
+library(gplots)
+
+corn_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.json.biom")
+
+ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
+
+corn_df <- as.data.frame(as(biom_data(corn_biom), "matrix"))
+ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+
+corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
+ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
+
+corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
+ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
+
+pdf("figures/corn_venn.pdf")
+corn_venn <- venn(corn_boolean_df)
+dev.off()
+
+pdf("figures/ramp_venn.pdf")
+ramp_venn <- venn(ramp_boolean_df)
+dev.off()
+```
+
+```{r, engine='bash'}
+shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
+
+wget 
