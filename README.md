@@ -37,4 +37,4 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
   
 
 
-The html rendered version can be found [here]()
+The html rendered version can be found [here](https://rawgit.com/chrisLanderson/rumen_adaptation/master/rumen_adaptation.html)
