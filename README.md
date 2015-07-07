@@ -25,13 +25,15 @@ Simply download the bash script from the github repository and run it (provide t
   7. After installation, enter 'source anaconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
   
 
-To convert the R markdown to html (or any other format) use the [knitr package](http://yihui.name/knitr/) from within R using the command: **knit2html("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
+To convert the R markdown to html use the command: **render("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
 
   1. source anaconda/bin/activate rumenEnv
   2. R
   3. install.packages("knitr")
-  4. library(knitr)
-  5. knit2html("rumen_adaptation.Rmd")
+  4. install.packages("rmarkdown")
+  5. library(knitr)
+  6. library(rmarkdown)
+  7. render("rumen_adaptation.Rmd")
 
 
 The html rendered version can be found [here]()
