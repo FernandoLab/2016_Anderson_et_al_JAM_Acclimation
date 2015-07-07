@@ -282,7 +282,7 @@ pd <- position_dodge(width = 275)
 rare_otu_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
 geom_line(position = pd) +
 geom_pointrange(position=pd) +
-scale_colour_manual(values = c("C1" = "FF0000", "C2" = "BF003F", "C3" = "7F007F", "C4" = "3F00BF", "CF" = "0000FF", "R1" = "FF0000", "R2" = "BF003F", "R3" = "7F007F", "R4" = "3F00BF", "RF" = "0000FF")) +
+scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
 labs(x = "Sequences per Sample", y="Mean Observed OTUs") +
 theme(legend.title=element_blank()) +
 facet_grid(~Diet)
@@ -290,7 +290,7 @@ facet_grid(~Diet)
 rare_chao1_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=chao1.Ave., colour=Treatment, group=Treatment, ymin=chao1.Ave.-chao1.Err., ymax=chao1.Ave.+chao1.Err.)) +
 geom_line(position = pd) +
 geom_pointrange(position=pd) +
-scale_colour_manual(values = c("C1" = "FF0000", "C2" = "BF003F", "C3" = "7F007F", "C4" = "3F00BF", "CF" = "0000FF", "R1" = "FF0000", "R2" = "BF003F", "R3" = "7F007F", "R4" = "3F00BF", "RF" = "0000FF")) +
+scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
 labs(x = "Sequences per Sample", y="Mean Chao1 Index") +
 theme(legend.title=element_blank()) +
 facet_grid(~Diet)
@@ -349,7 +349,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-#pdf("figures/alpha_diversity.pdf", 
+#pdf("figures/alpha_diversity.pdf", height=12, weight=12)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 #dev.off()
 
