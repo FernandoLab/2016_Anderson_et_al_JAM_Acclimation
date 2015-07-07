@@ -1,9 +1,8 @@
 ---
 title: "Adaptation of the rumen microbiota during a finishing study"
 author: "Christopher L. Anderson (canderson30@unl.edu)"
-date: ""
+date: "July 7, 2015"
 output: html_document
-    keep_md: yes
 ---
 
 # Adaptation of the rumen microbiota during a finishing study
