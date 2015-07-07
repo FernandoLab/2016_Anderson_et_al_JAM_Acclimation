@@ -503,11 +503,12 @@ corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
 
 corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
 
-#pdf("figures/corn_venn.pdf")
+pdf("figures/corn_venn.pdf")
 corn_venn <- venn(corn_boolean_df)
-plot(corn_venn)
-#dev.off()
+dev.off()
 ```
+
+<img src="figures/corn_venn.pdf" height="400px" width="300px" />
 
 ```{r}
 
@@ -521,11 +522,12 @@ ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
 pdf("figures/ramp_venn.pdf")
 ramp_venn <- venn(ramp_boolean_df)
-plot(ramp_venn)
 dev.off()
 ```
+
+<img src="figures/ramp_venn.pdf" height="400px" width="300px" />
 
 ```{r, engine='bash'}
 shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
 
-wget 
+#wget 
