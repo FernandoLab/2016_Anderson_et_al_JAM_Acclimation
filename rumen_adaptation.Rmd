@@ -2,8 +2,10 @@
 title: "Adaptation of the rumen microbiota during a finishing study"
 author: "Christopher L. Anderson (canderson30@unl.edu)"
 date: "July 7, 2015"
-output: html_document
+output: 
+  html_document
     keep_md: yes
+  pdf_document
 ---
 
 # Adaptation of the rumen microbiota during a finishing study
@@ -53,7 +55,7 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
 
 The following packages and knitR settings were used to compile this document:
 
-```{r,tidy=T}
+```{r}
 install.packages("ggplot2", repos='http://cran.us.r-project.org')
 install.packages("matrixStats", repos='http://cran.us.r-project.org')
 install.packages("vegan", repos='http://cran.us.r-project.org')
@@ -74,6 +76,7 @@ perm = 1e4
 ```
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
+opts_chunk$set("fig.path"="figures/")
 opts_chunk$set(dev = 'pdf')
 opts_chunk$set("fig.align"="center")
 opts_chunk$set("tidy" = TRUE)
@@ -355,12 +358,14 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-pdf("figures/alpha_diversity.pdf", height=12, width=12)
+tiff("figures/alpha_diversity.tiff", units='in', height=12, width=12, res=300)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 dev.off()
 ```
 
-![alpha_div](figures/alpha_diversity.pdf)
+<div style="text-align:center" markdown="1">
+![ramp_venn](figures/alpha_diversity.tiff)
+</div>
 
 ## Taxonomy
 
@@ -513,12 +518,16 @@ corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
 
 corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
 
-pdf("figures/corn_venn.pdf")
+tiff("figures/corn_venn.tiff", units='in', height=6, width=6, res=300)
 corn_venn <- venn(corn_boolean_df)
 dev.off()
 ```
 
-![corn_venn](figures/corn_venn.pdf)
+<div style="text-align:center" markdown="1">
+
+![ramp_venn](figures/corn_venn.tiff)
+
+</div>
 
 ```{r}
 
@@ -530,13 +539,14 @@ ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 
 ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
-pdf("figures/ramp_venn.pdf")
+tiff("figures/ramp_venn.tiff", units='in', height=6, width=6, res=300)
 ramp_venn <- venn(ramp_boolean_df)
 dev.off()
 ```
 
-![ramp_venn](figures/ramp_venn.pdf)
-
+<div style="text-align:center" markdown="1">
+![ramp_venn](figures/ramp_venn.tiff)
+</div>
 
 
 ```{r, engine='bash'}
@@ -555,25 +565,25 @@ library(RColorBrewer)
 
 #otu_table <- read.table("rumen.adaptation.otu_table.tax.final.biom", header=TRUE, sep="\t")
 
-otu_table <- read_biom("rumen.adaptation.otu_table.tax.final.biom")
+#otu_table <- read_biom("rumen.adaptation.otu_table.tax.final.biom")
 
-row.names(otu_table) <- otu_table$OTU.ID
-otu_table <- otu_table[,-1]
-colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
-otu_table_trans <- as.data.frame(t(otu_table))
-otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
-scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
-otu_dist <- vegdist(otu_table_rel, method = "bray")
-row.clus <- hclust(otu_dist, "aver")
-maxab <- apply(otu_table_rel, 2, max)
-n1 <- names(which(maxab < 0.01))
-otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
-otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
-col.clus <- hclust(otu_dist_col, "aver")
+#row.names(otu_table) <- otu_table$OTU.ID
+#otu_table <- otu_table[,-1]
+#colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+#otu_table_trans <- as.data.frame(t(otu_table))
+#otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
+#scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+#otu_dist <- vegdist(otu_table_rel, method = "bray")
+#row.clus <- hclust(otu_dist, "aver")
+#maxab <- apply(otu_table_rel, 2, max)
+#n1 <- names(which(maxab < 0.01))
+#otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
+#otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
+#col.clus <- hclust(otu_dist_col, "aver")
 
-pdf("heatmap.pdf")
-heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
-dev.off()
+#pdf("heatmap.pdf")
+#heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+#dev.off()
 ```
 
-![otu_heatmap](figures/otu_heatmap.pdf)
+#![otu_heatmap](figures/otu_heatmap.pdf)
