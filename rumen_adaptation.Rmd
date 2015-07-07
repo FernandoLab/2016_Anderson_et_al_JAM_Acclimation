@@ -5,8 +5,6 @@ date: "July 7, 2015"
 output:
   html_document:
     keep_md: yes
-  pdf_document:
-    keep tex: yes
 ---
 
 
@@ -49,7 +47,7 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
   4. install.packages("knitr")
   5. library(rmarkdown)
   6. library(knitr)
-  7. render("rumen_adaptation.Rmd", "pdf_document") or render("rumen_adaptation.Rmd", "html_document")
+  7. render("rumen_adaptation.Rmd")
   
 
 The following packages and knitR settings were used to compile this document:
@@ -369,9 +367,9 @@ dev.off()
 ## Taxonomy
 
 ```{r, engine='bash'}
-summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
+#summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
 
-plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
+#plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
 ```
 
 ## Beta Diversity
@@ -563,30 +561,112 @@ shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_sampl
 ## OTU Heatmap
 
 ```{r}
-library(gplots)
 library(Heatplus)
-library(vegan)
 library(RColorBrewer)
 
-#otu_table <- read.table("rumen.adaptation.otu_table.tax.final.biom", header=TRUE, sep="\t")
+otu_table_biom <- read_biom("rumen.adaptation.otu_table.tax.final.biom")
+otu_table <- as.data.frame(as(biom_data(otu_table_biom), "matrix"))
+row.names(otu_table) <- otu_table$OTU.ID
+colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+otu_table_trans <- as.data.frame(t(otu_table))
+otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
+scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+otu_dist <- vegdist(otu_table_rel, method = "bray")
+row.clus <- hclust(otu_dist, "aver")
+maxab <- apply(otu_table_rel, 2, max)
+n1 <- names(which(maxab < 0.01))
+otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
+otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
+col.clus <- hclust(otu_dist_col, "aver")
 
-#otu_table <- read_biom("rumen.adaptation.otu_table.tax.final.biom")
+pdf("otu_heatmap.pdf")
+heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+dev.off()
 
-#row.names(otu_table) <- otu_table$OTU.ID
-#otu_table <- otu_table[,-1]
-#colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
-#otu_table_trans <- as.data.frame(t(otu_table))
-#otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
-#scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
-#otu_dist <- vegdist(otu_table_rel, method = "bray")
-#row.clus <- hclust(otu_dist, "aver")
-#maxab <- apply(otu_table_rel, 2, max)
-#n1 <- names(which(maxab < 0.01))
-#otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
-#otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
-#col.clus <- hclust(otu_dist_col, "aver")
-
-#pdf("heatmap.pdf")
-#heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
-#dev.off()
+png("otu_heatmap.png", units='in', height=12, width=12, res=300)
+heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+dev.off()
 ```
+
+<div style="text-align:center" markdown="1">
+![ramp_venn](otu_heatmap.png)
+</div>
+
+## Pairwise Comparisons and Principle Component Analysis
+
+```{r}
+ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+corn_unweighted <- read.table("corn_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
+
+corn_unweighted_pairs <- split(corn_unweighted, corn_unweighted$Sample1Diet_Sample2Diet)
+corn_1_pairs <- rbind(corn_unweighted_pairs$C1_C1, corn_unweighted_pairs$C1_C2,corn_unweighted_pairs$C1_C3,corn_unweighted_pairs$C1_C4,corn_unweighted_pairs$C1_CF)
+
+ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
+ramp_1_pairs <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2,ramp_unweighted_pairs$R1_R3,ramp_unweighted_pairs$R1_R4,ramp_unweighted_pairs$R1_RF)
+
+ramp_1_pairs <- as.data.frame(sapply(ramp_1_pairs, gsub, pattern="_", replacement="-"))
+corn_1_pairs <- as.data.frame(sapply(corn_1_pairs, gsub, pattern="_", replacement="-"))
+
+ramp_1_pairs[,"Distance"] <- lapply("Distance", function(x) as.numeric(as.character(ramp_1_pairs[,x])))
+corn_1_pairs[,"Distance"] <- lapply("Distance", function(x) as.numeric(as.character(corn_1_pairs[,x])))
+
+corn_distance <- ggplot(corn_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
+geom_boxplot() +
+geom_point(position = position_jitter(width = 0.15)) +
+labs(x="", y = "Unweighted UniFrac Distance\n") +
+guides(fill=FALSE) +
+theme(axis.text.x = element_text( colour="black"),  axis.title.y = element_text(size=14), axis.ticks = element_blank())
+
+ramp_distance <- ggplot(ramp_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
+geom_boxplot() +
+geom_point(position = position_jitter(width = 0.15)) +
+labs(x="", y = "Unweighted UniFrac Distance\n") +
+guides(fill=FALSE) +
+theme(axis.text.x = element_text(colour="black"),   axis.title.y = element_text(size=14), axis.ticks = element_blank())
+
+
+con <- file('corn_beta_div/unweighted_unifrac_pc.txt')
+corn_pc <- read.table(con, skip=9, nrow=10, sep="\t")
+corn_pc <- corn_pc[,c("V1","V2","V3")]
+colnames(corn_pc) <- c("SampleID", "PC1", "PC2")
+
+con <- file('ramp_beta_div/unweighted_unifrac_pc.txt')
+ramp_pc <- read.table(con, skip=9, nrow=15, sep="\t")
+ramp_pc <- ramp_pc[,c("V1","V2","V3")]
+colnames(ramp_pc) <- c("SampleID", "PC1", "PC2")
+
+mapping <- read.table("mapping.txt", header=FALSE, sep="\t")
+colnames(mapping) <- c("SampleID", "BC", "For", "Rev", "Treatment", "Diet", "Step", "Indiv", "Description")
+
+corn_pc_map <- merge(corn_pc, mapping, by = "SampleID")
+ramp_pc_map <- merge(ramp_pc, mapping, by = "SampleID")
+
+shape_corn <- c("C1" = 15, "C2" = 16, "C3" = 17, "C4" = 18, "CF" = 8)
+corn_pc_plot <- ggplot(corn_pc_map, aes(PC1, PC2)) +
+geom_point(aes(size=4, shape = factor(Treatment))) +
+xlab("PC1 (38.9%)") +
+ylab("PC2 (13.5%)") +
+guides(size=FALSE) +
+scale_shape_manual(name = "", values = shape_corn) +
+labs(fill="")
+
+shape_ramp <- c("R1" = 15, "R2" = 16, "R3" = 17, "R4" = 18, "RF" = 8)
+ramp_pc_plot <- ggplot(ramp_pc_map, aes(PC1, PC2)) +
+geom_point(aes(size=4, shape = factor(Treatment))) +    xlab("PC1 (20.5%)") +
+ylab("PC2 (13.0%)") +
+guides(size=FALSE) + 
+scale_shape_manual(name = "", values = shape_ramp) +
+labs(fill="")
+
+pdf("unweighted_pc_distance.pdf", height=12, width=12)
+multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols=2)
+dev.off()
+
+png("unweighted_pc_distance.png", height=12, width=12, units='in', res=300)
+multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols=2)
+dev.off()
+```
+
+<div style="text-align:center" markdown="1">
+![unweighted_distance](unweighted_pc_distance.png")
+</div>
