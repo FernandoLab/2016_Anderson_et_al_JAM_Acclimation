@@ -3,6 +3,7 @@ title: "Adaptation of the rumen microbiota during a finishing study"
 author: "Christopher L. Anderson (canderson30@unl.edu)"
 date: "July 7, 2015"
 output: html_document
+    keep_md: yes
 ---
 
 # Adaptation of the rumen microbiota during a finishing study
@@ -11,7 +12,7 @@ Christopher L. Anderson, Samodha C. Fernando
 ## Introduction
 This is a R Markdown file to accompany the mansucript "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). 
 
-## **BEFORE YOU RENDER WITH KNITR**: 
+## **BEFORE YOU RENDER**: 
 To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
 
@@ -44,13 +45,15 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
   1. source anaconda/bin/activate rumenEnv
   2. R
   3. install.packages("rmarkdown")
-  4. library(rmarkdown)
-  5. render("rumen_adaptation.Rmd")
+  4. install.packages("knitr")
+  5. library(rmarkdown)
+  6. library(knitr)
+  7. render("rumen_adaptation.Rmd")
   
 
 The following packages and knitR settings were used to compile this document:
 
-```{r}
+```{r,tidy=T}
 install.packages("ggplot2", repos='http://cran.us.r-project.org')
 install.packages("matrixStats", repos='http://cran.us.r-project.org')
 install.packages("vegan", repos='http://cran.us.r-project.org')
@@ -60,6 +63,10 @@ install.packages("gplots", repos='http://cran.us.r-project.org')
 install.packages("formatR", repos='http://cran.us.r-project.org')
 install.packages("knitr", repos='http://cran.us.r-project.org')
 install.packages("rmarkdown", repos='http://cran.us.r-project.org')
+install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("Heatplus")
 
 sessionInfo()
 
@@ -67,6 +74,7 @@ perm = 1e4
 ```
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
+opts_chunk$set(dev = 'pdf')
 opts_chunk$set("fig.align"="center")
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = TRUE)
@@ -84,7 +92,7 @@ Download the 454 data (not really raw data though because the sequencing center 
 ```
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
-```{r, engine='bash', results='hide'}
+```{r, engine='bash', results='hide',tidy=T}
 #wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
 #tar -zxvf Silva.nr_v119.tgz
 #rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
@@ -535,3 +543,37 @@ dev.off()
 shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
 
 #wget 
+```
+
+## OTU Heatmap
+
+```{r}
+library(gplots)
+library(Heatplus)
+library(vegan)
+library(RColorBrewer)
+
+#otu_table <- read.table("rumen.adaptation.otu_table.tax.final.biom", header=TRUE, sep="\t")
+
+otu_table <- read_biom("rumen.adaptation.otu_table.tax.final.biom")
+
+row.names(otu_table) <- otu_table$OTU.ID
+otu_table <- otu_table[,-1]
+colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+otu_table_trans <- as.data.frame(t(otu_table))
+otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
+scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+otu_dist <- vegdist(otu_table_rel, method = "bray")
+row.clus <- hclust(otu_dist, "aver")
+maxab <- apply(otu_table_rel, 2, max)
+n1 <- names(which(maxab < 0.01))
+otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
+otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
+col.clus <- hclust(otu_dist_col, "aver")
+
+pdf("heatmap.pdf")
+heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+dev.off()
+```
+
+![otu_heatmap](figures/otu_heatmap.pdf)
