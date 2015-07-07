@@ -43,11 +43,9 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
 
   1. source anaconda/bin/activate rumenEnv
   2. R
-  3. install.packages("knitr")
-  4. install.packages("rmarkdown")
-  5. library(knitr)
-  6. library(rmarkdown)
-  7. render("rumen_adaptation.Rmd")
+  3. install.packages("rmarkdown")
+  4. library(rmarkdown)
+  5. render("rumen_adaptation.Rmd")
   
 
 The following packages and knitR settings were used to compile this document:
@@ -354,7 +352,7 @@ multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols
 dev.off()
 ```
 
-<img src="figures/alpha_diversity.pdf" height="400px" width="300px" />
+![alpha_div](figures/alpha_diversity.pdf)
 
 ## Taxonomy
 
@@ -512,7 +510,7 @@ corn_venn <- venn(corn_boolean_df)
 dev.off()
 ```
 
-<p> <img src="figures/corn_venn.pdf" height="400px" width="300px" /> </p>
+![corn_venn](figures/corn_venn.pdf)
 
 ```{r}
 
@@ -529,7 +527,9 @@ ramp_venn <- venn(ramp_boolean_df)
 dev.off()
 ```
 
-<p> <img src="figures/ramp_venn.pdf" height="400px" width="300px" /> </p>
+![ramp_venn](figures/ramp_venn.pdf)
+
+
 
 ```{r, engine='bash'}
 shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
