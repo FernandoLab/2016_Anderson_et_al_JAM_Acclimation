@@ -76,9 +76,6 @@ perm = 1e4
 
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
-#opts_chunk$set("fig.path"="figures/")
-#opts_chunk$set(dev = 'tiff')
-#opts_chunk$set("fig.align"="center")
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = TRUE)
 opts_chunk$set("eval" = TRUE)
@@ -358,13 +355,17 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-tiff("figures/alpha_diversity.tiff", units='in', height=12, width=12, res=300)
+png("figures/alpha_diversity.png", units='in', height=12, width=12, res=300)
+multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
+dev.off()
+
+pdf("figures/alpha_diversity.pdf", height=12, width=12, res=300)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-![ramp_venn](figures/alpha_diversity.tiff)
+![ramp_venn](figures/alpha_diversity.png)
 </div>
 
 ## Taxonomy
@@ -518,15 +519,17 @@ corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
 
 corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
 
-tiff("figures/corn_venn.tiff", units='in', height=6, width=6, res=300)
+png("figures/corn_venn.png", units='in', height=6, width=6, res=300)
+corn_venn <- venn(corn_boolean_df)
+dev.off()
+
+pdf("figures/corn_venn.pdf", height=6, width=6)
 corn_venn <- venn(corn_boolean_df)
 dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-
-![ramp_venn](figures/corn_venn.tiff)
-
+![ramp_venn](figures/corn_venn.png)
 </div>
 
 ```{r}
@@ -539,13 +542,17 @@ ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 
 ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
-tiff("figures/ramp_venn.tiff", units='in', height=6, width=6, res=300)
+png("figures/ramp_venn.png", units='in', height=6, width=6, res=300)
+ramp_venn <- venn(ramp_boolean_df)
+dev.off()
+
+pdf("figures/ramp_venn.pdf", height=6, width=6)
 ramp_venn <- venn(ramp_boolean_df)
 dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-![ramp_venn](figures/ramp_venn.tiff)
+![ramp_venn](figures/ramp_venn.png)
 </div>
 
 
@@ -585,5 +592,3 @@ library(RColorBrewer)
 #heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
 #dev.off()
 ```
-
-#![otu_heatmap](figures/otu_heatmap.pdf)
