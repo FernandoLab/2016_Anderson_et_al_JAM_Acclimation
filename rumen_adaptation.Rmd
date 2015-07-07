@@ -4,7 +4,6 @@ author: "Christopher L. Anderson (canderson30@unl.edu)"
 date: "July 7, 2015"
 output: 
   html_document
-    keep_md: yes
   pdf_document
 ---
 
