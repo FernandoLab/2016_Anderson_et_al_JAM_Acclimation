@@ -253,7 +253,7 @@ collate_alpha.py -i alpha_even -o alpha_even_collate
 mkdir figures
 ```
 
-``````{r figure1, height=12, width=12)}
+```{r figure1, height=12, width=12)}
 library(XML)
 library(ggplot2)
 library(matrixStats)
