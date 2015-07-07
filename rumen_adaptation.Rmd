@@ -52,6 +52,10 @@ To convert the R markdown to html (or any other format) use the [knitr package](
 The following packages and knitR settings were used to compile this document:
 
 ```{r}
+install.packages("ggplot2")
+install.packages("matrixStats")
+install.packages("vegan")
+install.packages("reshape")
 
 sessionInfo()
 
@@ -163,60 +167,64 @@ Assign taxonomy to the OTU representative sequences:
 
 Add the taxa outputted to the OTU table with the column header "taxonomy" and output the resulting file to biom format:
 ```{r, engine='bash'}
-awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
-sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
-{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
+#awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
+#sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
+#{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
 
-paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
+#paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
 
-rm rumen.adaptation.otu_table.sort.txt
+#rm rumen.adaptation.otu_table.sort.txt
 
-biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy --to-json
+#biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy --to-json
 ```
 
 Two of the samples were collected twice and seqeunced at a time point...not quite sure why...but lets remove the duplicate with the lower depth - samples R6 and R19.
 ```{r, engine='bash'}
-printf "R6\nR19" > remove_samples.txt
+#printf "R6\nR19" > remove_samples.txt
 
-filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
+#filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
 
-biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
+#biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
+#1165 OTUs, 145200 sequences
 ```
 
 Align the sequences using the SILVA reference within mothur and view the alignment summary:
 ```{r, engine='bash'}
-mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
+#mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
 
-mv usearch_results/rumen.adaptation.otus2.align ./
+#mv usearch_results/rumen.adaptation.otus2.align ./
 
-mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
+#mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
 ```
 
 I find it easiest to use R to collect the names of OTUs that are not aligning well. We can use the summary file to find this information. I decided to remove any OTU that did not end exactly at position 13125 (remember this is the end we sequenced off of) and started before position 1726:
 ```{r}
-summary <- read.table("rumen.adaptation.otus2.summary", sep="\t", header=TRUE)
+#summary <- read.table("rumen.adaptation.otus2.summary", sep="\t", header=TRUE)
 
-summary_sub <- subset(summary, end==13125 & start>1726)
+#summary_sub <- subset(summary, end==13125 & start>1726)
 
-write.table(summary_sub$seqname, file="remove_otus.txt", col.names = F, row.names = F)
+#write.table(summary_sub$seqname, file="remove_otus.txt", col.names = F, row.names = F)
 ```
 
 Remove those seqeunces that did not align well from the OTU table and then remove OTUs with a Cyanobacteria classification. UPARSE should have removed sinlgeton OTUs, but while we are removing OTUs we want to double check this is the case (-n 2 parameter):
 ```{r, engine='bash'}
-filter_otus_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.biom -e remove_otus.txt -n 2 --negate_ids_to_exclude
+#filter_otus_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.biom -e remove_otus.txt -n 2 --negate_ids_to_exclude
 
-filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.final.biom -n p__Cyanobacteria
+#filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.final.biom -n p__Cyanobacteria
+
+#biom summarize-table -i rumen.adaptation.otu_table.tax.final.biom -o rumen.adaptation.otu_table.tax.final.summary.txt
+# 1084 OTUs,  144319 sequences
 ```
 
 Leaving the OTUs that we removed from the OTU table within the aligned file is fine for downstream. Now use that aligned file to generate a phylogenetic tree using clearcut in mothur. For this to work, clearcut requires ID lengths greater than ~10 characters. To account for this, we simply add 10 'A's to the front of all sequence names. We then remove the 'A's after the tree is formed.
 ```{r, engine='bash'}
-sed -i -e 's/>/>AAAAAAAAAA/g' rumen.adaptation.otus2.align
+#sed -i -e 's/>/>AAAAAAAAAA/g' rumen.adaptation.otus2.align
 
-mothur "#dist.seqs(fasta=rumen.adaptation.otus2.align, output=lt)"
+#mothur "#dist.seqs(fasta=rumen.adaptation.otus2.align, output=lt)"
 
-mothur "#clearcut(phylip=rumen.adaptation.otus2.phylip.dist)"
+#mothur "#clearcut(phylip=rumen.adaptation.otus2.phylip.dist)"
 
-sed -i -e 's/AAAAAAAAAA//g' rumen.adaptation.otus2.phylip.tre
+#sed -i -e 's/AAAAAAAAAA//g' rumen.adaptation.otus2.phylip.tre
 ```
 
 ## Rarefaction Curves and Alpha Diversity
@@ -232,11 +240,168 @@ alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1
 
 collate_alpha.py -i alpha_rare_otu_chao/ -o alpha_rare_collate
 
-make_rarefaction_plots.py -i alpha_rare_collate/ -m mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_collate_avgtable  
+make_rarefaction_plots.py -i alpha_rare_collate/ -m mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_collate_avgtable
+
+multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.final.biom -n 10 -d 2160 -o mult_even
+
+alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
+
+collate_alpha.py -i alpha_even -o alpha_even_collate
+
+mkdir figure
 ```
 
-Installing the XML package with install.packages() was giving me problems, but this works:
+```{r}
+library(XML)
+library(ggplot2)
+library(matrixStats)
+library(plyr)
+
+rare_table <- readHTMLTable("alpha_rare_collate_avgtable/rarefaction_plots.html")
+rare_table$rare_data[rare_table$rare_data == "nan"] <- NA
+alpha_rare <- na.omit(rare_table$rare_data)
+colnames(alpha_rare)[2] <- "Seqs.Sample"
+colnames(alpha_rare)[3] <- "chao1.Ave."
+colnames(alpha_rare)[4] <- "chao1.Err."
+colnames(alpha_rare)[5] <- "observed_otus.Ave."
+colnames(alpha_rare)[6] <- "observed_otus.Err."
+
+cols = c(2, 3, 4, 5, 6)   
+
+alpha_rare[,cols]<-lapply(cols, function(x) as.numeric(as.character(alpha_rare[,x])))
+
+corn_rare <- subset(alpha_rare, Treatment %in% c("C1","C2","C3","C4","CF"))
+ramp_rare <- subset(alpha_rare, Treatment %in% c("R1","R2","R3","R4","RF"))
+corn_rare$Diet <- "CORN"
+ramp_rare$Diet <- "RAMP"
+alpha_rare <- rbind(corn_rare,ramp_rare)
+pd <- position_dodge(width = 275)
+
+rare_otu_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
+geom_line(position = pd) +
+geom_pointrange(position=pd) +
+scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
+labs(x = "Sequences per Sample", y="Mean Observed OTUs") +
+theme(legend.title=element_blank()) +
+facet_grid(~Diet)
+
+rare_chao1_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=chao1.Ave., colour=Treatment, group=Treatment, ymin=chao1.Ave.-chao1.Err., ymax=chao1.Ave.+chao1.Err.)) +
+geom_line(position = pd) +
+geom_pointrange(position=pd) +
+scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
+labs(x = "Sequences per Sample", y="Mean Chao1 Index") +
+theme(legend.title=element_blank()) +
+facet_grid(~Diet)
+
+
+alpha_chao1 <- read.table("alpha_even_collate/chao1.txt", header=TRUE, sep="\t")
+alpha_otu <- read.table("alpha_even_collate/observed_otus.txt", header=TRUE, sep="\t")
+
+alpha_chao1 <- alpha_chao1[-c(1:3)]
+colnames(alpha_chao1) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+alpha_chao1_matrix <- as.matrix(alpha_chao1)
+alpha_chao1_means <- data.frame(Means=colMeans(alpha_chao1_matrix), SD=colSds(alpha_chao1_matrix))
+
+alpha_otu <- alpha_otu[-c(1:3)]
+colnames(alpha_otu) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
+alpha_otu_matrix <- as.matrix(alpha_otu)
+alpha_otu_means <- data.frame(Means=colMeans(alpha_otu_matrix), SD=colSds(alpha_otu_matrix))
+
+steps <- data.frame(step=c("Finisher","Step3","Step2","Step4","Step4","Step3","Step4","Step1","Finisher","Finisher","Finisher","Step3","Step2","Step1","Step3","Step1","Step2","Step2","Step3","Step1","Step2","Step4","Finisher","Step1","Step4"))
+ diets <- data.frame(diet=c("CORN","RAMP","RAMP","RAMP","RAMP","CORN","CORN","RAMP","CORN","RAMP","RAMP","CORN","RAMP","RAMP","RAMP","CORN","CORN","RAMP","RAMP","CORN","CORN","RAMP","RAMP","RAMP","CORN"))
+
+alpha_chao1_means <- cbind(alpha_chao1_means,steps,diets)
+alpha_chao1_means$step <- factor(alpha_chao1_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
+alpha_chao1_plot <- ggplot(alpha_chao1_means, aes(x=step, y=Means)) +
+geom_point(size=4) +
+labs(x = "", y="Mean Chao1 Index") +
+facet_wrap(~diet)
+
+alpha_otu_means <- cbind(alpha_otu_means,steps,diets)
+alpha_otu_means$step <- factor(alpha_otu_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
+alpha_otu_plot <- ggplot(alpha_otu_means, aes(x=step, y=Means)) +
+geom_point(size=4) +
+labs(x = "", y="Mean Observed OTUs") +
+facet_wrap(~diet)
+
+
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+    library(grid)
+    plots <- c(list(...), plotlist)
+    numPlots = length(plots)
+    if (is.null(layout)) {
+        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),ncol = cols, nrow = ceiling(numPlots/cols))
+    }
+
+    if (numPlots==1) {
+        print(plots[[1]])
+
+    } else {
+        grid.newpage()
+        pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+        for (i in 1:numPlots) {
+            matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+            print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,layout.pos.col = matchidx$col))
+        }
+    }
+}
+
+pdf("figure/alpha_diversity.pdf", height=12, width=12)
+multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
+dev.off()
+
+```
+
+## Taxonomy
+
 ```{r, engine='bash'}
+summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
 
+plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
 ```
 
+## Beta Diversity
+
+Split the OTU table into RAMP and CORN adapted samples then generate the beta diversity outputs for each:
+```{r, engine='bash'}
+split_otu_table.py -i rumen.adaptation.otu_table.tax.final.biom -o split_total -m mapping.txt -f Diet
+
+biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -o split_total/control.summarize.txt
+
+biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -o split_total/ramp.summarize.txt
+
+beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -o corn_beta_div -t rumen.adaptation.otus2.phylip.tre -m mapping.txt -p qiime_parameters_working.txt -e 2160
+
+beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -o ramp_beta_div -t rumen.adaptation.otus2.phylip.tre -m mapping.txt -p qiime_parameters_working.txt -e 2959
+```
+
+
+## Community Statistics
+We use permanova tests (implemented in R as adonis function in the vegan package) to identify differences in microbial community structure. Here we are using the unweighted unifrac as the distance matrix of choice:
+```{r}
+library(vegan)
+library(reshape)
+
+corn_unweighted <- read.table("corn_beta_div/unweighted_unifrac_dm.txt", sep="\t", header=TRUE)
+row.names(corn_unweighted) <- corn_unweighted$X
+corn_unweighted <- corn_unweighted[,-1]
+corn_unweighted <- as.dist(corn_unweighted)
+
+ramp_unweighted <- read.table("ramp_beta_div/unweighted_unifrac_dm.txt", sep="\t", header=TRUE)
+row.names(ramp_unweighted) <- ramp_unweighted$X
+ramp_unweighted <- ramp_unweighted[,-1]
+ramp_unweighted <- as.dist(ramp_unweighted)
+
+corn_map <- read.table("split_total/mapping__Diet_Corn__.txt", sep="\t", header=FALSE)
+colnames(corn_map) <- c("SampleID","BarcodeSequence","LinkerPrimerSequence","ReversePrimer","Treatment","Diet","Step","Individual","Description")
+
+ramp_map <- read.table("split_total/mapping__Diet_Ramp__.txt", sep="\t", header=FALSE)
+colnames(ramp_map) <- c("SampleID","BarcodeSequence","LinkerPrimerSequence","ReversePrimer","Treatment","Diet","Step","Individual","Description")
+
+
+adonis(corn_unweighted ~ Treatment + Individual, permutations=999, data=corn_map)
+
+adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map)
+
+```
