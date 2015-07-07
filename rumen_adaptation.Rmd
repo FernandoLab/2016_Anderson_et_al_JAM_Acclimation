@@ -65,12 +65,8 @@ perm = 1e4
 ```
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
-opts_chunk$set("fig.path"="figures/")
 opts_chunk$set("fig.align"="center")
-opts_chunk$set("dev" = c("png", "pdf"))
-
 opts_chunk$set("tidy" = TRUE)
-
 opts_chunk$set("echo" = TRUE)
 opts_chunk$set("eval" = TRUE)
 opts_chunk$set("warning" = FALSE)
@@ -253,7 +249,7 @@ collate_alpha.py -i alpha_even -o alpha_even_collate
 mkdir figures
 ```
 
-```{r figure1, height=12, width=12}
+```{r}
 library(XML)
 library(ggplot2)
 library(matrixStats)
@@ -349,11 +345,12 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-#pdf("figures/alpha_diversity.pdf", height=12, weight=12)
+pdf("figures/alpha_diversity.pdf", height=12, weight=12)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
-#dev.off()
-
+dev.off()
 ```
+
+<img src="figures/alpha_diversity.pdf" height="400px" width="300px" />
 
 ## Taxonomy
 
@@ -494,7 +491,7 @@ biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_C
 biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json --table-type="OTU table"
 ```
 
-```{r figure2, height=12, width=12}
+```{r}
 library(biom)
 library(gplots)
 
@@ -512,7 +509,7 @@ plot(corn_venn)
 #dev.off()
 ```
 
-```{r figure3, height=12, width=12}
+```{r}
 
 ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
 
@@ -522,10 +519,10 @@ ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 
 ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
-#pdf("figures/ramp_venn.pdf")
+pdf("figures/ramp_venn.pdf")
 ramp_venn <- venn(ramp_boolean_df)
 plot(ramp_venn)
-#dev.off()
+dev.off()
 ```
 
 ```{r, engine='bash'}
