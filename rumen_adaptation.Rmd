@@ -10,7 +10,7 @@ output: html_document
 Christopher L. Anderson, Samodha C. Fernando
 
 ## Introduction
-This is a R Markdown file to accompany the mansucript titled, "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). 
+This is a R Markdown file to accompany the mansucript "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). 
 
 ## **BEFORE YOU RENDER WITH KNITR**: 
 To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
@@ -237,23 +237,23 @@ Remember, from QIIME: "If the lines for some categories do not extend all the wa
 
 ```{r, engine='bash'}
 multiple_rarefactions.py -i rumen.adaptation.otu_table.tax.final.biom -o alpha_rare -m 10 -x 6600 -s 500 -n 10
-
+ 
 alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1 
-
+ 
 collate_alpha.py -i alpha_rare_otu_chao/ -o alpha_rare_collate
-
+ 
 make_rarefaction_plots.py -i alpha_rare_collate/ -m mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_collate_avgtable
-
+ 
 multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.final.biom -n 10 -d 2160 -o mult_even
-
+ 
 alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
-
+ 
 collate_alpha.py -i alpha_even -o alpha_even_collate
-
+ 
 mkdir figures
 ```
 
-```{r}
+``````{r figure1, height=12, width=12)}
 library(XML)
 library(ggplot2)
 library(matrixStats)
@@ -282,7 +282,7 @@ pd <- position_dodge(width = 275)
 rare_otu_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
 geom_line(position = pd) +
 geom_pointrange(position=pd) +
-scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
+scale_colour_manual(values = c("C1" = "FF0000", "C2" = "BF003F", "C3" = "7F007F", "C4" = "3F00BF", "CF" = "0000FF", "R1" = "FF0000", "R2" = "BF003F", "R3" = "7F007F", "R4" = "3F00BF", "RF" = "0000FF")) +
 labs(x = "Sequences per Sample", y="Mean Observed OTUs") +
 theme(legend.title=element_blank()) +
 facet_grid(~Diet)
@@ -290,7 +290,7 @@ facet_grid(~Diet)
 rare_chao1_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=chao1.Ave., colour=Treatment, group=Treatment, ymin=chao1.Ave.-chao1.Err., ymax=chao1.Ave.+chao1.Err.)) +
 geom_line(position = pd) +
 geom_pointrange(position=pd) +
-scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
+scale_colour_manual(values = c("C1" = "FF0000", "C2" = "BF003F", "C3" = "7F007F", "C4" = "3F00BF", "CF" = "0000FF", "R1" = "FF0000", "R2" = "BF003F", "R3" = "7F007F", "R4" = "3F00BF", "RF" = "0000FF")) +
 labs(x = "Sequences per Sample", y="Mean Chao1 Index") +
 theme(legend.title=element_blank()) +
 facet_grid(~Diet)
@@ -349,9 +349,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-pdf("figures/alpha_diversity.pdf", height=12, width=12)
+#pdf("figures/alpha_diversity.pdf", 
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
-dev.off()
+#dev.off()
 
 ```
 
@@ -368,7 +368,7 @@ plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.t
 Split the OTU table into RAMP and CORN adapted samples then generate the beta diversity outputs for each:
 ```{r, engine='bash'}
 split_otu_table.py -i rumen.adaptation.otu_table.tax.final.biom -o split_total -m mapping.txt -f Diet
-
+ 
 biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -o split_total/control.summarize.txt
 
 biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -o split_total/ramp.summarize.txt
@@ -410,7 +410,7 @@ adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map
 
 ```
 
-We used paired t-tests as a post-hoc method to compare stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
+We used paired t-tests as a post-hoc method to compare the microbial community structure of stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
 ```{r}
 corn_unweighted_matrix <- as.matrix(corn_unweighted)
 m <- as.matrix(corn_unweighted)
@@ -423,20 +423,19 @@ m <- as.matrix(ramp_unweighted)
 m2 <- melt(m)[melt(upper.tri(m))$value,]
 names(m2) <- c("Sample1", "Sample2", "distance")
 write.table(m2, "ramp_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
-
 ```
 
 ```{r, engine='bash'}
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
-
+ 
 chmod 775 treatment_distances.pl
-
+ 
 ./treatment_distances.pl -mapping_file=mapping.txt -distance_file=corn_unweighted_pariwise_dist.txt -category=Treatment
-
+ 
 mv treatment_distances.txt corn_unweighted_treatment_distances.txt
-
+ 
 ./treatment_distances.pl -mapping_file=mapping.txt -distance_file=ramp_unweighted_pariwise_dist.txt -category=Treatment
-
+ 
 mv treatment_distances.txt ramp_unweighted_treatment_distances.txt
 ```
 
@@ -484,7 +483,7 @@ lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append=TRUE
 
 ```
 
-## Venn Diagrams
+## Shared OTUs and Sequences
 ```{r, engine='bash'}
 collapse_samples.py -b rumen.adaptation.otu_table.tax.final.biom -m mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp mapping_collapse.txt --collapse_fields Treatment --collapse_mode sum
 
@@ -495,26 +494,32 @@ biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_C
 biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json --table-type="OTU table"
 ```
 
-```{r}
+```{r figure2, height=12, width=12)}
 library(biom)
 library(gplots)
 
 corn_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.json.biom")
 
-ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
-
 corn_df <- as.data.frame(as(biom_data(corn_biom), "matrix"))
-ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
 
 corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
-ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 
 corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
-ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
 pdf("figures/corn_venn.pdf")
 corn_venn <- venn(corn_boolean_df)
 dev.off()
+```
+
+```{r figure3, height=12, width=12)}
+
+ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
+
+ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+
+ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
+
+ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
 pdf("figures/ramp_venn.pdf")
 ramp_venn <- venn(ramp_boolean_df)
