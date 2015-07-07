@@ -5,8 +5,7 @@ date: "July 7, 2015"
 output: 
   html_document:
     keep_md: yes
-  pdf_document:
-    keep_tex: true
+  pdf_document
 ---
 
 
@@ -49,7 +48,7 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
   4. install.packages("knitr")
   5. library(rmarkdown)
   6. library(knitr)
-  7. render("rumen_adaptation.Rmd")
+  7. render("rumen_adaptation.Rmd", "pdf_document") or render("rumen_adaptation.Rmd", "html_document")
   
 
 The following packages and knitR settings were used to compile this document:
@@ -255,8 +254,6 @@ multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.final.biom
 alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
  
 collate_alpha.py -i alpha_even -o alpha_even_collate
- 
-mkdir figures
 ```
 
 ```{r}
@@ -355,17 +352,17 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
 }
 
-png("figures/alpha_diversity.png", units='in', height=12, width=12, res=300)
+png("alpha_diversity.png", units='in', height=12, width=12, res=300)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 dev.off()
 
-pdf("figures/alpha_diversity.pdf", height=12, width=12)
+pdf("alpha_diversity.pdf", height=12, width=12)
 multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
 dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-![ramp_venn](figures/alpha_diversity.png)
+![ramp_venn](alpha_diversity.png)
 </div>
 
 ## Taxonomy
@@ -519,17 +516,17 @@ corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
 
 corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
 
-png("figures/corn_venn.png", units='in', height=6, width=6, res=300)
+png("corn_venn.png", units='in', height=6, width=6, res=300)
 corn_venn <- venn(corn_boolean_df)
 dev.off()
 
-pdf("figures/corn_venn.pdf", height=6, width=6)
+pdf("corn_venn.pdf", height=6, width=6)
 corn_venn <- venn(corn_boolean_df)
 dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-![ramp_venn](figures/corn_venn.png)
+![ramp_venn](corn_venn.png)
 </div>
 
 ```{r}
@@ -542,17 +539,17 @@ ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 
 ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
-png("figures/ramp_venn.png", units='in', height=6, width=6, res=300)
+png("ramp_venn.png", units='in', height=6, width=6, res=300)
 ramp_venn <- venn(ramp_boolean_df)
 dev.off()
 
-pdf("figures/ramp_venn.pdf", height=6, width=6)
+pdf("ramp_venn.pdf", height=6, width=6)
 ramp_venn <- venn(ramp_boolean_df)
 dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-![ramp_venn](figures/ramp_venn.png)
+![ramp_venn](ramp_venn.png)
 </div>
 
 
