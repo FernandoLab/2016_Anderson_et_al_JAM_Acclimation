@@ -85,14 +85,14 @@ opts_chunk$set("cache" = TRUE)
 
 Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
 ```{r, engine='bash', results='hide'}
-#wget 129.93.221.145:/public/rumen.adaptation.fasta
+wget 129.93.221.145:/public/rumen.adaptation.fasta
 ```
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
 ```{r, engine='bash', results='hide',tidy=T}
-#wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
-#tar -zxvf Silva.nr_v119.tgz
-#rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
+wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
+tar -zxvf Silva.nr_v119.tgz
+rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
 ```
 
 ## Demulitplex and Quality Control
@@ -107,7 +107,7 @@ wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qi
   
 split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
   
-#truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
+truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
   
 mothur "#trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)"
   
@@ -160,7 +160,7 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 
 Assign taxonomy to the OTU representative sequences:
 ```{r, engine='bash'}
-#assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t anaconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r anaconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa -m mothur
+assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t anaconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r anaconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa -m mothur
 ```
 
 Add the taxa outputted to the OTU table with the column header "taxonomy" and output the resulting file to biom format:
@@ -188,9 +188,9 @@ biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adap
 
 Align the sequences using the SILVA reference within mothur and view the alignment summary:
 ```{r, engine='bash'}
-#mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
+mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
 
-#mv usearch_results/rumen.adaptation.otus2.align ./
+mv usearch_results/rumen.adaptation.otus2.align ./
 
 mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
 ```
