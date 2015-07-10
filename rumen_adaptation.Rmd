@@ -959,6 +959,7 @@ mkdir figures_tables
 mv Figure1.png figures_tables
 mv Figure2.png figures_tables
 mv Figure3.png figures_tables
+mv FigureS1.png figures_tables
 mv TableS2-1.txt figures_tables
 mv TableS2-2.txt figures_tables
 mv TableS2-3.txt figures_tables
