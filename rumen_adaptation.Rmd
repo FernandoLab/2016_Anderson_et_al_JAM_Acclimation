@@ -567,7 +567,7 @@ collapse_sub2[,3] <- collapse_sub2[,1] + collapse_sub2[,2]
 sub_sum2 <- colSums(collapse_sub2)
 per <- (sub_sum2['V3'] / sub_sum['V3']) * 100
 collapse_out <- c(names(collapse_sub2)[1],names(collapse_sub2)[2],toString(sub_sum2['V3']),toString(sub_sum['V3']),toString(per))
-write(collapse_out, file="TableS4.txt", sep="\t", ncolumns =5, append = TRUE)
+write(collapse_out, file="TableS3.txt", sep="\t", ncolumns =5, append = TRUE)
 }
 
 combn(colnames(collapse),2,simplify=FALSE,FUN=seq_shared_func)
@@ -953,3 +953,14 @@ GraphicsMagick-1.3.21/utilities/gm montage -mode concatenate -tile 2x -density 1
 <div style="text-align:center" markdown="1">
 ![heatmap](Figure3.png)
 </div>
+
+```{r, engine='bash'}
+mkdir figures_tables
+mv Figure1.png figures_tables
+mv Figure2.png figures_tables
+mv Figure3.png figures_tables
+mv TableS2-1.txt figures_tables
+mv TableS2-2.txt figures_tables
+mv TableS2-3.txt figures_tables
+mv TableS3.txt figures_tables
+```
