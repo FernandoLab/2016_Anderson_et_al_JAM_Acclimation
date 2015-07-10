@@ -736,7 +736,6 @@ python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.filter.f
 python lefse/run_lefse.py ramp_23_lefse_format.txt ramp_23_lefse_result.txt
 ```
 
-Create heatmaps for each shift in the microbial community sorted by LDA score and a maximum relative abundance >1%
 ```{r}
 corn_lefse <- read.table("corn_lefse_result.txt", header=FALSE, sep="\t")
 corn_lefse <- corn_lefse[complete.cases(corn_lefse),]
@@ -769,6 +768,7 @@ biom convert -i ramp_23_lefse.biom -o  ramp_23_lefse.txt --table-type="OTU table
 awk '{gsub("; ","\t",$0); print;}' ramp_23_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-16,21 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > ramp_23_lefse_tax.txt
 ```
 
+One shift in the microbial community was identified for corn-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around this shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
 ```{r}
 corn_otu <- read.table("corn_lefse_tax.txt", header=TRUE, sep="\t", fill=TRUE)
 corn_otu$family <- sub("f__", "", corn_otu$family)
@@ -827,6 +827,7 @@ heatmap.2(as.matrix(corn_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblac
 dev.off()
 ```
 
+Two shifts in the microbial community were identified for RAMP-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around the first shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
 ```{r}
 ramp_12_otu <- read.table("ramp_12_lefse_tax.txt", header=TRUE, sep="\t", fill=TRUE)
 ramp_12_otu$family <- sub("f__", "", ramp_12_otu$family)
@@ -886,6 +887,7 @@ heatmap.2(as.matrix(ramp_12_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteb
 dev.off()
 ```
 
+Two shifts in the microbial community were identified for RAMP-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around the second shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
 ```{r}
 ramp_23_otu <- read.table("ramp_23_lefse_tax.txt", header=TRUE, sep="\t", fill=TRUE)
 ramp_23_otu$family <- sub("f__", "", ramp_23_otu$family)
