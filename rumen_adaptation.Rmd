@@ -91,9 +91,9 @@ wget 129.93.221.145:/public/rumen.adaptation.fasta
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
 ```{r, engine='bash', results='hide',tidy=T}
-#wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
-#tar -zxvf Silva.nr_v119.tgz
-#rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
+wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
+tar -zxvf Silva.nr_v119.tgz
+rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
 ```
 
 ## Demulitplex and Quality Control
