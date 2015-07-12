@@ -17,9 +17,6 @@ pip install https://github.com/biocore/qiime/archive/1.9.0.tar.gz
 anaconda/bin/conda install -c r r r-xml
 anaconda/bin/conda install -c https://conda.binstar.org/asmeurer pandoc
 anaconda/bin/conda install -c https://conda.binstar.org/r rpy2
-#anaconda/bin/conda install -c https://conda.binstar.org/kalefranz imagemagick
-anaconda/bin/conda install -c https://conda.binstar.org/asmeurer graphviz
-anaconda/bin/conda install -c https://conda.binstar.org/anaconda freetype
 
 wget -O anaconda/envs/rumenEnv/bin/usearch $1
 chmod 775 anaconda/envs/rumenEnv/bin/usearch

@@ -691,7 +691,7 @@ Wanted to look at differential OTUs at break points in ramp and corn adapted ani
 ```{r, engine='bash'}
 filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom
 
-filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom
+filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom
 ```
 
 ```{r}
@@ -726,13 +726,13 @@ wget https://bitbucket.org/nsegata/lefse/get/default.zip -O lefse.zip
 unzip lefse.zip
 mv nsegata* lefse
 
-python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Corn__.filter.relative.txt corn_lefse_format.txt -c 1 -u 2 -o 1000000 
+python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.relative.txt corn_lefse_format.txt -c 1 -u 2 -o 1000000 
 python lefse/run_lefse.py corn_lefse_format.txt corn_lefse_result.txt
 
-python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.b12.relative.txt ramp_12_lefse_format.txt -c 1 -u 2 -o 1000000 
+python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.b12.relative.txt ramp_12_lefse_format.txt -c 1 -u 2 -o 1000000 
 python lefse/run_lefse.py ramp_12_lefse_format.txt ramp_12_lefse_result.txt
 
-python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.b23.relative.txt ramp_23_lefse_format.txt -c 1 -u 2 -o 1000000 
+python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.b23.relative.txt ramp_23_lefse_format.txt -c 1 -u 2 -o 1000000 
 python lefse/run_lefse.py ramp_23_lefse_format.txt ramp_23_lefse_result.txt
 ```
 
@@ -756,15 +756,21 @@ write.table(ramp_lefse_23$V1, file="ramp_23_lefse_otus.txt", row.names=FALSE, co
 ```{r, engine='bash'}
 #replace "OTU"
 filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom -o corn_lefse.biom -e corn_lefse_otus.txt --negate_ids_to_exclude
+
 biom convert -i corn_lefse.biom -o corn_lefse.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+
 awk '{gsub("; ","\t",$0); print;}' corn_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-11,16 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > corn_lefse_tax.txt
 
 filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom -o ramp_12_lefse.biom -e ramp_12_lefse_otus.txt --negate_ids_to_exclude
+
 biom convert -i ramp_12_lefse.biom -o  ramp_12_lefse.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+
 awk '{gsub("; ","\t",$0); print;}' ramp_12_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-16,21 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > ramp_12_lefse_tax.txt
 
 filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom -o ramp_23_lefse.biom -e ramp_23_lefse_otus.txt --negate_ids_to_exclude
+
 biom convert -i ramp_23_lefse.biom -o  ramp_23_lefse.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+
 awk '{gsub("; ","\t",$0); print;}' ramp_23_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-16,21 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > ramp_23_lefse_tax.txt
 ```
 
