@@ -47,13 +47,5 @@ rm Mothur.mac_64.OSX-10.9.zip
 rm -rf mothur
 rm -rf __MACOSX
 
-wget http://sourceforge.net/projects/graphicsmagick/files/latest/download?source=files -O gmagick.tar.gz
-tar -zxvf gmagick.tar.gz
-cd GraphicsMagick-1.3.21/
-./configure
-make
-cd ..
-rm gmagick.tar.gz
-
 wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/rumen_adaptation.Rmd
 

@@ -507,14 +507,18 @@ corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
 
 corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
 
-png("corn_venn.png", units='in', height=6, width=6, res=300)
+png("Figure4_panelA.png", units='in', height=6, width=6, res=300)
 corn_venn <- venn(corn_boolean_df)
 dev.off()
 
-pdf("corn_venn.pdf", height=6, width=6)
+pdf("Figure4_panelA.pdf", height=6, width=6)
 corn_venn <- venn(corn_boolean_df)
 dev.off()
 ```
+
+<div style="text-align:center" markdown="1">
+![corn_venn](Figure4_panelA.png)
+</div>
 
 ```{r}
 
@@ -526,21 +530,17 @@ ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
 
 ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
 
-png("ramp_venn.png", units='in', height=6, width=6, res=300)
+png("Figure4_panelB.png", units='in', height=6, width=6, res=300)
 ramp_venn <- venn(ramp_boolean_df)
 dev.off()
 
-pdf("ramp_venn.pdf", height=6, width=6)
+pdf("Figure4_panelB.pdf", height=6, width=6)
 ramp_venn <- venn(ramp_boolean_df)
 dev.off()
-```
-
-```{r, engine='bash'}
-GraphicsMagick-1.3.21/utilities/gm montage -mode concatenate -tile 2x -density 1000 ramp_venn.png corn_venn.png Figure4
 ```
 
 <div style="text-align:center" markdown="1">
-![venn](Figure4.png)
+![ramp_venn](Figure4_panelB.png)
 </div>
 
 Get shared OTUs between samples:
@@ -818,14 +818,18 @@ corn_fam2 <- subset(corn_merge2, select=c(family))
 corn_plot <- subset(corn_merge2, select = -c(family,breaks,LDA,raw,pval))
 corn_plot <- as.data.frame(t(corn_plot))
 
-pdf("corn_heatmap.pdf", width=12, height=9)
+pdf("Figure3_panelA.pdf", width=12, height=9)
 heatmap.2(as.matrix(corn_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = corn_fam2$family)
 dev.off()
 
-png("corn_heatmap.png", width=12, height=9, units='in', res=300)
+png("Figure3_panelA.png", width=12, height=9, units='in', res=300)
 heatmap.2(as.matrix(corn_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = corn_fam2$family)
 dev.off()
 ```
+
+<div style="text-align:center" markdown="1">
+![corn_heatmap](Figure3_panelA.png)
+</div>
 
 Two shifts in the microbial community were identified for RAMP-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around the first shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
 ```{r}
@@ -878,14 +882,18 @@ ramp_12_fam2 <- subset(ramp_12_merge2, select=c(family))
 ramp_12_plot <- subset(ramp_12_merge2, select = -c(family,breaks,LDA,raw,pval))
 ramp_12_plot <- as.data.frame(t(ramp_12_plot))
 
-pdf("ramp_12_heatmap.pdf", width=12, height=9)
+pdf("Figure3_panelB.pdf", width=12, height=9)
 heatmap.2(as.matrix(ramp_12_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = ramp_12_fam2$family)
 dev.off()
 
-png("ramp_12_heatmap.png", width=12, height=9, units='in', res=300)
+png("Figure3_panelB.png", width=12, height=9, units='in', res=300)
 heatmap.2(as.matrix(ramp_12_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = ramp_12_fam2$family)
 dev.off()
 ```
+
+<div style="text-align:center" markdown="1">
+![ramp_12_heatmap](Figure3_panelB.png)
+</div>
 
 Two shifts in the microbial community were identified for RAMP-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around the second shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
 ```{r}
@@ -938,29 +946,42 @@ ramp_23_fam2 <- subset(ramp_23_merge2, select=c(family))
 ramp_23_plot <- subset(ramp_23_merge2, select = -c(family,breaks,LDA,raw,pval))
 ramp_23_plot <- as.data.frame(t(ramp_23_plot))
 
-pdf("ramp_23_heatmap.pdf", width=12, height=9)
+pdf("Figure3_panelC.pdf", width=12, height=9)
 heatmap.2(as.matrix(ramp_23_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = ramp_23_fam2$family)
 dev.off()
 
-png("ramp_23_heatmap.png", width=12, height=9, units='in', res=300)
+png("Figure3_panelC.png", width=12, height=9, units='in', res=300)
 heatmap.2(as.matrix(ramp_23_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = ramp_23_fam2$family)
 dev.off()
-```
-
-```{r, engine='bash'}
-GraphicsMagick-1.3.21/utilities/gm montage -mode concatenate -tile 2x -density 1000 corn_heatmap.png ramp_12_heatmap.png ramp_23_heatmap.png Figure3.png
 ```
 
 <div style="text-align:center" markdown="1">
-![heatmap](Figure3.png)
+![ramp_23_heatmap](Figure3_panelC.png)
 </div>
 
 ```{r, engine='bash'}
 mkdir figures_tables
-mv Figure1.png figures_tables
-mv Figure2.png figures_tables
-mv Figure3.png figures_tables
+mv FigureS1.pdf figures_tables
 mv FigureS1.png figures_tables
+
+mv Figure1.pdf figures_tables
+mv Figure1.png figures_tables
+
+mv Figure2.pdf figures_tables
+mv Figure2.png figures_tables
+
+mv Figure3_panelA.pdf figures_tables
+mv Figure3_panelB.pdf figures_tables
+mv Figure3_panelC.pdf figures_tables
+mv Figure3_panelA.png figures_tables
+mv Figure3_panelB.png figures_tables
+mv Figure3_panelC.png figures_tables
+
+mv Figure4_panelA.pdf figures_tables
+mv Figure4_panelB.pdf figures_tables
+mv Figure4_panelA.png figures_tables
+mv Figure4_panelB.png figures_tables
+
 mv TableS2-1.txt figures_tables
 mv TableS2-2.txt figures_tables
 mv TableS2-3.txt figures_tables
