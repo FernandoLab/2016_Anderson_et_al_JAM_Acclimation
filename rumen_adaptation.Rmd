@@ -964,32 +964,3 @@ dev.off()
 <div style="text-align:center" markdown="1">
 ![ramp_23_heatmap](Figure3_panelC.png)
 </div>
-
-```{r, engine='bash'}
-mkdir figures_tables
-mv FigureS1.pdf figures_tables
-mv FigureS1.png figures_tables
-
-mv Figure1.pdf figures_tables
-mv Figure1.png figures_tables
-
-mv Figure2.pdf figures_tables
-mv Figure2.png figures_tables
-
-mv Figure3_panelA.pdf figures_tables
-mv Figure3_panelB.pdf figures_tables
-mv Figure3_panelC.pdf figures_tables
-mv Figure3_panelA.png figures_tables
-mv Figure3_panelB.png figures_tables
-mv Figure3_panelC.png figures_tables
-
-mv Figure4_panelA.pdf figures_tables
-mv Figure4_panelB.pdf figures_tables
-mv Figure4_panelA.png figures_tables
-mv Figure4_panelB.png figures_tables
-
-mv TableS2-1.txt figures_tables
-mv TableS2-2.txt figures_tables
-mv TableS2-3.txt figures_tables
-mv TableS3.txt figures_tables
-```
