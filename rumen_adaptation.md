@@ -1,878 +1,2721 @@
-Adaptation of the rumen microbiota during a finishing study
-===============
-Author: Christopher L. Anderson (canderson30@unl.edu)
+# Adaptation of the rumen microbiota during a finishing study
+Christopher L. Anderson (canderson30@unl.edu)  
+July 9, 2015  
+## Introduction
+This is a R Markdown file to accompany the mansucript "Adaptation of the rumen microbiota during a finishing study." It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/rumen_adaptation). 
 
-##Introduction
-To recreate the analysis from Anderson et al. manuscript.  All commands below were ran on Mac OS X 10.9.5. Other software needed are listed, and when they are needed I try to demonstrate how to install.
+## **BEFORE YOU RENDER**: 
+To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
+ there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
 
-- MacQIIME 1.9.0-20140227
-- R 3.1.1
-- USEARCH v7.0.1090
-- mothur v.1.35.1
-- python
-- perl
+  1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the anaconda package manager. This will recreate the same enivronment I used.
+    
+  2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
+Due to licensing issues, USEARCH can not be included in the setup. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for linux. **A link (expires after 30 days) will be sent to the provided email. Use the link as an argument for shell script below**.
 
-##Retrieve Raw Data and Intermediate Files
-Seqeuncing was done on 454.  Initial QC was done before I recieved files - need to find out what was done...just trimmed to 200 bp, but no .qual files either?
+Simply download the bash script from the github repository and run it (provide the link to download your licensed USEARCH version as an argument for setup.sh):
 
-Information about study...
+  1. wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/setup.sh
+  2. chmod 775 setup.sh 
+  3. ./setup.sh usearch_link
 
-To download the raw data and intermediate files/scripts for the analysis:
+**Miniconda is downloaded and prompts you during installataion of the packages above. The prompts are as follows:**
 
-    scp -r canderson3@crane.unl.edu:/work/samodha/canderson3/rumen_adaptation_2015/intermediate_files.tar.gz ./
-    tar -zxvf intermediate_files.tar.gz
+  1. Press enter to view the license agreement
+  2. Press enter to read the license and q to exit
+  3. Accept the terms
+  4. Prompts you where to install anaconda.  Simply type anaconda to create a directory within the current directory. Should be:
+  [/Users/user/anaconda] >>> anaconda
+  5. No to prepend anaconda to your path. Choosing yes should not impact the installation though.
+  6. Will be asked a few times if you wish to proceed with installing the packages...agree to it.
+  7. After installation, enter 'source anaconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
+  
 
-##Install MacQIIME:
+To convert the R markdown to html use the command: **render("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
 
-If you already have macqiime, you can skip this section. If you dont already have macqiime or want to use the same version as I used during the analysis, it is straightforward to install (be aware this will overwrite other versions of MacQIIME and you will need root access):
-	
-	wget ftp://ftp.microbio.me/pub/macqiime-releases/MacQIIME_1.9.0-20150227_OS10.6.tgz
-	tar -xvf MacQIIME_1.9.0-20150227_OS10.6.tgz
-	cd MacQIIME_1.9.0-20150227_OS10.6
-	./install.s
+  1. source anaconda/bin/activate rumenEnv
+  2. R
+  3. install.packages("rmarkdown", repos='http://cran.us.r-project.org')
+  4. install.packages("knitr", repos='http://cran.us.r-project.org')
+  5. library(rmarkdown)
+  6. library(knitr)
+  7. render("rumen_adaptation.Rmd")
+  
 
-Can remove the files from local firectory as they were copied to root.
-	
-	cd ..
-	rm -rf MacQIIME_1.9.0-20150227_OS10.6
-	rm MacQIIME_1.9.0-20150227_OS10.6.tgz
-	
-##Demultiplex and Quality Control:
-First, need to demultiplex the samples using the provided barcodes.  This information can be found in the mapping file located in the downloaded intermediate_files directory.
-	
-	macqiime
-	split_libraries.py -m intermediate_files/mapping.txt -f intermediate_files/rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
-	
-The results from this command could be found in directory intermediate_files/rumen_adaptation_demultiplex
-
-Now, remove the reverse primer:
-
-	truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m intermediate_files/mapping.txt -z truncate_only -M 2
-	exit
-	
-The results from this command could be found in directory intermediate_files/rumen_adaptation_rev_primer
+The following packages and knitR settings were used to compile this document:
 
 
-Trim the seqeunes to a fixed length to improve OTU picking donwstream with UPARSE. I do this with a combination of mothur and FASTX - likely is easier way to do this though.
+```r
+install.packages("ggplot2", repos='http://cran.us.r-project.org')
+```
 
-	wget https://github.com/mothur/mothur/releases/download/v1.35.1/Mothur.mac_64.OSX-10.9.zip
-	unzip Mothur.mac_64.OSX-10.9.zip
-	
-	mothur/mothur 
-	trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)
-	quit()
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-The results from this command could be found atintermediate_files/rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-Use FASTX to trim all seqeunces back to a length of 400 bp.
+```r
+install.packages("matrixStats", repos='http://cran.us.r-project.org')
+```
 
-	wget http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_MacOSX.10.5.8_i386.tar.bz2
-	bzip2 -d fastx_toolkit_0.0.13_binaries_MacOSX.10.5.8_i386.tar.bz2
-	tar -xvf fastx_toolkit_0.0.13_binaries_MacOSX.10.5.8_i386.tar
-	mv bin fastx_bin
-	fastx_bin/fastx_trimmer -i rumen_adaptation_rev_primer/seqs_rev_primer_truncated.trim.fasta -l 400 -o rumen.adaptation.qc.trim.fasta
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-Output can be found at intermediate_files/rumen.adaptation.qc.trim.fasta
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-Reverse complement the sequences since we seqeunced off the 518 primer towards 27.
+```r
+install.packages("vegan", repos='http://cran.us.r-project.org')
+```
 
-	mothur/mothur 
-	reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)
-	quit()
-	grep -c ">" rumen.adaptation.qc.trim.rc.fasta
-	#272630 seqeunces should be in the final FASTA file
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-Output can be found at intermediate_files/rumen.adaptation.qc.trim.rc.fasta
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-##Pick OTUs, assign taxonomy, and align sequences
-We use UPARSE to pick OTUs and remove chimeras, etc.  First, we need to get the seqeunces into a format more compatible with UPARSE.  Can use a cutom perl script to do so:
+```r
+install.packages("reshape", repos='http://cran.us.r-project.org')
+```
 
-	intermediate_files/./qiime_to_usearch.pl -fasta=rumen.adaptation.qc.trim.rc.fasta -prefix=rumen
-	mv format.fasta rumen.adaptation.format.fasta
-	
-Output can be found at intermediate_files/rumen.adaptation.format.fasta
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-Going to need to download USEARCH to complete the next steps.  The free version suffices for this dataset. To get it, go to http://www.drive5.com/usearch/download.html and select version USEARCH v7.0.1090 for Mac OSX.  Enter your email and hit submit. You should receive an email with the download link. Use that link below to download the exectuable:
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-	wget <link>
-	mv <filename> usearch
-	chmod 775 usearch
+```r
+install.packages("biom", repos='http://cran.us.r-project.org')
+```
 
-Now, going to go through several steps to pick OTUs:
-	
-	mkdir usearch_results
-	./usearch -derep_fulllength rumen.adaptation.format.fasta -sizeout -output usearch_results/rumen.adaptation.derep.fasta
-	./usearch -sortbysize usearch_results/rumen.adaptation.derep.fasta -minsize 2 -output usearch_results/rumen.adaptation.derep.sort.fasta
-	./usearch -cluster_otus usearch_results/rumen.adaptation.derep.sort.fasta -otus usearch_results/rumen.adaptation.otus1.fasta
-	./usearch -uchime_ref usearch_results/rumen.adaptation.otus1.fasta -db intermediate_files/gold.fasta -strand plus -nonchimeras usearch_results/rumen.adaptation.otus1.nonchimera.fasta
-	python intermediate_files/usearch_python_scripts/fasta_number.py usearch_results/rumen.adaptation.otus1.nonchimera.fasta > usearch_results/rumen.adaptation.otus2.fasta
-	./usearch -usearch_global rumen.adaptation.format.fasta -db usearch_results/rumen.adaptation.otus2.fasta -strand plus -id 0.97 -uc usearch_results/rumen.adaptation.otu_map.uc
-	python intermediate_files/usearch_python_scripts/uc2otutab.py usearch_results/rumen.adaptation.otu_map.uc > usearch_results/rumen.adaptation.otu_table.txt
-	cp usearch_results/rumen.adaptation.otu_table.txt ./
-	
-Output files from above commands can be found at intermediate_files/usearch_result
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-Assign taxonomy to the representative sequences for each OTU:
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-	macqiime
-	assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t /macqiime/greengenes/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r /macqiime/greengenes/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa
-	exit
+```r
+install.packages("gplots", repos='http://cran.us.r-project.org')
+```
 
-Outputs from above command can be found at intermediate_files/assign_gg_taxa
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-Add the taxa outputted to the OTU table with the column header "taxonomy".
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-	awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
-	sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
-	{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
-	paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
-	rm rumen.adaptation.otu_table.sort.txt
+```r
+install.packages("formatR", repos='http://cran.us.r-project.org')
+```
 
-Outputs from above command can be found at intermediate_files/rumen.adaptation.otu_table.tax.txt
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-You may need to install biom tools if you have not used the software that utilizes biom formats in the past.  Easiest way I found is just:
-	
-	pip install biom-format
-	biom convert --table-type "otu table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy
-	
-Two of the samples have duplicates that were seqeunced...not quite sure why...but lets remove the duplicates with the lower depth - samples R6 and R19.
-	
-	vi remove_samples.txt
-	#add samples R6 and R19 on seperate lines and save
-	macqiime
-	filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
-	biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
-	
-Outputs from above command can be found at intermediate_files/rumen.adaptation.otu_table.tax.biom, intermediate_files/rumen.adaptation.otu_table.tax.filter.biom, and intermediate_files/rumen.adaptation.otu_table.tax.filter.summary.txt
-	
-Need to create an alignment of the 16S seqeunces for each OTU. Our lab prefers to do so using the RDP aligner. Go to https://pyro.cme.msu.edu/aligner/form.spr and type in  a job name (I used rumen) to download file from later. Then select Bacteria 16S for the gene and upload file usearch_results/rumen.adaptation.otus2.fasta for alignment. Click on my jobs near upper right of the webpage to check the status of the job...it should be pretty quick. When the job is completed, hit Download Zip to save the results. Move the results to current directory:
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-	mv ~/Downloads/rumen.zip ./
-	
-The alignment results can be found at intermediate_files/rumen.zip
+```r
+install.packages("knitr", repos='http://cran.us.r-project.org')
+```
 
-	unzip rumen.zip
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-RDP over the past year has been misaligning a bit even when we use files that have worked in the past.
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-If you were to look at file alignment/aligned_rumen.adaptation.otus2.fasta_alignment_summary you would notice OTU 630 does not align very well. So, we need to remove it before continuing on...While we are removing OTUs if were to look at the taxonomy, we would see five OTUs with a cyanobacteria classification.  We also want to remove those as they should not be present in the rumen and are likely derivatives of chloroplast sequences. Since we are removing OTUs we also want to remove any singletons that may have resulted (-n2 option)
+```r
+install.packages("rmarkdown", repos='http://cran.us.r-project.org')
+```
 
-	vi remove_otus.txt
-	#add 1148,371,554,616,489,630 on seperate lines
-	filter_otus_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.biom -e remove_otus.txt -n 2
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-Resulting files can be found at intermediate_files/rumen.adaptation.otu_table.tax.filter.filter.biom and intermediate_files/remove_otus.txt
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-Take the aligned file from the unziped results at alignment/aligned_rumen.adaptation.otus2.fasta and open it in a text editor (the files is small).  We need to replace the dots created by RDP with dashes to work best in mothur.  Just do a simple find and replace.  Also, the clearcut command in mothur we are going to use requires seqeunce names to be longer than 10 characters.  So search and replace '>' with '>AAAAAAAAAA' and later we will remove these again. For some reason, there is a strang seqeunce at the bottom of these aligned files always, remove the seqeunce and header for it.
+```r
+install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
+```
 
-Move the reformated file to the current directory.
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-	cp alignment/aligned_rumen.adaptation.otus2.fasta ./
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
 
-This reformatted file can be found at intermediate_files/aligned_rumen.adaptation.otus2.fasta
+```r
+install.packages("mvtnorm", repos='http://cran.us.r-project.org')
+```
 
-Use mothur to calculate form a distance matrix:
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
 
-	mothur/mothur
-	dist.seqs(fasta=aligned_rumen.adaptation.otus2.fasta, countends=F, output=lt)
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
+
+```r
+install.packages("coin", repos='http://cran.us.r-project.org')
+```
+
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
+
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
+
+```r
+source("http://bioconductor.org/biocLite.R")
+```
+
+```
+## Bioconductor version 3.1 (BiocInstaller 1.18.3), ?biocLite for help
+```
+
+```r
+biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
+```
+
+```
+## BioC_mirror: http://bioconductor.org
+## Using Bioconductor version 3.1 (BiocInstaller 1.18.3), R version 3.2.0.
+## Installing package(s) 'Heatplus'
+```
+
+```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+```
+
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
+```
+
+```r
+sessionInfo()
+```
+
+```
+## R version 3.2.0 (2015-04-16)
+## Platform: x86_64-apple-darwin11.4.2 (64-bit)
+## Running under: OS X 10.9.5 (Mavericks)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] BiocInstaller_1.18.3 rmarkdown_0.7        knitr_1.10.5        
+## 
+## loaded via a namespace (and not attached):
+## [1] magrittr_1.5    formatR_1.2     htmltools_0.2.6 tools_3.2.0    
+## [5] yaml_2.1.13     stringi_0.5-5   stringr_1.0.0   digest_0.6.8   
+## [9] evaluate_0.7
+```
+
+```r
+perm = 1e4
+```
+
+
+
+```r
+opts_chunk$set("tidy" = TRUE)
+opts_chunk$set("echo" = TRUE)
+opts_chunk$set("eval" = TRUE)
+opts_chunk$set("warning" = FALSE)
+opts_chunk$set("cache" = TRUE)
+```
+
+## Data curation
+
+Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
+
+```bash
+wget 129.93.221.145:/public/rumen.adaptation.fasta
+```
+
+Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
+
+```bash
+wget http://www.mothur.org/w/images/2/27/Silva.nr_v119.tgz
+tar -zxvf Silva.nr_v119.tgz
+rm -rf Silva.nr_v119.tgz __MACOSX silva.nr_v119.tax README.Rmd README.html README.md
+```
+
+## Demulitplex and Quality Control
+
+The code chunk below demulitplexes the sequencing library using the provided mapping file then trims off the reverse primer.  Subseqeuntly, we use a combination of mothur and FASTX to trim the seqeunces to a fixed length of 400 basepairs to improve OTU picking in UPARSE downstream. Finally, the sequences are reverse complemented in mothur.
+
+
+```bash
+
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
+  
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
+  
+split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
+  
+truncate_reverse_primer.py -f rumen_adaptation_demultiplex/seqs.fna -o rumen_adaptation_rev_primer -m mapping.txt -z truncate_only -M 2
+  
+mothur "#trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)"
+  
+fastx_trimmer -i rumen_adaptation_rev_primer/seqs_rev_primer_truncated.trim.fasta -l 400 -o rumen.adaptation.qc.trim.fasta
  
-Use mothur to generate a phylogenetic tree:
-
-	clearcut(phylip=aligned_rumen.adaptation.otus2.phylip.dist)
-	quit()
-
-Replace the string of 10 'A' from the .tre file with nothing in a text editor.
-
-Resulting files are found at intermediate_files/aligned_rumen.adaptation.otus2.phylip.dist and intermediate_files/aligned_rumen.adaptation.otus2.phylip.tre
-
-##Rarefaction Curves and Alpha Diversity
-Want to look at the sequencing depth of each sample by monitoring the number of novel OTUs encountered as depth is increased.  Setup here for a depth roughly equivalent to least sample seqeunced within a step-up diet in our study so we can visually see full depth to give us an idea if the curves were plateauing....Also, want to compare alpha diversity (observed OTUs and chao1 index), but with all samples at the sample depth.	
-
-"If the lines for some categories do not extend all the way to the right end of the x-axis, that means that at least one of the samples in that category does not have that many sequences."
-
-	macqiime
-	multiple_rarefactions.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o alpha_rare -m 10 -x 6600 -s 500 -n 10
-	alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1 
-	collate_alpha.py -i alpha_rare_otu_chao/ -o alpha_rare_collate
-	make_rarefaction_plots.py -i alpha_rare_collate/ -m intermediate_files/mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_collate_avgtable	
-	
-The calculations I need to plot are already in the generated html file.  I opened alpha_rare_collate_avgtable/rarefaction_plots.html, picked observed OTUs by Treatment, and copied the table at the bottom of the page to txt file and saved as alpha_rarefaction_table.txt
-
-Also, want to plot the raw data for each sample at an even depth for both observed OTUs and Chao1 index:
-
-	multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -n 10 -d 2164 -o mult_even
-	alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
-	collate_alpha.py -i alpha_even -o alpha_even_collate
-	exit
-
-Plot results as 4 diagrams in R:
-
-	R
-	library(ggplot2)
-	library(matrixStats)
-	alpha_rare <- read.table("alpha_rarefaction_table.txt", header=TRUE, sep="\t")
-	alpha_rare <- na.omit(alpha_rare)
-	control_rare <- subset(alpha_rare, Treatment %in% c("C1","C2","C3","C4","CF"))
-	ramp_rare <- subset(alpha_rare, Treatment %in% c("R1","R2","R3","R4","RF"))
-	control_rare$Diet <- "CON"
-	ramp_rare$Diet <- "RAMP"
-	alpha_rare <- rbind(control_rare,ramp_rare)
-	pd <- position_dodge(width = 275)
-	
-	rare_otu_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=observed_otus.Ave., colour=Treatment, group=Treatment, ymin=observed_otus.Ave.-observed_otus.Err., ymax=observed_otus.Ave.+observed_otus.Err.)) +
-	geom_line(position = pd) +
-	geom_pointrange(position=pd) +
-	scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
-	labs(x = "Sequences per Sample", y="Mean Observed OTUs") +
-	theme(legend.title=element_blank()) +
-	facet_grid(~Diet)
-	
-	rare_chao1_plot <- ggplot(alpha_rare, aes(x=Seqs.Sample, y=chao1.Ave., colour=Treatment, group=Treatment, ymin=chao1.Ave.-chao1.Err., ymax=chao1.Ave.+chao1.Err.)) +
-	geom_line(position = pd) +
-	geom_pointrange(position=pd) +
-	scale_colour_manual(values = c("C1" = "#FF0000", "C2" = "#BF003F", "C3" = "#7F007F", "C4" = "#3F00BF", "CF" = "#0000FF", "R1" = "#FF0000", "R2" = "#BF003F", "R3" = "#7F007F", "R4" = "#3F00BF", "RF" = "#0000FF")) +
-	labs(x = "Sequences per Sample", y="Mean Chao1 Index") +
-	theme(legend.title=element_blank()) +
-	facet_grid(~Diet)
-	
-	
-	alpha_chao1 <- read.table("alpha_even_collate/chao1.txt", header=TRUE, sep="\t")
-	alpha_otu <- read.table("alpha_even_collate/observed_otus.txt", header=TRUE, sep="\t")
-	
-	alpha_chao1 <- alpha_chao1[-c(1:3)]
-	colnames(alpha_chao1) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
-	alpha_chao1_matrix <- as.matrix(alpha_chao1)
-	alpha_chao1_means <- data.frame(Means=colMeans(alpha_chao1_matrix), SD=colSds(alpha_chao1_matrix))
-	
-	alpha_otu <- alpha_otu[-c(1:3)]
-	colnames(alpha_otu) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
-	alpha_otu_matrix <- as.matrix(alpha_otu)
-	alpha_otu_means <- data.frame(Means=colMeans(alpha_otu_matrix), SD=colSds(alpha_otu_matrix))
-
-	 steps <- data.frame(step=c("Finisher","Step3","Step2","Step4","Step4","Step3","Step4","Step1","Finisher","Finisher","Finisher","Step3","Step2","Step1","Step3","Step1","Step2","Step2","Step3","Step1","Step2","Step4","Finisher","Step1","Step4"))
-	 diets <- data.frame(diet=c("CON","RAMP","RAMP","RAMP","RAMP","CON","CON","RAMP","CON","RAMP","RAMP","CON","RAMP","RAMP","RAMP","CON","CON","RAMP","RAMP","CON","CON","RAMP","RAMP","RAMP","CON"))
-	 
-	alpha_chao1_means <- cbind(alpha_chao1_means,steps,diets)
-	alpha_chao1_means$step <- factor(alpha_chao1_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
-	alpha_chao1_plot <- ggplot(alpha_chao1_means, aes(x=step, y=Means)) +
-	geom_point(size=4) +
-	labs(x = "", y="Mean Chao1 Index") +
-	facet_wrap(~diet)
-	
-	alpha_otu_means <- cbind(alpha_otu_means,steps,diets)
-	alpha_otu_means$step <- factor(alpha_otu_means$step, c("Step1", "Step2", "Step3", "Step4", "Finisher"))
-	alpha_otu_plot <- ggplot(alpha_otu_means, aes(x=step, y=Means)) +
-	geom_point(size=4) +
-	labs(x = "", y="Mean Observed OTUs") +
-	facet_wrap(~diet)
-	
-	
-	
-	multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-		library(grid)
-		plots <- c(list(...), plotlist)
-		numPlots = length(plots)
-		if (is.null(layout)) {
-			layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),ncol = cols, nrow = ceiling(numPlots/cols))
-		}
-
-		if (numPlots==1) {
-			print(plots[[1]])
-
-		} else {
-			grid.newpage()
-			pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-			for (i in 1:numPlots) {
-				matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-				print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,layout.pos.col = matchidx$col))
-    		}
-    	}
-	}
-
-	pdf("alpha_diversity.pdf", height=12, width=12)
-	multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, cols=2)
-	dev.off()
-	quit()
-
-##Taxonomy Plots
-	macqiime
-	summarize_taxa.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o summarize_taxa -L 2,3,4,5,6,7
-	plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.filter.filter_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
-
-Outputs can be found at intermediate_files/summarize_taxa and intermediate_files/plot_taxa
-
-##Beta Diversity
-	
-split the OTU table into RAMP and Control:
-
-	split_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o split_total -m intermediate_files/mapping.txt -f Diet
-	
-	biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.biom -o split_total/control.summarize.txt
-	
-	biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.biom -o split_total/ramp.summarize.txt
-	
-	beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.biom -o control_beta_div -t aligned_rumen.adaptation.otus2.phylip.tre -m intermediate_files/mapping.txt -p intermediate_files/qiime_parameters_working.txt -e 2164
-	
-	beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.biom -o ramp_beta_div -t aligned_rumen.adaptation.otus2.phylip.tre -m intermediate_files/mapping.txt -p intermediate_files/qiime_parameters_working.txt -e 2966
-	
-	
-Output can be found at intermediate_files/control_beta_div
-Output can be found at intermediate_files/ramp_beta_div
-	
-	
-##Community Statistics
-Community level statistics:
-	
-	#install R and dependencies (phyloseq, biom, ggplot2, vegan,...)
-	R
-	
-	control_unweighted <- read.table("control_beta_div/unweighted_unifrac_dm.txt", sep="\t", header=TRUE)
-	row.names(control_unweighted) <- control_unweighted$X
-	control_unweighted <- control_unweighted[,-1]
-	control_unweighted <- as.dist(control_unweighted)
-	
-	control_weighted <- read.table("control_beta_div/weighted_unifrac_dm.txt", sep="\t", header=TRUE)
-	row.names(control_weighted) <- control_weighted$X
-	control_weighted <- control_weighted[,-1]
-	control_weighted <- as.dist(control_weighted)
-	
-	ramp_unweighted <- read.table("ramp_beta_div/unweighted_unifrac_dm.txt", sep="\t", header=TRUE)
-	row.names(ramp_unweighted) <- ramp_unweighted$X
-	ramp_unweighted <- ramp_unweighted[,-1]
-	ramp_unweighted <- as.dist(ramp_unweighted)
-	
-	ramp_weighted <- read.table("ramp_beta_div/weighted_unifrac_dm.txt", sep="\t", header=TRUE)
-	row.names(ramp_weighted) <- ramp_weighted$X
-	ramp_weighted <- ramp_weighted[,-1]
-	ramp_weighted <- as.dist(ramp_weighted)
-	
-	control_map <- read.table("split_total/mapping__Diet_Control__.txt", sep="\t", header=FALSE)
-	colnames(control_map) <- c("SampleID","BarcodeSequence","LinkerPrimerSequence","ReversePrimer","Treatment","Diet","Step","Individual","Description")
-	
-	ramp_map <- read.table("split_total/mapping__Diet_Ramp__.txt", sep="\t", header=FALSE)
-	colnames(ramp_map) <- c("SampleID","BarcodeSequence","LinkerPrimerSequence","ReversePrimer","Treatment","Diet","Step","Individual","Description")
-	
-	library(vegan)
-	
-	adonis(control_unweighted ~ Treatment + Individual, permutations=999, data=control_map)
-Treatment   4   1.42318 0.35579  2.0295 0.59941  0.015  </br>
-Individual  1   0.24988 0.24988  1.4254 0.10525  0.170  
-Residuals   4   0.70123 0.17531         0.29534         
-Total       9   2.37429                 1.00000    
-
-	adonis(control_weighted ~ Treatment + Individual, permutations=999, data=control_map)
-Treatment   4  0.097088 0.024272  1.7632 0.55599  0.043  </br>
-Individual  1  0.022471 0.022471  1.6324 0.12868  0.119  
-Residuals   4  0.055063 0.013766         0.31533         
-Total       9  0.174621                  1.00000 
-
-	adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map)
-Treatment   4    1.2561 0.31403  1.6796 0.38151  0.002  </br>
-Individual  1    0.3536 0.35364  1.8914 0.10741  0.006  </br>
-Residuals   9    1.6827 0.18697         0.51108          
-Total      14    3.2925                 1.00000     
-
-	adonis(ramp_weighted ~ Treatment + Individual, permutations=999, data=ramp_map)
-Treatment   4  0.099273 0.024818  1.6398 0.36763  0.066 </br>
-Individual  1  0.034546 0.034546  2.2825 0.12793  0.056 </br>
-Residuals   9  0.136216 0.015135         0.50444         
-Total      14  0.270035                  1.00000
-
-
-	#Need to check assumptions:
-
-Post-Hoc Pairwise Distance Comparisons (on unweighted only in future?):
-	
-	library(reshape)
-	
-	control_unweighted_matrix <- as.matrix(control_unweighted)
-	m <- as.matrix(control_unweighted)
-	m2 <- melt(m)[melt(upper.tri(m))$value,]
-	names(m2) <- c("Sample1", "Sample2", "distance")
-	write.table(m2, "control_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
-	
-	control_weighted_matrix <- as.matrix(control_weighted)
-	m <- as.matrix(control_weighted)
-	m2 <- melt(m)[melt(upper.tri(m))$value,]
-	names(m2) <- c("Sample1", "Sample2", "distance")
-	write.table(m2, "control_weighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
-	
-	ramp_unweighted_matrix <- as.matrix(ramp_unweighted)
-	m <- as.matrix(ramp_unweighted)
-	m2 <- melt(m)[melt(upper.tri(m))$value,]
-	names(m2) <- c("Sample1", "Sample2", "distance")
-	write.table(m2, "ramp_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
-	
-	ramp_weighted_matrix <- as.matrix(ramp_weighted)
-	m <- as.matrix(ramp_weighted)
-	m2 <- melt(m)[melt(upper.tri(m))$value,]
-	names(m2) <- c("Sample1", "Sample2", "distance")
-	write.table(m2, "ramp_weighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
-	
-	quit()
-	n
-	
-	intermediate_files/./treatment_distances.pl -mapping_file=intermediate_files/mapping.txt -distance_file=control_unweighted_pariwise_dist.txt -category=Treatment
-	mv treatment_distances.txt control_unweighted_treatment_distances.txt
-	
-	intermediate_files/./treatment_distances.pl -mapping_file=intermediate_files/mapping.txt -distance_file=control_weighted_pariwise_dist.txt -category=Treatment
-	mv treatment_distances.txt control_weighted_treatment_distances.txt
-	
-	
-	
-
-Intermediate outputs can be found in intermediate_files directory
-
-Look at pairwise ttests for different steps:
-
-	R
-	control_unweighted <- read.table("control_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
-	control_unweighted_pairs <- split(control_unweighted, control_unweighted$Sample1Diet_Sample2Diet)
-	c1c2_c1c3 <- rbind(control_unweighted_pairs$C1_C2, control_unweighted_pairs$C1_C3)
-	c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
-	c1c2_c1c3_test
-	lapply(c1c2_c1c3_test, write, "control_unweighted_c1c2_c1c3_ttest.txt", append=TRUE)
-
-	c1c3_c1c4 <- rbind(control_unweighted_pairs$C1_C3, control_unweighted_pairs$C1_C4)
-	c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
-	c1c3_c1c4_test
-	lapply(c1c3_c1c4_test, write, "control_unweighted_c1c3_c1c4_ttest.txt", append=TRUE)
-	
-	c1c4_c1cf <- rbind(control_unweighted_pairs$C1_C4, control_unweighted_pairs$C1_CF)
-	c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
-	c1c4_c1cf_test
-	lapply(c1c4_c1cf_test, write, "control_unweighted_c1c4_c1cf_ttest.txt", append=TRUE)
-	
-	
-	
-	control_weighted <- read.table("control_weighted_treatment_distances.txt", sep="\t", header=TRUE)
-	control_weighted_pairs <- split(control_weighted, control_weighted$Sample1Diet_Sample2Diet)
-	c1c2_c1c3 <- rbind(control_weighted_pairs$C1_C2, control_weighted_pairs$C1_C3)
-	c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
-	c1c2_c1c3_test
-	lapply(c1c2_c1c3_test, write, "control_weighted_c1c2_c1c3_ttest.txt", append=TRUE)
-	
-	c1c3_c1c4 <- rbind(control_weighted_pairs$C1_C3, control_weighted_pairs$C1_C4)
-	c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
-	c1c3_c1c4_test
-	lapply(c1c3_c1c4_test, write, "control_weighted_c1c3_c1c4_ttest.txt", append=TRUE)
-	
-	c1c4_c1cf <- rbind(control_weighted_pairs$C1_C4, control_weighted_pairs$C1_CF)
-	c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
-	c1c4_c1cf_test
-	lapply(c1c4_c1cf_test, write, "control_weighted_c1c4_c1cf_ttest.txt", append=TRUE)
-	
-	
-	
-	ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
-	ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
-	r1r1_r1r2 <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2)
-	r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
-	r1r1_r1r2_test
-	lapply(r1r1_r1r2_test, write, "ramp_unweighted_r1r1_r1r2_ttest.txt", append=TRUE)
-	
-	r1r2_r1r3 <- rbind(ramp_unweighted_pairs$R1_R2, ramp_unweighted_pairs$R1_R3)
-	r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
-	r1r2_r1r3_test
-	lapply(r1r2_r1r3_test, write, "ramp_unweighted_r1r2_r1r3_ttest.txt", append=TRUE)
-	
-	r1r3_r1r4 <- rbind(ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4)
-	r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
-	r1r3_r1r4_test
-	lapply(r1r3_r1r4_test, write, "ramp_unweighted_r1r3_r1r4_ttest.txt", append=TRUE)
-	
-	r1r4_r1rf <- rbind(ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
-	r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
-	r1r4_r1rf_test
-	lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append=TRUE)
-	
-	
-	
-	ramp_weighted <- read.table("ramp_weighted_treatment_distances.txt", sep="\t", header=TRUE)
-	ramp_weighted_pairs <- split(ramp_weighted, ramp_weighted$Sample1Diet_Sample2Diet)
-	r1r1_r1r2 <- rbind(ramp_weighted_pairs$R1_R1, ramp_weighted_pairs$R1_R2)
-	r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
-	r1r1_r1r2_test
-	lapply(r1r1_r1r2_test, write, "ramp_weighted_r1r1_r1r2_ttest.txt", append=TRUE)
-	
-	r1r2_r1r3 <- rbind(ramp_weighted_pairs$R1_R2, ramp_weighted_pairs$R1_R3)
-	r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
-	r1r2_r1r3_test
-	lapply(r1r2_r1r3_test, write, "ramp_weighted_r1r2_r1r3_ttest.txt", append=TRUE)
-	
-	r1r3_r1r4 <- rbind(ramp_weighted_pairs$R1_R3, ramp_weighted_pairs$R1_R4)
-	r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
-	r1r3_r1r4_test
-	lapply(r1r3_r1r4_test, write, "ramp_weighted_r1r3_r1r4_ttest.txt", append=TRUE)
-	
-	r1r4_r1rf <- rbind(ramp_weighted_pairs$R1_R4, ramp_weighted_pairs$R1_RF)
-	r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
-	r1r4_r1rf_test
-	lapply(r1r4_r1rf_test, write, "ramp_weighted_r1r4_r1rf_ttest.txt", append=TRUE)
-
-
-
-Intermediate outputs can be found in intermediate_files directory
-
-
-##Venn Diagrams
-	
-Collapse samples together based on diet
-
-	macqiime
-	
-	collapse_samples.py -b rumen.adaptation.otu_table.tax.filter.filter.biom -m intermediate_files/mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp intermediate_files/mapping_collapse.txt --collapse_fields Treatment --collapse_mode sum
-	split_otu_table.py -i rumen.adaptation.collapse_samples.biom -m intermediate_files/mapping_collapse.txt -f Diet -o split_collapse_samples
-	
-For some reason file is not reading as JSON
-
-	biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Control__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Control__.json.biom --to-json
-	biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json
-	
-	R
-	library(biom)
-	library(gplots)
-	
-	control_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Control__.json.biom")
-	ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
-	control_df <- as.data.frame(as(biom_data(control_biom), "matrix"))
-	ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
-	control_boolean_df <- as.data.frame(control_df > 0 + 0)
-	ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
-	control_boolean_df <- control_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
-	ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
-	pdf("control_venn.pdf")
-	control_venn <- venn(control_boolean_df)
-	dev.off()
-	pdf("ramp_venn.pdf")
-	ramp_venn <- venn(ramp_boolean_df)
-	dev.off()
-	
-	
-Figures saved to intermediate_files
-
-Get the number of OTUs and sequences shared pairwise:
-
-	shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_outs.txt
-	intermediate_files/./pairwise_seq_comparison.pl
-
-Saved to intermediate_files/
-
-##Heatmap
-
-	biom convert -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.txt --to-tsv --table-type="OTU table"
-	vi rumen.adaptation.otu_table.tax.filter.filter.txt 
-	#remove the first line about Created from biom and remove comment sign on second line
-	
-	R
-	library(gplots)
-	library(Heatplus)
-	library(vegan)
-	library(RColorBrewer)
-	otu_table <- read.table("rumen.adaptation.otu_table.tax.filter.filter.txt", header=TRUE, sep="\t")
-	row.names(otu_table) <- otu_table$OTU.ID
-	otu_table <- otu_table[,-1]
-	colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", "RF_259", "R1_259", "C4_346")
-	otu_table_trans <- as.data.frame(t(otu_table))
-	otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
-	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
-	otu_dist <- vegdist(otu_table_rel, method = "bray")
-	row.clus <- hclust(otu_dist, "aver")
-	maxab <- apply(otu_table_rel, 2, max)
-	n1 <- names(which(maxab < 0.01))
-	otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
-	otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
-	col.clus <- hclust(otu_dist_col, "aver")
-	pdf("heatmap.pdf")
-	heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", labCol="", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
-	dev.off()
-
-##Cytoscape
-
-	make_otu_network.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o network/ -m intermediate_files/mapping.txt 
-
-	#Insert notes on what to do in cytoscape with node colors, sizes, etc and uploading attribute tables.
-	
-
-##Distance Box and Whisker and Principle Component
-
-	R
-	library(ggplot2)
-	ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
-	control_unweighted <- read.table("control_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
-	
-	control_unweighted_pairs <- split(control_unweighted, control_unweighted$Sample1Diet_Sample2Diet)
-	control_1_pairs <- rbind(control_unweighted_pairs$C1_C1, control_unweighted_pairs$C1_C2,control_unweighted_pairs$C1_C3,control_unweighted_pairs$C1_C4,control_unweighted_pairs$C1_CF)
-	
-	ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
-	ramp_1_pairs <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2,ramp_unweighted_pairs$R1_R3,ramp_unweighted_pairs$R1_R4,ramp_unweighted_pairs$R1_RF)
-	
-	control_distance <- ggplot(control_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
-	geom_boxplot() +
-	geom_point(position = position_jitter(width = 0.15)) +
-	labs(x="", y = "Unweighted UniFrac Distance\n") +
-	guides(fill=FALSE) +
-	theme(axis.text.x = element_text( colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
-	#ggsave(control_distance, file="control_distances_box_whisker.pdf", w=5, h=5)
-	
-	ramp_distance <- ggplot(ramp_1_pairs, aes(x=Sample1Diet_Sample2Diet, y=Distance)) +
-	geom_boxplot() +
-	geom_point(position = position_jitter(width = 0.15)) +
-	labs(x="", y = "Unweighted UniFrac Distance\n") +
-	guides(fill=FALSE) +
-	theme(axis.text.x = element_text(colour="black"), 	axis.title.y = element_text(size=14), axis.ticks = element_blank())
-	ggsave(ramp_distance, file="ramp_distances_box_whisker.pdf", w=5, h=5)
-	
-
-I went ahead and manually made a file to upload into R with PC1 and PC2 from beta diversity command before for both control and ramp datasets.  Right now, just doing this with unweighted unifrac.  The file can be found in intermediate_files. It has the SampleID, Treatment (or step), PC1, and PC2. control_unweighted_pc.txt and ramp_unweighted_pc.txt
-
-	R
-	library(ggplot2)
-	
-	control_pc <- read.table("intermediate_files/control_unweighted_pc.txt", header=TRUE, sep="\t")
-	ramp_pc <- read.table("intermediate_files/ramp_unweighted_pc.txt", header=TRUE, sep="\t")
-	
-	
-	shape_control <- c("C1" = 15, "C2" = 16, "C3" = 17, "C4" = 18, "CF" = 8)
-	control_pc_plot <- ggplot(control_pc, aes(PC1, PC2)) +
-	geom_point(aes(size=4, shape = factor(Treatment))) +
-	xlab("PC1 (37.1%)") +
-	ylab("PC2 (13.7%)") +
-	guides(size=FALSE) +
-	scale_shape_manual(name = "", values = shape_control) +
-	labs(fill="")
-	#ggsave(control_pc_plot, file="control_unweighted_pc.pdf", w=6, h=6)
-	
-	shape_ramp <- c("R1" = 15, "R2" = 16, "R3" = 17, "R4" = 18, "RF" = 8)
-	ramp_pc_plot <- ggplot(ramp_pc, aes(PC1, PC2)) +
-	geom_point(aes(size=4, shape = factor(Treatment))) +	xlab("PC1 (20.3%)") +
-	ylab("PC2 (12.9%)") +
-	guides(size=FALSE) + 
-	scale_shape_manual(name = "", values = shape_ramp) +
-	labs(fill="")
-	#ggsave(ramp_pc_plot, file="ramp_unweighted_pc.pdf", w=6, h=6)
-
-
-Now I want to tile all 4 plots together:
-	
-	 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-		library(grid)
-		plots <- c(list(...), plotlist)
-		numPlots = length(plots)
-		if (is.null(layout)) {
-			layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),ncol = cols, nrow = ceiling(numPlots/cols))
-		}
-
-		if (numPlots==1) {
-			print(plots[[1]])
-
-		} else {
-			grid.newpage()
-			pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-			for (i in 1:numPlots) {
-				matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-				print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,layout.pos.col = matchidx$col))
-    		}
-    	}
-	}
-
-
-	pdf("unweighted_pc_distance.pdf", height=12, width=12)
-	multiplot(control_pc_plot, ramp_pc_plot, control_distance, ramp_distance, cols=2)
-	dev.off()
-
-
-##OTU-Level Statistics
-Look at differential OTUs at break points in ramp and control based on pairwise t-statstiics before.  We use LEfSe to compare samples - first need to be in relative abundance though.
-
-	macqiime
-	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.biom
-	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom
-
-	biom convert -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.biom -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.txt --table-type="OTU table" --to-tsv
-	biom convert -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom -o split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.txt --table-type="OTU table" --to-tsv
-	exit
-	
-	Delete the first line and comment from second line on both outputs
-	
-	
-	
-	R
-	control <- read.table("split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.txt", header=TRUE, sep="\t")
-	rownames(control) <- control$OTU.ID
-	control <- control[, -1]
-	control_rel <- control/rowSums(control)
-	write.table(control_rel, sep="\t", file="split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.relative.txt", row.names=TRUE, col.names=TRUE, quote = FALSE)
-	
-	ramp <- read.table("split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.txt", header=TRUE, sep="\t")
-	rownames(ramp) <- ramp$OTU.ID
-	ramp <- ramp[, -1]
-	ramp_rel <- ramp/rowSums(ramp)
-	write.table(ramp_rel, sep="\t", file="split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.relative.txt", row.names=TRUE, col.names=TRUE, quote = FALSE)
-	quit()
-	
-Now, need to alter relative abundance tables to upload to LEfSe - I did so manually, but files control.lefse.txt, ramp.lefse.break1.txt, and ramp.lefse.break2.txt  can be found in the intermediate files to be uploaded.  Only changes from relative abundance OTU tables were removing sampleIDs and replacing with one row for Break identifier and another row with animal ID.
-
-Unfortunately, I had troubles getting LEfSe to work on command line, so we still use the version hosted on Galaxy. LEfSe on Galaxy can be found at
-http://huttenhower.sph.harvard.edu/galaxy/
-
-Upload each file using the Get Data Module as a tabular file. Then run Format Data for LEfSe with BREAK as class, no subclass, and ANIMAL as subject.  Use option Yes for per-sample normalization.
-
-Next, run LDA Effect Size with the output from Format Data with default values and download the results. The outputs I generated can be found in intermediate_files as control.lefse_output.txt, ramp.break1.lefse_output.txt, and ramp.break2.lefse_otuput.txt.  If repreating yourself, you may get a slightly different answer because of changes in LEfSe script on Galaxy.
-
-Manually created a list of OTUs for each break from the LEfSe output.  Simply sorted by fourth column (LDA score) largest to smallest and copied OTUs into text editor and replaced f_ with nothing. Files are named control_break_otus.txt, ramp_break1_otus.txt, and ramp_break2_otus.txt.
-
-	macqiime
-	
-	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Control__.filter.biom -o control.break.biom -e control_break_otus.txt --negate_ids_to_exclude
-	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom -o ramp.break1.biom -e ramp_break1_otus.txt --negate_ids_to_exclude
-	filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.filter.filter__Diet_Ramp__.filter.biom -o ramp.break2.biom -e ramp_break2_otus.txt --negate_ids_to_exclude
-	biom convert -i control.break.biom -o control.break.txt --table-type="OTU table" --to-tsv --header-key taxonomy
-	biom convert -i ramp.break1.biom -o ramp.break1.txt --table-type="OTU table" --to-tsv --header-key taxonomy
-	biom convert -i ramp.break2.biom -o ramp.break2.txt --table-type="OTU table" --to-tsv --header-key taxonomy
-	
-
-Delete first row of convert file and uncomment second row.
-	
-Then I am going to sort those new OTU tables by break and LDA score.  So, I created files with OTU ID, break number, and LDA from LEfSe output - control_break_LDA.txt, ramp_break1_LDA.txt, and ramp_break2_LDA.txt.  Using those files I added break number and LDA score to the new OTU tables so we can order the OTU rows in the subsequent heatmaps.
-
-	awk 'NR==1; NR > 1 {print $0 | "sort"}' control.break.txt > control.break.sort.txt
-	sort control_break_LDA.txt > control_break_LDA_sort.txt
-	{ printf '\tbreak\tLDA\n'; cat control_break_LDA_sort.txt ; }  > control_break_LDA_sort_label.txt
-	paste control.break.sort.txt <(cut -f 2,3 control_break_LDA_sort_label.txt) > control.break.LDA.txt
-	
-	awk 'NR==1; NR > 1 {print $0 | "sort"}' ramp.break1.txt > ramp.break1.sort.txt
-	sort ramp_break1_LDA.txt > ramp_break1_LDA_sort.txt
-	{ printf '\tbreak\tLDA\n'; cat ramp_break1_LDA_sort.txt ; }  > ramp_break1_LDA_sort_label.txt
-	paste ramp.break1.sort.txt <(cut -f 2,3 ramp_break1_LDA_sort_label.txt) > ramp.break1.LDA.txt
-
-	awk 'NR==1; NR > 1 {print $0 | "sort"}' ramp.break2.txt > ramp.break2.sort.txt
-	sort ramp_break2_LDA.txt > ramp_break2_LDA_sort.txt
-	{ printf '\tbreak\tLDA\n'; cat ramp_break2_LDA_sort.txt ; }  > ramp_break2_LDA_sort_label.txt
-	paste ramp.break2.sort.txt <(cut -f 2,3 ramp_break2_LDA_sort_label.txt) > ramp.break2.LDA.txt
-	
-	
-	exit
-	
-Use R to sort by break and LDA score then make the heatmaps
-
-	R
-	library(gplots)
-	library(Heatplus)
-	library(vegan)
-	library(RColorBrewer)
-	control <- read.table("control.break.LDA.txt", header=TRUE, sep="\t")
-	control <- control[with(control, order(break., -LDA)), ]
-	control_samples <- subset(control, select = -c(taxonomy,break.,LDA))
-	row.names(control_samples) <- control_samples$OTU.ID
-	control_samples <- control_samples[,-1]
-	colnames(control_samples) <- c("CF_332", "C3_346", "C4_332", "CF_346", "C3_332", "C1_346", "C2_332", "C1_332", "C2_346", "C4_346")
-	control_samples <- control_samples[c("C1_346", "C1_332", "C2_346", "C2_332", "C3_346", "C3_332", "C4_346", "C4_332", "CF_346", "CF_332")]
-	control_trans <- as.data.frame(t(control_samples))
-	control_rel <- control_trans/rowSums(control_trans)
-	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
-	maxab <- apply(control_rel, 2, max)
-	n1 <- names(which(maxab < 0.03))
-	control_rel2 <- control_rel[, -which(names(control_rel) %in% n1)]
-	otus <- colnames(control_rel2)
-	write.table(otus, "control_break_figure_otus.txt", quote=FALSE, sep="\n", row.names = FALSE, col.names=FALSE)
-	
-	
-
-The last command makes OTUs, so we can go get taxonomy of the printed OTUs on the figure and add them.  Keep the R window open and use a different terminal window to follow these commands:
-	
-	intermediate_files/parse_taxonomy.pl -otu_text_file=control.break.LDA.txt -figure_otus=control_break_figure_otus.txt 
-	
-Now, back in R, run the commands inserting taxnomy output from above in the last line of heatmap.2 command:
-	
-	lmat = rbind(c(4,0,0),c(2,1,3))
-	lwid = c(0.60,1.9,0.3)
-	lhei = c(0.3,1.5)
-	pdf("control_break_heatmap.pdf", width=12, height=9)
-	heatmap.2(as.matrix(control_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("S24-7", "Spirochaetaceae", "S24-7", "S24-7", "S24-7", "No Assigned Family", "No Assigned Family", "No Assigned Family", "No Assigned Family", "Pirellulaceae", "No Assigned Family", "Prevotellaceae", "Prevotellaceae", "Ruminococcaceae", "No Assigned Family", "Lachnospiraceae", "Anaerolinaceae", "Mogibacteriaceae", "Clostridiaceae", "No Assigned Family", "Veillonellaceae", "Prevotellaceae", "Lachnospiraceae", "Veillonellaceae", "Veillonellaceae", "Paraprevotellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Ruminococcaceae", "Prevotellaceae", "Prevotellaceae", "Succinivibrionaceae", "Veillonellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "Lachnospiraceae", "Lachnospiraceae"))
-	dev.off()
-
-
-Repeat the above for ramp break 1:
-	
-	ramp1 <- read.table("ramp.break1.LDA.txt", header=TRUE, sep="\t")
-	ramp1 <- ramp1[with(ramp1, order(break., -LDA)), ]
-	ramp1_samples <- subset(ramp1, select = -c(taxonomy,break.,LDA))
-	ramp1_samples <- subset(ramp1, select = c(OTU.ID,R18,R8,R24,R23,R38,R12))
-	row.names(ramp1_samples) <- ramp1_samples$OTU.ID
-	ramp1_samples <- ramp1_samples[,-1]
-	colnames(ramp1_samples) <- c("R1_222","R1_259","R1_343","R2_222","R2_259","R2_343")
-	ramp1_trans <- as.data.frame(t(ramp1_samples))
-	ramp1_rel <- ramp1_trans/rowSums(ramp1_trans)
-	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
-	maxab <- apply(ramp1_rel, 2, max)
-	n1 <- names(which(maxab < 0.03))
-	ramp1_rel2 <- ramp1_rel[, -which(names(ramp1_rel) %in% n1)]
-	otus <- colnames(ramp1_rel2)
-	write.table(otus, "ramp_break1_figure_otus.txt", quote=FALSE, sep="\n", row.names = FALSE, col.names=FALSE)
-
-Use seperate terminal window to generate taxonomy:
-	
-	intermediate_files/parse_taxonomy.pl -otu_text_file=ramp.break1.LDA.txt -figure_otus=ramp_break1_figure_otus.txt 
-	
-Now, back in R, run the commands inserting taxnomy output from above in the last line of heatmap.2 command:
-
-	lmat = rbind(c(4,0,0),c(2,1,3))
-	lwid = c(0.60,1.9,0.3)
-	lhei = c(0.3,1.5)
-	pdf("ramp_break1_heatmap.pdf", width=12, height=9)
-	heatmap.2(as.matrix(ramp1_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("S24-7", "Ruminococcaceae", "Prevotellaceae", "No Assigned Family", "Lachnospiraceae", "Lachnospiraceae", "Ruminococcaceae", "No Assigned Family", "Coriobacteriaceae", "Ruminococcaceae", "Lachnospiraceae", "Prevotellaceae", "Prevotellaceae", "Eubacteriaceae", "Erysipelotrichaceae", "Prevotellaceae", "No Assigned Family", "No Assigned Family", "Fibrobacteraceae", "Prevotellaceae"))
-	dev.off()
-	
-
-
-Do all the above for ramp break 2:
-
-	ramp2 <- read.table("ramp.break2.LDA.txt", header=TRUE, sep="\t")
-	ramp2 <- ramp2[with(ramp2, order(break., -LDA)), ]
-	ramp2_samples <- subset(ramp2, select = -c(taxonomy,break.,LDA))
-	ramp2_samples <- subset(ramp2, select = c(OTU.ID,R23,R38,R12,R4,R11,R3,R5,R14,R13,R21,R7,R20))
-	row.names(ramp2_samples) <- ramp2_samples$OTU.ID
-	ramp2_samples <- ramp2_samples[,-1]
-	colnames(ramp2_samples) <- c("R2_222","R2_259","R2_343","R3_222","R3_259","R3_343","R4_222","R4_259","R4_343","RF_222","RF_259","RF_343")
-	ramp2_trans <- as.data.frame(t(ramp2_samples))
-	ramp2_rel <- ramp2_trans/rowSums(ramp2_trans)
-	scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
-	maxab <- apply(ramp2_rel, 2, max)
-	n1 <- names(which(maxab < 0.03))
-	ramp2_rel2 <- ramp2_rel[, -which(names(ramp2_rel) %in% n1)]
-	otus <- colnames(ramp2_rel2)
-	write.table(otus, "ramp_break2_figure_otus.txt", quote=FALSE, sep="\n", row.names = FALSE, col.names=FALSE)
-
-Use seperate terminal window to generate taxonomy:
-	
-	intermediate_files/parse_taxonomy.pl -otu_text_file=ramp.break2.LDA.txt -figure_otus=ramp_break2_figure_otus.txt 
-	
-Now, back in R, run the commands inserting taxnomy output from above in the last line of heatmap.2 command:
-
-	lmat = rbind(c(4,0,0),c(2,1,3))
-	lwid = c(0.60,1.9,0.3)
-	lhei = c(0.3,1.5)
-	pdf("ramp_break2_heatmap.pdf", width=12, height=9)
-	heatmap.2(as.matrix(ramp2_rel2), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", ylab = "", main = "", srtCol=67.5, cexCol=1.3, cexRow=2.0, lmat= lmat, lwid = lwid, lhei = lhei, labCol = c("Prevotellaceae", "Lachnospiraceae", "Prevotellaceae", "Lachnospiraceae", "Prevotellaceae", "Paraprevotellaceae", "No Assigned Family", "No Assigned Family", "Prevotellaceae", "Lachnospiraceae", "Mogibacteriaceae", "Mogibacteriaceae", "Lachnospiraceae", "No Assigned Family", "Lachnospiraceae", "Mogibacteriaceae", "Prevotellaceae", "Prevotellaceae", "Paraprevotellaceae", "No Assigned Family", "Prevotellaceae", "Prevotellaceae", "Prevotellaceae", "RF16", "Prevotellaceae", "Erysipelotrichaceae"))
-	dev.off()
-	quit()
-
-
-##Bacteroidetes:Firmicutes
-
-Wanted to look at the ratio of Bacteroidetes to Firmicutes over the course of adaptation.
-
-	macqiime
-	filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.bacteroidetes.biom -p p__Bacteroidetes
-	filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.firmicutes.biom -p p__Firmicutes
-	biom summarize-table -i rumen.adaptation.otu_table.tax.filter.filter.bacteroidetes.biom -o summarize_bacteroidetes.txt
-	biom summarize-table -i rumen.adaptation.otu_table.tax.filter.filter.firmicutes.biom -o summarize_firmicutes.txt
-
-I used the two summary files to look at the number of seqeunces assigned to each phyla and relabelled the sample identifiers as their diet, step, and animal ID.  The collated summary file used to generate the table in the manuscript is bacteroidetes_firmicutes.txt.
-
-
-
-	
-
+mothur "#reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)"
+```
+
+```
+## --2015-07-12 19:39:47--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
+## Resolving raw.githubusercontent.com... 23.235.40.133
+## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
+## HTTP request sent, awaiting response... 200 OK
+## Length: 2076 (2.0K) [text/plain]
+## Saving to: ‘mapping.txt’
+## 
+##      0K ..                                                    100%  220M=0s
+## 
+## 2015-07-12 19:39:48 (220 MB/s) - ‘mapping.txt’ saved [2076/2076]
+## 
+## --2015-07-12 19:39:48--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
+## Resolving raw.githubusercontent.com... 23.235.40.133
+## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
+## HTTP request sent, awaiting response... 200 OK
+## Length: 3575 (3.5K) [text/plain]
+## Saving to: ‘qiime_parameters_working.txt’
+## 
+##      0K ...                                                   100%  426M=0s
+## 
+## 2015-07-12 19:39:48 (426 MB/s) - ‘qiime_parameters_working.txt’ saved [3575/3575]
+## 
+## 'xterm-256color': unknown terminal type.
+## 
+## 
+## 
+## 
+## 
+## 
+## mothur v.1.35.1
+## Last updated: 3/31/2015
+## 
+## by
+## Patrick D. Schloss
+## 
+## Department of Microbiology & Immunology
+## University of Michigan
+## pschloss@umich.edu
+## http://www.mothur.org
+## 
+## When using, please cite:
+## Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+## 
+## Distributed under the GNU General Public License
+## 
+## Type 'help()' for information on the commands that are available
+## 
+## Type 'quit()' to exit program
+## 
+## 
+## 
+## mothur > trim.seqs(fasta=rumen_adaptation_rev_primer/seqs_rev_primer_truncated.fna, minlength=400)
+## 
+## Using 1 processors.
+## 1000
+## 2000
+## 3000
+## 4000
+## 5000
+## 6000
+## 7000
+## 8000
+## 9000
+## 10000
+## 11000
+## 12000
+## 13000
+## 14000
+## 15000
+## 16000
+## 17000
+## 18000
+## 19000
+## 20000
+## 21000
+## 22000
+## 23000
+## 24000
+## 25000
+## 26000
+## 27000
+## 28000
+## 29000
+## 30000
+## 31000
+## 32000
+## 33000
+## 34000
+## 35000
+## 36000
+## 37000
+## 38000
+## 39000
+## 40000
+## 41000
+## 42000
+## 43000
+## 44000
+## 45000
+## 46000
+## 47000
+## 48000
+## 49000
+## 50000
+## 51000
+## 52000
+## 53000
+## 54000
+## 55000
+## 56000
+## 57000
+## 58000
+## 59000
+## 60000
+## 61000
+## 62000
+## 63000
+## 64000
+## 65000
+## 66000
+## 67000
+## 68000
+## 69000
+## 70000
+## 71000
+## 72000
+## 73000
+## 74000
+## 75000
+## 76000
+## 77000
+## 78000
+## 79000
+## 80000
+## 81000
+## 82000
+## 83000
+## 84000
+## 85000
+## 86000
+## 87000
+## 88000
+## 89000
+## 90000
+## 91000
+## 92000
+## 93000
+## 94000
+## 95000
+## 96000
+## 97000
+## 98000
+## 99000
+## 100000
+## 101000
+## 102000
+## 103000
+## 104000
+## 105000
+## 106000
+## 107000
+## 108000
+## 109000
+## 110000
+## 111000
+## 112000
+## 113000
+## 114000
+## 115000
+## 116000
+## 117000
+## 118000
+## 119000
+## 120000
+## 121000
+## 122000
+## 123000
+## 124000
+## 125000
+## 126000
+## 127000
+## 128000
+## 129000
+## 130000
+## 131000
+## 132000
+## 133000
+## 134000
+## 135000
+## 136000
+## 137000
+## 138000
+## 139000
+## 140000
+## 141000
+## 142000
+## 143000
+## 144000
+## 145000
+## 146000
+## 147000
+## 148000
+## 149000
+## 150000
+## 151000
+## 152000
+## 153000
+## 154000
+## 155000
+## 156000
+## 157000
+## 158000
+## 159000
+## 160000
+## 161000
+## 162000
+## 163000
+## 164000
+## 165000
+## 166000
+## 167000
+## 168000
+## 169000
+## 170000
+## 171000
+## 172000
+## 173000
+## 174000
+## 175000
+## 176000
+## 177000
+## 178000
+## 179000
+## 180000
+## 181000
+## 182000
+## 183000
+## 184000
+## 185000
+## 186000
+## 187000
+## 188000
+## 189000
+## 190000
+## 191000
+## 192000
+## 193000
+## 194000
+## 195000
+## 196000
+## 197000
+## 198000
+## 199000
+## 200000
+## 201000
+## 202000
+## 203000
+## 204000
+## 205000
+## 206000
+## 207000
+## 208000
+## 209000
+## 210000
+## 211000
+## 212000
+## 213000
+## 214000
+## 215000
+## 216000
+## 217000
+## 218000
+## 219000
+## 220000
+## 221000
+## 222000
+## 223000
+## 224000
+## 225000
+## 226000
+## 227000
+## 228000
+## 229000
+## 230000
+## 231000
+## 232000
+## 233000
+## 234000
+## 235000
+## 236000
+## 237000
+## 238000
+## 239000
+## 240000
+## 241000
+## 242000
+## 243000
+## 244000
+## 245000
+## 246000
+## 247000
+## 248000
+## 249000
+## 250000
+## 251000
+## 252000
+## 253000
+## 254000
+## 255000
+## 256000
+## 257000
+## 258000
+## 259000
+## 260000
+## 261000
+## 262000
+## 263000
+## 264000
+## 265000
+## 266000
+## 267000
+## 268000
+## 269000
+## 270000
+## 271000
+## 272000
+## 273000
+## 274000
+## 275000
+## 276000
+## 276080
+## 
+## 
+## Output File Names: 
+## rumen_adaptation_rev_primer/seqs_rev_primer_truncated.trim.fasta
+## rumen_adaptation_rev_primer/seqs_rev_primer_truncated.scrap.fasta
+## 
+## 
+## mothur > quit()
+## 'xterm-256color': unknown terminal type.
+## 
+## 
+## 
+## 
+## 
+## 
+## mothur v.1.35.1
+## Last updated: 3/31/2015
+## 
+## by
+## Patrick D. Schloss
+## 
+## Department of Microbiology & Immunology
+## University of Michigan
+## pschloss@umich.edu
+## http://www.mothur.org
+## 
+## When using, please cite:
+## Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+## 
+## Distributed under the GNU General Public License
+## 
+## Type 'help()' for information on the commands that are available
+## 
+## Type 'quit()' to exit program
+## 
+## 
+## 
+## mothur > reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)
+## 
+## Output File Names: 
+## rumen.adaptation.qc.trim.rc.fasta
+## 
+## mothur > quit()
+```
+
+## Pick OTUs, assign taxonomy, and align sequences
+
+Use a custom perl script from our lab to convert the fasta file from QIIME format to a format that works with UPARSE to generate the OTU table:
+
+
+```bash
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_to_usearch.pl
+
+chmod 775 qiime_to_usearch.pl
+
+./qiime_to_usearch.pl -fasta=rumen.adaptation.qc.trim.rc.fasta -prefix=rumen
+
+mv format.fasta rumen.adaptation.format.fasta
+```
+
+Run the sequences through the UPARSE pipeline to pick OTUs:
+
+```bash
+svn export https://github.com/chrisLanderson/rumen_adaptation/trunk/usearch_python_scripts --non-interactive --trust-server-cert
+chmod -R 775 usearch_python_scripts
+wget https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
+chmod 775 uc2otutab.py
+chmod 775 fasta_number.py
+gzip -d gold.fasta.gz
+chmod 775 gold.fasta
+mkdir usearch_results
+
+usearch -derep_fulllength rumen.adaptation.format.fasta -sizeout -output usearch_results/rumen.adaptation.derep.fasta
+
+usearch -sortbysize usearch_results/rumen.adaptation.derep.fasta -minsize 2 -output usearch_results/rumen.adaptation.derep.sort.fasta
+
+usearch -cluster_otus usearch_results/rumen.adaptation.derep.sort.fasta -otus usearch_results/rumen.adaptation.otus1.fasta
+
+usearch -uchime_ref usearch_results/rumen.adaptation.otus1.fasta -db gold.fasta -strand plus -nonchimeras usearch_results/rumen.adaptation.otus1.nonchimera.fasta
+
+python usearch_python_scripts/fasta_number.py usearch_results/rumen.adaptation.otus1.nonchimera.fasta > usearch_results/rumen.adaptation.otus2.fasta
+
+usearch -usearch_global rumen.adaptation.format.fasta -db usearch_results/rumen.adaptation.otus2.fasta -strand plus -id 0.97 -uc usearch_results/rumen.adaptation.otu_map.uc
+
+python usearch_python_scripts/uc2otutab.py usearch_results/rumen.adaptation.otu_map.uc > usearch_results/rumen.adaptation.otu_table.txt
+
+cp usearch_results/rumen.adaptation.otu_table.txt ./
+```
+
+```
+## A    usearch_python_scripts
+## A    usearch_python_scripts/die.py
+## A    usearch_python_scripts/die.pyc
+## A    usearch_python_scripts/faqual2fastq.py
+## A    usearch_python_scripts/faqual2fastq2.py
+## A    usearch_python_scripts/fasta.py
+## A    usearch_python_scripts/fasta.pyc
+## A    usearch_python_scripts/fasta_number.py
+## A    usearch_python_scripts/fastq.py
+## A    usearch_python_scripts/fastq_strip_barcode_relabel.py
+## A    usearch_python_scripts/fastq_strip_barcode_relabel2.py
+## A    usearch_python_scripts/primer.py
+## A    usearch_python_scripts/progress.py
+## A    usearch_python_scripts/progress.pyc
+## A    usearch_python_scripts/uc.py
+## A    usearch_python_scripts/uc.pyc
+## A    usearch_python_scripts/uc2otutab.py
+## Exported revision 127.
+## --2015-07-12 20:00:28--  https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
+## Resolving github.com... 192.30.252.129
+## Connecting to github.com|192.30.252.129|:443... connected.
+## HTTP request sent, awaiting response... 302 Found
+## Location: https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz [following]
+## --2015-07-12 20:00:29--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz
+## Resolving raw.githubusercontent.com... 23.235.40.133
+## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
+## HTTP request sent, awaiting response... 200 OK
+## Length: 3293704 (3.1M) [application/octet-stream]
+## Saving to: ‘gold.fasta.gz’
+## 
+##      0K .......... .......... .......... .......... ..........  1%  528K 6s
+##     50K .......... .......... .......... .......... ..........  3% 1.73M 4s
+##    100K .......... .......... .......... .......... ..........  4% 1.56M 3s
+##    150K .......... .......... .......... .......... ..........  6% 1.56M 3s
+##    200K .......... .......... .......... .......... ..........  7% 1.85M 3s
+##    250K .......... .......... .......... .......... ..........  9% 5.60M 2s
+##    300K .......... .......... .......... .......... .......... 10% 2.29M 2s
+##    350K .......... .......... .......... .......... .......... 12% 1.76M 2s
+##    400K .......... .......... .......... .......... .......... 13% 7.10M 2s
+##    450K .......... .......... .......... .......... .......... 15% 2.46M 2s
+##    500K .......... .......... .......... .......... .......... 17% 5.65M 1s
+##    550K .......... .......... .......... .......... .......... 18% 5.38M 1s
+##    600K .......... .......... .......... .......... .......... 20% 4.07M 1s
+##    650K .......... .......... .......... .......... .......... 21% 4.88M 1s
+##    700K .......... .......... .......... .......... .......... 23% 8.05M 1s
+##    750K .......... .......... .......... .......... .......... 24% 3.68M 1s
+##    800K .......... .......... .......... .......... .......... 26% 3.80M 1s
+##    850K .......... .......... .......... .......... .......... 27% 7.60M 1s
+##    900K .......... .......... .......... .......... .......... 29% 6.58M 1s
+##    950K .......... .......... .......... .......... .......... 31% 6.19M 1s
+##   1000K .......... .......... .......... .......... .......... 32% 4.26M 1s
+##   1050K .......... .......... .......... .......... .......... 34% 7.11M 1s
+##   1100K .......... .......... .......... .......... .......... 35% 6.11M 1s
+##   1150K .......... .......... .......... .......... .......... 37% 3.58M 1s
+##   1200K .......... .......... .......... .......... .......... 38% 5.97M 1s
+##   1250K .......... .......... .......... .......... .......... 40% 9.61M 1s
+##   1300K .......... .......... .......... .......... .......... 41% 6.87M 1s
+##   1350K .......... .......... .......... .......... .......... 43% 5.21M 1s
+##   1400K .......... .......... .......... .......... .......... 45% 7.39M 1s
+##   1450K .......... .......... .......... .......... .......... 46% 6.05M 1s
+##   1500K .......... .......... .......... .......... .......... 48% 5.06M 1s
+##   1550K .......... .......... .......... .......... .......... 49% 6.94M 0s
+##   1600K .......... .......... .......... .......... .......... 51% 8.28M 0s
+##   1650K .......... .......... .......... .......... .......... 52% 4.15M 0s
+##   1700K .......... .......... .......... .......... .......... 54% 8.23M 0s
+##   1750K .......... .......... .......... .......... .......... 55% 8.21M 0s
+##   1800K .......... .......... .......... .......... .......... 57% 11.3M 0s
+##   1850K .......... .......... .......... .......... .......... 59% 4.27M 0s
+##   1900K .......... .......... .......... .......... .......... 60% 6.49M 0s
+##   1950K .......... .......... .......... .......... .......... 62% 7.24M 0s
+##   2000K .......... .......... .......... .......... .......... 63% 7.75M 0s
+##   2050K .......... .......... .......... .......... .......... 65% 12.2M 0s
+##   2100K .......... .......... .......... .......... .......... 66% 4.09M 0s
+##   2150K .......... .......... .......... .......... .......... 68% 7.66M 0s
+##   2200K .......... .......... .......... .......... .......... 69% 6.88M 0s
+##   2250K .......... .......... .......... .......... .......... 71% 12.5M 0s
+##   2300K .......... .......... .......... .......... .......... 73% 6.45M 0s
+##   2350K .......... .......... .......... .......... .......... 74% 5.95M 0s
+##   2400K .......... .......... .......... .......... .......... 76% 7.11M 0s
+##   2450K .......... .......... .......... .......... .......... 77% 6.38M 0s
+##   2500K .......... .......... .......... .......... .......... 79% 13.6M 0s
+##   2550K .......... .......... .......... .......... .......... 80% 8.25M 0s
+##   2600K .......... .......... .......... .......... .......... 82% 9.08M 0s
+##   2650K .......... .......... .......... .......... .......... 83% 8.92M 0s
+##   2700K .......... .......... .......... .......... .......... 85% 6.01M 0s
+##   2750K .......... .......... .......... .......... .......... 87% 5.66M 0s
+##   2800K .......... .......... .......... .......... .......... 88% 10.3M 0s
+##   2850K .......... .......... .......... .......... .......... 90% 14.5M 0s
+##   2900K .......... .......... .......... .......... .......... 91% 8.48M 0s
+##   2950K .......... .......... .......... .......... .......... 93% 6.90M 0s
+##   3000K .......... .......... .......... .......... .......... 94% 3.61M 0s
+##   3050K .......... .......... .......... .......... .......... 96% 11.1M 0s
+##   3100K .......... .......... .......... .......... .......... 97% 11.5M 0s
+##   3150K .......... .......... .......... .......... .......... 99% 9.03M 0s
+##   3200K .......... ......                                     100% 65.8M=0.7s
+## 
+## 2015-07-12 20:00:30 (4.45 MB/s) - ‘gold.fasta.gz’ saved [3293704/3293704]
+## 
+## chmod: uc2otutab.py: No such file or directory
+## chmod: fasta_number.py: No such file or directory
+## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
+## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
+## http://drive5.com/usearch
+## 
+## Licensed to: canderson30@unl.edu
+## 
+## 00:00 966.7kb Reading rumen.adaptation.format.fasta, 116Mb
+## 00:00 117Mb 272630 (272.6k) seqs, min 400, avg 400, max 400nt
+## 00:02 134Mb 188248 (188.2k) uniques, avg cluster 1.4, median 1, max 1750
+## 00:02 134Mb    0.0% Writing usearch_results/rumen.adaptation.derep.fasta
+00:03 134Mb   10.2% Writing usearch_results/rumen.adaptation.derep.fasta
+00:04 134Mb   25.9% Writing usearch_results/rumen.adaptation.derep.fasta
+00:05 134Mb   41.8% Writing usearch_results/rumen.adaptation.derep.fasta
+00:06 134Mb   58.0% Writing usearch_results/rumen.adaptation.derep.fasta
+00:07 134Mb   72.8% Writing usearch_results/rumen.adaptation.derep.fasta
+00:08 134Mb   88.5% Writing usearch_results/rumen.adaptation.derep.fasta
+00:08 134Mb  100.0% Writing usearch_results/rumen.adaptation.derep.fasta
+## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
+## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
+## http://drive5.com/usearch
+## 
+## Licensed to: canderson30@unl.edu
+## 
+## 00:00 917.5kb Reading usearch_results/rumen.adaptation.derep.fasta, 82Mb
+## 00:01  83Mb 188248 (188.2k) seqs, min 400, avg 400, max 400nt
+## 00:01  86Mb Getting sizes
+## 00:02  86Mb Sorting 15960 sequences
+## 00:02  86Mb    0.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
+00:02  86Mb  100.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
+## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
+## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
+## http://drive5.com/usearch
+## 
+## Licensed to: canderson30@unl.edu
+## 
+## 00:01 9.2Mb    0.1% 0 OTUs
+00:02  12Mb    1.0% 61 OTUs
+00:03  13Mb    1.3% 83 OTUs
+00:04  13Mb    1.6% 93 OTUs
+00:05  14Mb    4.7% 205 OTUs
+00:06  15Mb   19.0% 504 OTUs
+00:07  16Mb   32.7% 686 OTUs
+00:08  18Mb   45.3% 820 OTUs
+00:09  18Mb   56.9% 913 OTUs
+00:10  19Mb   67.2% 998 OTUs
+00:11  20Mb   76.8% 1070 OTUs
+00:12  20Mb   86.0% 1147 OTUs
+00:13  21Mb   95.0% 1229 OTUs
+00:13  21Mb  100.0% 1257 OTUs
+##                              
+## Input seqs  15960 (16.0k)
+##       OTUs  1257
+##    Members  9372
+##   Chimeras  5331
+##    Max mem  21Mb
+##       Time  12.0s
+## Throughput  1330.0 seqs/sec.
+## 
+## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
+## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
+## http://drive5.com/usearch
+## 
+## Licensed to: canderson30@unl.edu
+## 
+## 00:00 946.2kb Reading usearch_results/rumen.adaptation.otus1.fasta, 550.1kb
+## 00:00 1.5Mb 1257 seqs, min 400, avg 400, max 400nt
+## 00:00 1.6Mb Reading gold.fasta, 16Mb
+## 00:00  18Mb 10362 (10.4k) seqs, min 1205, avg 1470, max 1655nt
+## 00:00  18Mb    0.0% Masking
+00:01  18Mb   35.8% Masking
+00:01  18Mb  100.0% Masking
+## 00:01  18Mb    0.0% Word stats
+00:01  18Mb  100.0% Word stats
+## 00:01  18Mb    0.0% Building slots
+00:01  19Mb  100.0% Building slots
+## 00:01  19Mb    0.0% Build index   
+00:02  63Mb    3.9% Build index
+00:02  82Mb  100.0% Build index
+## 00:02  82Mb    0.1% Search 0/1 chimeras found (0.0%)
+00:03  85Mb    3.6% Search 0/45 chimeras found (0.0%)
+00:04  88Mb   27.1% Search 2/341 chimeras found (0.6%)
+00:05  91Mb   48.4% Search 9/609 chimeras found (1.5%)
+00:06  92Mb   67.2% Search 26/845 chimeras found (3.1%)
+00:07  94Mb   84.7% Search 47/1065 chimeras found (4.4%)
+00:07  96Mb  100.0% Search 60/1257 chimeras found (4.8%)
+## 00:07  96Mb    0.1% Writing 1197 non-chimeras           
+00:07  96Mb  100.0% Writing 1197 non-chimeras
+## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
+## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
+## http://drive5.com/usearch
+## 
+## Licensed to: canderson30@unl.edu
+## 
+## 00:00  18Mb Reading usearch_results/rumen.adaptation.otus2.fasta, 477.7kb
+## 00:00  18Mb 1165 seqs, min 400, avg 400, max 400nt
+## 00:00  18Mb    0.1% Masking
+00:00  18Mb  100.0% Masking
+## 00:00  19Mb    0.1% Word stats
+00:00  19Mb  100.0% Word stats
+## 00:00  19Mb    0.0% Building slots
+00:00  19Mb  100.0% Building slots
+## 00:00  19Mb    0.1% Build index   
+00:00  22Mb  100.0% Build index
+## 00:00  22Mb    0.1% Searching, 0.0% matched
+00:01  24Mb    1.2% Searching, 64.2% matched
+00:02  24Mb    2.9% Searching, 64.4% matched
+00:03  24Mb    4.4% Searching, 59.8% matched
+00:04  24Mb    6.0% Searching, 56.7% matched
+00:05  24Mb    7.4% Searching, 54.5% matched
+00:06  24Mb    9.1% Searching, 53.8% matched
+00:07  25Mb   10.5% Searching, 52.9% matched
+00:08  25Mb   12.3% Searching, 52.4% matched
+00:09  25Mb   13.8% Searching, 51.9% matched
+00:10  25Mb   16.0% Searching, 53.6% matched
+00:11  25Mb   17.8% Searching, 54.3% matched
+00:12  25Mb   19.3% Searching, 53.9% matched
+00:13  25Mb   20.4% Searching, 53.7% matched
+00:14  25Mb   21.7% Searching, 53.4% matched
+00:15  25Mb   23.7% Searching, 54.0% matched
+00:16  25Mb   25.3% Searching, 54.2% matched
+00:17  25Mb   27.2% Searching, 54.7% matched
+00:18  25Mb   29.3% Searching, 55.6% matched
+00:19  25Mb   31.1% Searching, 55.9% matched
+00:20  25Mb   32.7% Searching, 55.8% matched
+00:21  25Mb   34.4% Searching, 55.7% matched
+00:22  25Mb   35.8% Searching, 55.7% matched
+00:23  25Mb   37.6% Searching, 55.9% matched
+00:24  25Mb   41.0% Searching, 58.7% matched
+00:25  25Mb   43.2% Searching, 59.4% matched
+00:26  25Mb   45.5% Searching, 59.8% matched
+00:27  25Mb   47.1% Searching, 59.8% matched
+00:28  25Mb   49.3% Searching, 60.0% matched
+00:29  25Mb   51.2% Searching, 60.1% matched
+00:30  25Mb   52.7% Searching, 59.9% matched
+00:31  25Mb   54.8% Searching, 59.8% matched
+00:32  25Mb   56.3% Searching, 59.6% matched
+00:33  25Mb   58.1% Searching, 59.4% matched
+00:34  25Mb   59.6% Searching, 59.3% matched
+00:35  25Mb   61.0% Searching, 59.0% matched
+00:36  25Mb   62.6% Searching, 58.9% matched
+00:37  25Mb   64.0% Searching, 58.5% matched
+00:38  25Mb   65.4% Searching, 58.2% matched
+00:39  25Mb   66.9% Searching, 58.0% matched
+00:40  25Mb   68.6% Searching, 57.9% matched
+00:41  25Mb   70.4% Searching, 58.0% matched
+00:42  25Mb   71.8% Searching, 57.9% matched
+00:43  25Mb   72.9% Searching, 57.9% matched
+00:44  25Mb   74.6% Searching, 58.0% matched
+00:45  25Mb   76.0% Searching, 57.8% matched
+00:46  25Mb   77.6% Searching, 57.6% matched
+00:47  25Mb   79.1% Searching, 57.4% matched
+00:48  25Mb   80.5% Searching, 57.3% matched
+00:49  25Mb   82.4% Searching, 57.3% matched
+00:50  25Mb   83.8% Searching, 57.2% matched
+00:51  25Mb   85.8% Searching, 57.2% matched
+00:52  25Mb   87.4% Searching, 57.1% matched
+00:53  25Mb   89.2% Searching, 57.2% matched
+00:54  25Mb   90.8% Searching, 57.2% matched
+00:55  25Mb   92.8% Searching, 57.3% matched
+00:56  25Mb   94.3% Searching, 57.2% matched
+00:57  25Mb   96.1% Searching, 57.1% matched
+00:58  25Mb   97.5% Searching, 57.0% matched
+00:59  25Mb   99.3% Searching, 56.9% matched
+00:59  25Mb  100.0% Searching, 56.8% matched
+## usearch_results/rumen.adaptation.otu_map.uc   0.0%   
+usearch_results/rumen.adaptation.otu_map.uc  15.5%   
+usearch_results/rumen.adaptation.otu_map.uc  31.0%   
+usearch_results/rumen.adaptation.otu_map.uc  48.2%   
+usearch_results/rumen.adaptation.otu_map.uc  63.3%   
+usearch_results/rumen.adaptation.otu_map.uc  78.2%   
+usearch_results/rumen.adaptation.otu_map.uc  93.4%   
+usearch_results/rumen.adaptation.otu_map.uc 100.0%
+```
+
+Assign taxonomy to the OTU representative sequences:
+
+```bash
+assign_taxonomy.py -i usearch_results/rumen.adaptation.otus2.fasta -t anaconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt -r anaconda/envs/rumenEnv/lib/python2.7/site-packages/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta -o assign_gg_taxa -m mothur
+```
+
+Add the taxa outputted to the OTU table with the column header "taxonomy" and output the resulting file to biom format:
+
+```bash
+awk 'NR==1; NR > 1 {print $0 | "sort"}' rumen.adaptation.otu_table.txt > rumen.adaptation.otu_table.sort.txt 
+sort assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.txt > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt
+{ printf '\ttaxonomy\t\t\n'; cat assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.txt ; }  > assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt
+
+paste rumen.adaptation.otu_table.sort.txt <(cut -f 2 assign_gg_taxa/rumen.adaptation.otus2_tax_assignments.sort.label.txt) > rumen.adaptation.otu_table.tax.txt
+
+rm rumen.adaptation.otu_table.sort.txt
+
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.txt -o rumen.adaptation.otu_table.tax.biom --process-obs-metadata taxonomy --to-json
+```
+
+Two of the samples were collected twice and seqeunced at a time point...not quite sure why...but lets remove the duplicate with the lower depth - samples R6 and R19.
+
+```bash
+printf "R6\nR19" > remove_samples.txt
+
+filter_samples_from_otu_table.py -i rumen.adaptation.otu_table.tax.biom -o rumen.adaptation.otu_table.tax.filter.biom --sample_id_fp remove_samples.txt --negate_sample_id_fp
+
+biom summarize-table -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.summary.txt
+#1165 OTUs, 145200 sequences
+```
+
+Align the sequences using the SILVA reference within mothur and view the alignment summary:
+
+```bash
+mothur "#align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)"
+
+mv usearch_results/rumen.adaptation.otus2.align ./
+
+mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
+```
+
+```
+## 'xterm-256color': unknown terminal type.
+## 
+## 
+## 
+## 
+## 
+## 
+## mothur v.1.35.1
+## Last updated: 3/31/2015
+## 
+## by
+## Patrick D. Schloss
+## 
+## Department of Microbiology & Immunology
+## University of Michigan
+## pschloss@umich.edu
+## http://www.mothur.org
+## 
+## When using, please cite:
+## Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+## 
+## Distributed under the GNU General Public License
+## 
+## Type 'help()' for information on the commands that are available
+## 
+## Type 'quit()' to exit program
+## 
+## 
+## 
+## mothur > align.seqs(fasta=usearch_results/rumen.adaptation.otus2.fasta, reference=Silva.nr_v119.align)
+## 
+## Using 1 processors.
+## 
+## Reading in the Silva.nr_v119.align template sequences...	DONE.
+## It took 331 to read  153307 sequences.
+## Aligning sequences from usearch_results/rumen.adaptation.otus2.fasta ...
+## 100
+## 200
+## 300
+## 400
+## 500
+## 600
+## 700
+## 800
+## 900
+## 1000
+## 1100
+## 1165
+## Some of you sequences generated alignments that eliminated too many bases, a list is provided in usearch_results/rumen.adaptation.otus2.flip.accnos. If you set the flip parameter to true mothur will try aligning the reverse compliment as well.
+## It took 31 secs to align 1165 sequences.
+## 
+## 
+## Output File Names: 
+## usearch_results/rumen.adaptation.otus2.align
+## usearch_results/rumen.adaptation.otus2.align.report
+## usearch_results/rumen.adaptation.otus2.flip.accnos
+## 
+## 
+## mothur > quit()
+## 'xterm-256color': unknown terminal type.
+## 
+## 
+## 
+## 
+## 
+## 
+## mothur v.1.35.1
+## Last updated: 3/31/2015
+## 
+## by
+## Patrick D. Schloss
+## 
+## Department of Microbiology & Immunology
+## University of Michigan
+## pschloss@umich.edu
+## http://www.mothur.org
+## 
+## When using, please cite:
+## Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+## 
+## Distributed under the GNU General Public License
+## 
+## Type 'help()' for information on the commands that are available
+## 
+## Type 'quit()' to exit program
+## 
+## 
+## 
+## mothur > summary.seqs(fasta=rumen.adaptation.otus2.align)
+## 
+## Using 1 processors.
+## 
+## 		Start	End	NBases	Ambigs	Polymer	NumSeqs
+## Minimum:	1046	1060	6	0	2	1
+## 2.5%-tile:	1761	10357	400	0	4	30
+## 25%-tile:	1772	13125	400	0	5	292
+## Median: 	1801	13125	400	0	5	583
+## 75%-tile:	2037	13125	400	0	5	874
+## 97.5%-tile:	2084	13125	400	0	6	1136
+## Maximum:	2090	13881	400	1	6	1165
+## Mean:	1897.37	13043.2	399.662	0.00171674	4.97854
+## # of Seqs:	1165
+## 
+## Output File Names: 
+## rumen.adaptation.otus2.summary
+## 
+## It took 2 secs to summarize 1165 sequences.
+## 
+## mothur > quit()
+```
+
+I find it easiest to use R to collect the names of OTUs that are not aligning well. We can use the summary file to find this information. I decided to remove any OTU that did not end exactly at position 13125 (remember this is the end we sequenced off of) and started before position 1726:
+
+```r
+summary <- read.table("rumen.adaptation.otus2.summary", sep = "\t", header = TRUE)
+
+summary_sub <- subset(summary, end == 13125 & start > 1726)
+
+write.table(summary_sub$seqname, file = "remove_otus.txt", col.names = F, row.names = F)
+```
+
+Remove those seqeunces that did not align well from the OTU table and then remove OTUs with a Cyanobacteria classification. UPARSE should have removed sinlgeton OTUs, but while we are removing OTUs we want to double check this is the case (-n 2 parameter):
+
+```bash
+filter_otus_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.biom -o rumen.adaptation.otu_table.tax.filter.filter.biom -e remove_otus.txt -n 2 --negate_ids_to_exclude
+
+filter_taxa_from_otu_table.py -i rumen.adaptation.otu_table.tax.filter.filter.biom -o rumen.adaptation.otu_table.tax.final.biom -n p__Cyanobacteria
+
+biom summarize-table -i rumen.adaptation.otu_table.tax.final.biom -o rumen.adaptation.otu_table.tax.final.summary.txt
+# 1084 OTUs,  144319 sequences
+```
+
+Leaving the OTUs that we removed from the OTU table within the aligned file is fine for downstream. Now use that aligned file to generate a phylogenetic tree using clearcut in mothur. For this to work, clearcut requires ID lengths greater than ~10 characters. To account for this, we simply add 10 'A's to the front of all sequence names. We then remove the 'A's after the tree is formed.
+
+```bash
+sed -i -e 's/>/>AAAAAAAAAA/g' rumen.adaptation.otus2.align
+
+mothur "#dist.seqs(fasta=rumen.adaptation.otus2.align, output=lt)"
+
+mothur "#clearcut(phylip=rumen.adaptation.otus2.phylip.dist)"
+
+sed -i -e 's/AAAAAAAAAA//g' rumen.adaptation.otus2.phylip.tre
+```
+
+```
+## 'xterm-256color': unknown terminal type.
+## 
+## 
+## 
+## 
+## 
+## 
+## mothur v.1.35.1
+## Last updated: 3/31/2015
+## 
+## by
+## Patrick D. Schloss
+## 
+## Department of Microbiology & Immunology
+## University of Michigan
+## pschloss@umich.edu
+## http://www.mothur.org
+## 
+## When using, please cite:
+## Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+## 
+## Distributed under the GNU General Public License
+## 
+## Type 'help()' for information on the commands that are available
+## 
+## Type 'quit()' to exit program
+## 
+## 
+## 
+## mothur > dist.seqs(fasta=rumen.adaptation.otus2.align, output=lt)
+## 
+## Using 1 processors.
+## 0	0
+## 100	0
+## 200	1
+## 300	3
+## 400	6
+## 500	9
+## 600	13
+## 700	18
+## 800	23
+## 900	28
+## 1000	34
+## 1100	39
+## 1164	43
+## 
+## Output File Names: 
+## rumen.adaptation.otus2.phylip.dist
+## 
+## It took 43 seconds to calculate the distances for 1165 sequences.
+## 
+## mothur > quit()
+## 'xterm-256color': unknown terminal type.
+## 
+## 
+## 
+## 
+## 
+## 
+## mothur v.1.35.1
+## Last updated: 3/31/2015
+## 
+## by
+## Patrick D. Schloss
+## 
+## Department of Microbiology & Immunology
+## University of Michigan
+## pschloss@umich.edu
+## http://www.mothur.org
+## 
+## When using, please cite:
+## Schloss, P.D., et al., Introducing mothur: Open-source, platform-independent, community-supported software for describing and comparing microbial communities. Appl Environ Microbiol, 2009. 75(23):7537-41.
+## 
+## Distributed under the GNU General Public License
+## 
+## Type 'help()' for information on the commands that are available
+## 
+## Type 'quit()' to exit program
+## 
+## 
+## 
+## mothur > clearcut(phylip=rumen.adaptation.otus2.phylip.dist)
+## 
+## Output File Names: 
+## rumen.adaptation.otus2.phylip.tre
+## 
+## 
+## mothur > quit()
+```
+
+## Rarefaction Curves and Alpha Diversity
+
+We wanted to look at the sequencing depth of each sample by monitoring the number of novel OTUs encountered as depth is increased. Setup here is for a depth roughly equivalent to least sample seqeunced within a step-up diet in our study so we can visually see full depth to give us an idea if the curves were plateauing....Also, we wanted to compare alpha diversity (observed OTUs and chao1 index), but with all samples at the sample depth.
+
+Remember, from QIIME: "If the lines for some categories do not extend all the way to the right end of the x-axis, that means that at least one of the samples in that category does not have that many sequences."
+
+
+```bash
+multiple_rarefactions.py -i rumen.adaptation.otu_table.tax.final.biom -o alpha_rare -m 10 -x 6600 -s 500 -n 10
+ 
+alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1 
+ 
+collate_alpha.py -i alpha_rare_otu_chao/ -o alpha_rare_collate
+ 
+make_rarefaction_plots.py -i alpha_rare_collate/ -m mapping.txt -e stderr --generate_average_tables -b Treatment -w -o alpha_rare_collate_avgtable
+ 
+multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.final.biom -n 10 -d 2160 -o mult_even
+ 
+alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
+ 
+collate_alpha.py -i alpha_even -o alpha_even_collate
+```
+
+
+```r
+library(XML)
+library(ggplot2)
+library(matrixStats)
+```
+
+```
+## matrixStats v0.14.2 (2015-06-23) successfully loaded. See ?matrixStats for help.
+```
+
+```r
+library(plyr)
+```
+
+```
+## 
+## Attaching package: 'plyr'
+## 
+## The following object is masked from 'package:matrixStats':
+## 
+##     count
+```
+
+```r
+rare_table <- readHTMLTable("alpha_rare_collate_avgtable/rarefaction_plots.html")
+rare_table$rare_data[rare_table$rare_data == "nan"] <- NA
+alpha_rare <- na.omit(rare_table$rare_data)
+colnames(alpha_rare)[2] <- "Seqs.Sample"
+colnames(alpha_rare)[3] <- "chao1.Ave."
+colnames(alpha_rare)[4] <- "chao1.Err."
+colnames(alpha_rare)[5] <- "observed_otus.Ave."
+colnames(alpha_rare)[6] <- "observed_otus.Err."
+
+cols = c(2, 3, 4, 5, 6)
+
+alpha_rare[, cols] <- lapply(cols, function(x) as.numeric(as.character(alpha_rare[, 
+    x])))
+
+corn_rare <- subset(alpha_rare, Treatment %in% c("C1", "C2", "C3", "C4", "CF"))
+ramp_rare <- subset(alpha_rare, Treatment %in% c("R1", "R2", "R3", "R4", "RF"))
+corn_rare$Diet <- "CORN"
+ramp_rare$Diet <- "RAMP"
+alpha_rare <- rbind(corn_rare, ramp_rare)
+pd <- position_dodge(width = 275)
+
+rare_otu_plot <- ggplot(alpha_rare, aes(x = Seqs.Sample, y = observed_otus.Ave., 
+    colour = Treatment, group = Treatment, ymin = observed_otus.Ave. - observed_otus.Err., 
+    ymax = observed_otus.Ave. + observed_otus.Err.)) + geom_line(position = pd) + 
+    geom_pointrange(position = pd) + scale_colour_manual(values = c(C1 = "#FF0000", 
+    C2 = "#BF003F", C3 = "#7F007F", C4 = "#3F00BF", CF = "#0000FF", R1 = "#FF0000", 
+    R2 = "#BF003F", R3 = "#7F007F", R4 = "#3F00BF", RF = "#0000FF")) + labs(x = "Sequences per Sample", 
+    y = "Mean Observed OTUs") + theme(legend.title = element_blank()) + facet_grid(~Diet)
+
+rare_chao1_plot <- ggplot(alpha_rare, aes(x = Seqs.Sample, y = chao1.Ave., colour = Treatment, 
+    group = Treatment, ymin = chao1.Ave. - chao1.Err., ymax = chao1.Ave. + chao1.Err.)) + 
+    geom_line(position = pd) + geom_pointrange(position = pd) + scale_colour_manual(values = c(C1 = "#FF0000", 
+    C2 = "#BF003F", C3 = "#7F007F", C4 = "#3F00BF", CF = "#0000FF", R1 = "#FF0000", 
+    R2 = "#BF003F", R3 = "#7F007F", R4 = "#3F00BF", RF = "#0000FF")) + labs(x = "Sequences per Sample", 
+    y = "Mean Chao1 Index") + theme(legend.title = element_blank()) + facet_grid(~Diet)
+
+
+alpha_chao1 <- read.table("alpha_even_collate/chao1.txt", header = TRUE, sep = "\t")
+alpha_otu <- read.table("alpha_even_collate/observed_otus.txt", header = TRUE, 
+    sep = "\t")
+
+alpha_chao1 <- alpha_chao1[-c(1:3)]
+colnames(alpha_chao1) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", 
+    "C3_346", "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", 
+    "R1_343", "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", 
+    "R4_222", "RF_259", "R1_259", "C4_346")
+alpha_chao1_matrix <- as.matrix(alpha_chao1)
+alpha_chao1_means <- data.frame(Means = colMeans(alpha_chao1_matrix), SD = colSds(alpha_chao1_matrix))
+
+alpha_otu <- alpha_otu[-c(1:3)]
+colnames(alpha_otu) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", 
+    "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", 
+    "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", 
+    "RF_259", "R1_259", "C4_346")
+alpha_otu_matrix <- as.matrix(alpha_otu)
+alpha_otu_means <- data.frame(Means = colMeans(alpha_otu_matrix), SD = colSds(alpha_otu_matrix))
+
+steps <- data.frame(step = c("Finisher", "Step3", "Step2", "Step4", "Step4", 
+    "Step3", "Step4", "Step1", "Finisher", "Finisher", "Finisher", "Step3", 
+    "Step2", "Step1", "Step3", "Step1", "Step2", "Step2", "Step3", "Step1", 
+    "Step2", "Step4", "Finisher", "Step1", "Step4"))
+diets <- data.frame(diet = c("CORN", "RAMP", "RAMP", "RAMP", "RAMP", "CORN", 
+    "CORN", "RAMP", "CORN", "RAMP", "RAMP", "CORN", "RAMP", "RAMP", "RAMP", 
+    "CORN", "CORN", "RAMP", "RAMP", "CORN", "CORN", "RAMP", "RAMP", "RAMP", 
+    "CORN"))
+
+alpha_chao1_means <- cbind(alpha_chao1_means, steps, diets)
+alpha_chao1_means$step <- factor(alpha_chao1_means$step, c("Step1", "Step2", 
+    "Step3", "Step4", "Finisher"))
+alpha_chao1_plot <- ggplot(alpha_chao1_means, aes(x = step, y = Means)) + geom_point(size = 4) + 
+    labs(x = "", y = "Mean Chao1 Index") + facet_wrap(~diet)
+
+alpha_otu_means <- cbind(alpha_otu_means, steps, diets)
+alpha_otu_means$step <- factor(alpha_otu_means$step, c("Step1", "Step2", "Step3", 
+    "Step4", "Finisher"))
+alpha_otu_plot <- ggplot(alpha_otu_means, aes(x = step, y = Means)) + geom_point(size = 4) + 
+    labs(x = "", y = "Mean Observed OTUs") + facet_wrap(~diet)
+
+
+
+multiplot <- function(..., plotlist = NULL, file, cols = 1, layout = NULL) {
+    library(grid)
+    plots <- c(list(...), plotlist)
+    numPlots = length(plots)
+    if (is.null(layout)) {
+        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)), ncol = cols, 
+            nrow = ceiling(numPlots/cols))
+    }
+    
+    if (numPlots == 1) {
+        print(plots[[1]])
+        
+    } else {
+        grid.newpage()
+        pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+        for (i in 1:numPlots) {
+            matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+            print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row, layout.pos.col = matchidx$col))
+        }
+    }
+}
+
+png("FigureS1.png", units = "in", height = 12, width = 12, res = 300)
+multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, 
+    cols = 2)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+pdf("FigureS1.pdf", height = 12, width = 12)
+multiplot(rare_otu_plot, rare_chao1_plot, alpha_otu_plot, alpha_chao1_plot, 
+    cols = 2)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![alpha_div](FigureS1.png)
+</div>
+
+## Taxonomy
+
+
+```bash
+summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
+
+plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
+```
+
+## Beta Diversity
+
+Split the OTU table into RAMP and CORN adapted samples then generate the beta diversity outputs for each:
+
+```bash
+split_otu_table.py -i rumen.adaptation.otu_table.tax.final.biom -o split_total -m mapping.txt -f Diet
+ 
+biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -o split_total/control.summarize.txt
+
+biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -o split_total/ramp.summarize.txt
+
+beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -o corn_beta_div -t rumen.adaptation.otus2.phylip.tre -m mapping.txt -p qiime_parameters_working.txt -e 2160
+
+beta_diversity_through_plots.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -o ramp_beta_div -t rumen.adaptation.otus2.phylip.tre -m mapping.txt -p qiime_parameters_working.txt -e 2959
+```
+
+
+## Community Statistics
+We use permanova tests (implemented in R as adonis function in the vegan package) to identify differences in microbial community structure. Here we are using the unweighted unifrac as the distance matrix of choice:
+
+```r
+library(vegan)
+```
+
+```
+## Loading required package: permute
+## Loading required package: lattice
+## This is vegan 2.3-0
+```
+
+```r
+library(reshape)
+```
+
+```
+## 
+## Attaching package: 'reshape'
+## 
+## The following objects are masked from 'package:plyr':
+## 
+##     rename, round_any
+```
+
+```r
+corn_unweighted <- read.table("corn_beta_div/unweighted_unifrac_dm.txt", sep = "\t", 
+    header = TRUE)
+row.names(corn_unweighted) <- corn_unweighted$X
+corn_unweighted <- corn_unweighted[, -1]
+corn_unweighted <- as.dist(corn_unweighted)
+
+ramp_unweighted <- read.table("ramp_beta_div/unweighted_unifrac_dm.txt", sep = "\t", 
+    header = TRUE)
+row.names(ramp_unweighted) <- ramp_unweighted$X
+ramp_unweighted <- ramp_unweighted[, -1]
+ramp_unweighted <- as.dist(ramp_unweighted)
+
+corn_map <- read.table("split_total/mapping__Diet_Corn__.txt", sep = "\t", header = FALSE)
+colnames(corn_map) <- c("SampleID", "BarcodeSequence", "LinkerPrimerSequence", 
+    "ReversePrimer", "Treatment", "Diet", "Step", "Individual", "Description")
+
+ramp_map <- read.table("split_total/mapping__Diet_Ramp__.txt", sep = "\t", header = FALSE)
+colnames(ramp_map) <- c("SampleID", "BarcodeSequence", "LinkerPrimerSequence", 
+    "ReversePrimer", "Treatment", "Diet", "Step", "Individual", "Description")
+
+
+adonis(corn_unweighted ~ Treatment + Individual, permutations = 999, data = corn_map)
+```
+
+```
+## 
+## Call:
+## adonis(formula = corn_unweighted ~ Treatment + Individual, data = corn_map,      permutations = 999) 
+## 
+## Permutation: free
+## Number of permutations: 999
+## 
+## Terms added sequentially (first to last)
+## 
+##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)  
+## Treatment   4   1.38775 0.34694  2.0756 0.60325  0.011 *
+## Individual  1   0.24408 0.24408  1.4602 0.10610  0.151  
+## Residuals   4   0.66861 0.16715         0.29065         
+## Total       9   2.30044                 1.00000         
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+adonis(ramp_unweighted ~ Treatment + Individual, permutations = 999, data = ramp_map)
+```
+
+```
+## 
+## Call:
+## adonis(formula = ramp_unweighted ~ Treatment + Individual, data = ramp_map,      permutations = 999) 
+## 
+## Permutation: free
+## Number of permutations: 999
+## 
+## Terms added sequentially (first to last)
+## 
+##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)   
+## Treatment   4    1.2816 0.32041  1.7631 0.38995  0.002 **
+## Individual  1    0.3695 0.36953  2.0335 0.11243  0.004 **
+## Residuals   9    1.6355 0.18173         0.49762          
+## Total      14    3.2867                 1.00000          
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+# Check for assumptions (DO!!):
+```
+
+We used paired t-tests as a post-hoc method to compare the microbial community structure of stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
+
+```r
+corn_unweighted_matrix <- as.matrix(corn_unweighted)
+m <- as.matrix(corn_unweighted)
+m2 <- melt(m)[melt(upper.tri(m))$value, ]
+names(m2) <- c("Sample1", "Sample2", "distance")
+write.table(m2, "corn_unweighted_pariwise_dist.txt", sep = "\t", row.names = FALSE)
+
+ramp_unweighted_matrix <- as.matrix(ramp_unweighted)
+m <- as.matrix(ramp_unweighted)
+m2 <- melt(m)[melt(upper.tri(m))$value, ]
+names(m2) <- c("Sample1", "Sample2", "distance")
+write.table(m2, "ramp_unweighted_pariwise_dist.txt", sep = "\t", row.names = FALSE)
+```
+
+
+```bash
+wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
+ 
+chmod 775 treatment_distances.pl
+ 
+./treatment_distances.pl -mapping_file=mapping.txt -distance_file=corn_unweighted_pariwise_dist.txt -category=Treatment
+ 
+mv treatment_distances.txt corn_unweighted_treatment_distances.txt
+ 
+./treatment_distances.pl -mapping_file=mapping.txt -distance_file=ramp_unweighted_pariwise_dist.txt -category=Treatment
+ 
+mv treatment_distances.txt ramp_unweighted_treatment_distances.txt
+```
+
+```
+## --2015-07-12 20:25:22--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
+## Resolving raw.githubusercontent.com... 23.235.44.133
+## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
+## HTTP request sent, awaiting response... 200 OK
+## Length: 6979 (6.8K) [text/plain]
+## Saving to: ‘treatment_distances.pl’
+## 
+##      0K ......                                                100%  740M=0s
+## 
+## 2015-07-12 20:25:23 (740 MB/s) - ‘treatment_distances.pl’ saved [6979/6979]
+## 
+## 
+## Number of pairwise comparisons read in: 45
+## 
+## 
+## Number of pairwise comparisons read in: 105
+```
+
+
+```r
+corn_unweighted <- read.table("corn_unweighted_treatment_distances.txt", sep = "\t", 
+    header = TRUE)
+corn_unweighted_pairs <- split(corn_unweighted, corn_unweighted$Sample1Diet_Sample2Diet)
+
+c1c2_c1c3 <- rbind(corn_unweighted_pairs$C1_C2, corn_unweighted_pairs$C1_C3)
+c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
+c1c2_c1c3_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  c1c2_c1c3$Distance and c1c2_c1c3$Sample1Diet_Sample2Diet 
+## 
+##       C1_C2
+## C1_C3 0.57 
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(c1c2_c1c3_test, write, "corn_unweighted_c1c2_c1c3_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+```r
+c1c3_c1c4 <- rbind(corn_unweighted_pairs$C1_C3, corn_unweighted_pairs$C1_C4)
+c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
+c1c3_c1c4_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  c1c3_c1c4$Distance and c1c3_c1c4$Sample1Diet_Sample2Diet 
+## 
+##       C1_C3 
+## C1_C4 0.0061
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(c1c3_c1c4_test, write, "corn_unweighted_c1c3_c1c4_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+```r
+c1c4_c1cf <- rbind(corn_unweighted_pairs$C1_C4, corn_unweighted_pairs$C1_CF)
+c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
+c1c4_c1cf_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  c1c4_c1cf$Distance and c1c4_c1cf$Sample1Diet_Sample2Diet 
+## 
+##       C1_C4
+## C1_CF 0.036
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(c1c4_c1cf_test, write, "corn_unweighted_c1c4_c1cf_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+```r
+ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep = "\t", 
+    header = TRUE)
+ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
+
+r1r1_r1r2 <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2)
+r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
+r1r1_r1r2_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  r1r1_r1r2$Distance and r1r1_r1r2$Sample1Diet_Sample2Diet 
+## 
+##       R1_R1 
+## R1_R2 0.0043
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(r1r1_r1r2_test, write, "ramp_unweighted_r1r1_r1r2_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+```r
+r1r2_r1r3 <- rbind(ramp_unweighted_pairs$R1_R2, ramp_unweighted_pairs$R1_R3)
+r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
+r1r2_r1r3_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  r1r2_r1r3$Distance and r1r2_r1r3$Sample1Diet_Sample2Diet 
+## 
+##       R1_R2  
+## R1_R3 2.7e-05
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(r1r2_r1r3_test, write, "ramp_unweighted_r1r2_r1r3_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+```r
+r1r3_r1r4 <- rbind(ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4)
+r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
+r1r3_r1r4_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  r1r3_r1r4$Distance and r1r3_r1r4$Sample1Diet_Sample2Diet 
+## 
+##       R1_R3
+## R1_R4 0.27 
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(r1r3_r1r4_test, write, "ramp_unweighted_r1r3_r1r4_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+```r
+r1r4_r1rf <- rbind(ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
+r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
+r1r4_r1rf_test
+```
+
+```
+## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  r1r4_r1rf$Distance and r1r4_r1rf$Sample1Diet_Sample2Diet 
+## 
+##       R1_R4
+## R1_RF 0.11 
+## 
+## P value adjustment method: holm
+```
+
+```r
+lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append = TRUE)
+```
+
+```
+## $method
+## NULL
+## 
+## $data.name
+## NULL
+## 
+## $p.value
+## NULL
+## 
+## $p.adjust.method
+## NULL
+```
+
+## Shared OTUs and Sequences
+
+```bash
+collapse_samples.py -b rumen.adaptation.otu_table.tax.final.biom -m mapping.txt --output_biom_fp rumen.adaptation.collapse_samples.biom --output_mapping_fp mapping_collapse.txt --collapse_fields Treatment --collapse_mode sum
+
+split_otu_table.py -i rumen.adaptation.collapse_samples.biom -m mapping_collapse.txt -f Diet -o split_collapse_samples
+
+biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.json.biom --to-json --table-type="OTU table"
+
+biom convert -i split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.biom -o split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom --to-json --table-type="OTU table"
+```
+
+
+```r
+library(biom)
+library(gplots)
+```
+
+```
+## 
+## Attaching package: 'gplots'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     lowess
+```
+
+```r
+corn_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Corn__.json.biom")
+
+corn_df <- as.data.frame(as(biom_data(corn_biom), "matrix"))
+
+corn_boolean_df <- as.data.frame(corn_df > 0 + 0)
+
+corn_boolean_df <- corn_boolean_df[c("C1", "C2", "C3", "C4", "CF")]
+
+png("Figure4_panelA.png", units = "in", height = 6, width = 6, res = 300)
+corn_venn <- venn(corn_boolean_df)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+pdf("Figure4_panelA.pdf", height = 6, width = 6)
+corn_venn <- venn(corn_boolean_df)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![corn_venn](Figure4_panelA.png)
+</div>
+
+
+```r
+ramp_biom <- read_biom("split_collapse_samples/rumen.adaptation.collapse_samples__Diet_Ramp__.json.biom")
+
+ramp_df <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+
+ramp_boolean_df <- as.data.frame(ramp_df > 0 + 0)
+
+ramp_boolean_df <- ramp_boolean_df[c("R1", "R2", "R3", "R4", "RF")]
+
+png("Figure4_panelB.png", units = "in", height = 6, width = 6, res = 300)
+ramp_venn <- venn(ramp_boolean_df)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+pdf("Figure4_panelB.pdf", height = 6, width = 6)
+ramp_venn <- venn(ramp_boolean_df)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![ramp_venn](Figure4_panelB.png)
+</div>
+
+Get shared OTUs between samples:
+
+```bash
+shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_otus.txt
+```
+
+Get shared number of sequences per sample:
+
+```r
+collapse_biom <- read_biom("rumen.adaptation.collapse_samples.biom")
+collapse <- as.matrix(as(biom_data(collapse_biom), "matrix"))
+collapse_df <- as.data.frame(collapse)
+
+
+seq_shared_func <- function(x) {
+    single_combo <- unlist(x)
+    collapse_sub <- collapse_df[, names(collapse_df) %in% single_combo]
+    collapse_sub[, 3] <- collapse_sub[, 1] + collapse_sub[, 2]
+    sub_sum <- colSums(collapse_sub)
+    collapse_sub[collapse_sub == 0] <- NA
+    collapse_sub2 <- na.omit(collapse_sub)
+    collapse_sub2[, 3] <- collapse_sub2[, 1] + collapse_sub2[, 2]
+    sub_sum2 <- colSums(collapse_sub2)
+    per <- (sub_sum2["V3"]/sub_sum["V3"]) * 100
+    collapse_out <- c(names(collapse_sub2)[1], names(collapse_sub2)[2], toString(sub_sum2["V3"]), 
+        toString(sub_sum["V3"]), toString(per))
+    write(collapse_out, file = "TableS3.txt", sep = "\t", ncolumns = 5, append = TRUE)
+}
+
+combn(colnames(collapse), 2, simplify = FALSE, FUN = seq_shared_func)
+```
+
+```
+## [[1]]
+## NULL
+## 
+## [[2]]
+## NULL
+## 
+## [[3]]
+## NULL
+## 
+## [[4]]
+## NULL
+## 
+## [[5]]
+## NULL
+## 
+## [[6]]
+## NULL
+## 
+## [[7]]
+## NULL
+## 
+## [[8]]
+## NULL
+## 
+## [[9]]
+## NULL
+## 
+## [[10]]
+## NULL
+## 
+## [[11]]
+## NULL
+## 
+## [[12]]
+## NULL
+## 
+## [[13]]
+## NULL
+## 
+## [[14]]
+## NULL
+## 
+## [[15]]
+## NULL
+## 
+## [[16]]
+## NULL
+## 
+## [[17]]
+## NULL
+## 
+## [[18]]
+## NULL
+## 
+## [[19]]
+## NULL
+## 
+## [[20]]
+## NULL
+## 
+## [[21]]
+## NULL
+## 
+## [[22]]
+## NULL
+```
+
+## OTU Heatmap
+
+
+```r
+library(Heatplus)
+library(RColorBrewer)
+
+otu_table_biom <- read_biom("rumen.adaptation.otu_table.tax.final.biom")
+otu_table <- as.data.frame(as(biom_data(otu_table_biom), "matrix"))
+row.names(otu_table) <- otu_table$OTU.ID
+colnames(otu_table) <- c("CF_332", "R3_259", "R2_343", "R4_343", "R4_259", "C3_346", 
+    "C4_332", "R1_222", "CF_346", "RF_343", "RF_222", "C3_332", "R2_222", "R1_343", 
+    "R3_343", "C1_346", "C2_332", "R2_259", "R3_222", "C1_332", "C2_346", "R4_222", 
+    "RF_259", "R1_259", "C4_346")
+otu_table_trans <- as.data.frame(t(otu_table))
+otu_table_rel <- otu_table_trans/rowSums(otu_table_trans)
+scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+otu_dist <- vegdist(otu_table_rel, method = "bray")
+row.clus <- hclust(otu_dist, "aver")
+maxab <- apply(otu_table_rel, 2, max)
+n1 <- names(which(maxab < 0.01))
+otu_table_rel2 <- otu_table_rel[, -which(names(otu_table_rel) %in% n1)]
+otu_dist_col <- vegdist(t(otu_table_rel2), method = "bray")
+col.clus <- hclust(otu_dist_col, "aver")
+
+pdf("Figure2.pdf")
+heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), 
+    col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", 
+    labCol = "", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+png("Figure2.png", units = "in", height = 12, width = 12, res = 300)
+heatmap.2(as.matrix(otu_table_rel2), Rowv = as.dendrogram(row.clus), Colv = as.dendrogram(col.clus), 
+    col = scalewhiteblack, margins = c(2, 6), trace = "none", density.info = "none", 
+    labCol = "", xlab = "OTUs", ylab = "Samples", main = "", lhei = c(2, 8))
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![otu_heatmap](Figure2.png)
+</div>
+
+## Pairwise Comparisons and Principle Component Analysis
+
+
+```r
+ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep = "\t", 
+    header = TRUE)
+corn_unweighted <- read.table("corn_unweighted_treatment_distances.txt", sep = "\t", 
+    header = TRUE)
+
+corn_unweighted_pairs <- split(corn_unweighted, corn_unweighted$Sample1Diet_Sample2Diet)
+corn_1_pairs <- rbind(corn_unweighted_pairs$C1_C1, corn_unweighted_pairs$C1_C2, 
+    corn_unweighted_pairs$C1_C3, corn_unweighted_pairs$C1_C4, corn_unweighted_pairs$C1_CF)
+
+ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
+ramp_1_pairs <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2, 
+    ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
+
+ramp_1_pairs <- as.data.frame(sapply(ramp_1_pairs, gsub, pattern = "_", replacement = "-"))
+corn_1_pairs <- as.data.frame(sapply(corn_1_pairs, gsub, pattern = "_", replacement = "-"))
+
+ramp_1_pairs[, "Distance"] <- lapply("Distance", function(x) as.numeric(as.character(ramp_1_pairs[, 
+    x])))
+corn_1_pairs[, "Distance"] <- lapply("Distance", function(x) as.numeric(as.character(corn_1_pairs[, 
+    x])))
+
+corn_distance <- ggplot(corn_1_pairs, aes(x = Sample1Diet_Sample2Diet, y = Distance)) + 
+    geom_boxplot() + geom_point(position = position_jitter(width = 0.15)) + 
+    labs(x = "", y = "Unweighted UniFrac Distance\n") + guides(fill = FALSE) + 
+    theme(axis.text.x = element_text(colour = "black"), axis.title.y = element_text(size = 14), 
+        axis.ticks = element_blank())
+
+ramp_distance <- ggplot(ramp_1_pairs, aes(x = Sample1Diet_Sample2Diet, y = Distance)) + 
+    geom_boxplot() + geom_point(position = position_jitter(width = 0.15)) + 
+    labs(x = "", y = "Unweighted UniFrac Distance\n") + guides(fill = FALSE) + 
+    theme(axis.text.x = element_text(colour = "black"), axis.title.y = element_text(size = 14), 
+        axis.ticks = element_blank())
+
+
+con <- file("corn_beta_div/unweighted_unifrac_pc.txt")
+corn_pc <- read.table(con, skip = 9, nrow = 10, sep = "\t")
+corn_pc <- corn_pc[, c("V1", "V2", "V3")]
+colnames(corn_pc) <- c("SampleID", "PC1", "PC2")
+
+con <- file("ramp_beta_div/unweighted_unifrac_pc.txt")
+ramp_pc <- read.table(con, skip = 9, nrow = 15, sep = "\t")
+ramp_pc <- ramp_pc[, c("V1", "V2", "V3")]
+colnames(ramp_pc) <- c("SampleID", "PC1", "PC2")
+
+mapping <- read.table("mapping.txt", header = FALSE, sep = "\t")
+colnames(mapping) <- c("SampleID", "BC", "For", "Rev", "Treatment", "Diet", 
+    "Step", "Indiv", "Description")
+
+corn_pc_map <- merge(corn_pc, mapping, by = "SampleID")
+ramp_pc_map <- merge(ramp_pc, mapping, by = "SampleID")
+
+shape_corn <- c(C1 = 15, C2 = 16, C3 = 17, C4 = 18, CF = 8)
+corn_pc_plot <- ggplot(corn_pc_map, aes(PC1, PC2)) + geom_point(aes(size = 4, 
+    shape = factor(Treatment))) + xlab("PC1 (38.9%)") + ylab("PC2 (13.5%)") + 
+    guides(size = FALSE) + scale_shape_manual(name = "", values = shape_corn) + 
+    labs(fill = "")
+
+shape_ramp <- c(R1 = 15, R2 = 16, R3 = 17, R4 = 18, RF = 8)
+ramp_pc_plot <- ggplot(ramp_pc_map, aes(PC1, PC2)) + geom_point(aes(size = 4, 
+    shape = factor(Treatment))) + xlab("PC1 (20.5%)") + ylab("PC2 (13.0%)") + 
+    guides(size = FALSE) + scale_shape_manual(name = "", values = shape_ramp) + 
+    labs(fill = "")
+
+pdf("Figure1.pdf", height = 12, width = 12)
+multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols = 2)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+png("Figure1.png", height = 12, width = 12, units = "in", res = 300)
+multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols = 2)
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![unweighted_distance](Figure1.png)
+</div>
+
+
+## OTU-Level Statistics and Comparisons
+Wanted to look at differential OTUs at break points in ramp and corn adapted animals based on pairwise t-statstics. We use LEfSe to compare samples:
+
+```bash
+filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom
+
+filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.biom -n 1 -o split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom
+```
+
+
+```r
+corn_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom")
+corn_table <- as.data.frame(as(biom_data(corn_biom), "matrix"))
+corn_rel <- sweep(corn_table, 2, colSums(corn_table), FUN = "/")
+rownames(corn_rel) <- paste("OTU", rownames(corn_rel), sep = "")
+corn_rel2 <- corn_rel[0, ]
+corn_rel2[nrow(corn_rel2) + 1, ] <- c("break2", "break1", "break2", "break2", 
+    "break1", "break1", "break1", "break1", "break1", "break2")
+corn_rel2[nrow(corn_rel2) + 1, ] <- c("A332", "A346", "A332", "A346", "A332", 
+    "A346", "A332", "A332", "A346", "A346")
+row.names(corn_rel2) <- c("break", "animal")
+corn_rel_merge <- rbind(corn_rel2, corn_rel)
+write.table(corn_rel_merge, sep = "\t", file = "split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.relative.txt", 
+    row.names = TRUE, col.names = FALSE, quote = FALSE)
+
+ramp_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom")
+ramp_table <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+ramp_rel <- sweep(ramp_table, 2, colSums(ramp_table), FUN = "/")
+rownames(ramp_rel) <- paste("OTU", rownames(ramp_rel), sep = "")
+ramp_rel2 <- ramp_rel[0, ]
+ramp_rel2[nrow(ramp_rel2) + 1, ] <- c("break3", "break2", "break3", "break3", 
+    "break1", "break3", "break3", "break2", "break1", "break3", "break2", "break3", 
+    "break2", "break3", "break1")
+ramp_rel2[nrow(ramp_rel2) + 1, ] <- c("A259", "A343", "A343", "A259", "A222", 
+    "A343", "A222", "A222", "A343", "A343", "A259", "A222", "A222", "A259", 
+    "A259")
+row.names(ramp_rel2) <- c("break", "animal")
+ramp_rel_merge <- rbind(ramp_rel2, ramp_rel)
+ramp_rel_merge_1 <- subset(ramp_rel_merge, select = c(R18, R24, R8, R12, R23, 
+    R5))
+ramp_rel_merge_2 <- subset(ramp_rel_merge, select = c(R12, R23, R5, R11, R13, 
+    R14, R20, R21, R23, R3, R4, R7))
+write.table(ramp_rel_merge_1, sep = "\t", file = "split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.b12.relative.txt", 
+    row.names = TRUE, col.names = FALSE, quote = FALSE)
+write.table(ramp_rel_merge_2, sep = "\t", file = "split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.b23.relative.txt", 
+    row.names = TRUE, col.names = FALSE, quote = FALSE)
+```
+
+
+```bash
+wget https://bitbucket.org/nsegata/lefse/get/default.zip -O lefse.zip
+unzip lefse.zip
+mv nsegata* lefse
+
+python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.relative.txt corn_lefse_format.txt -c 1 -u 2 -o 1000000 
+python lefse/run_lefse.py corn_lefse_format.txt corn_lefse_result.txt
+
+python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.b12.relative.txt ramp_12_lefse_format.txt -c 1 -u 2 -o 1000000 
+python lefse/run_lefse.py ramp_12_lefse_format.txt ramp_12_lefse_result.txt
+
+python lefse/format_input.py split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.b23.relative.txt ramp_23_lefse_format.txt -c 1 -u 2 -o 1000000 
+python lefse/run_lefse.py ramp_23_lefse_format.txt ramp_23_lefse_result.txt
+```
+
+```
+## --2015-07-12 20:25:51--  https://bitbucket.org/nsegata/lefse/get/default.zip
+## Resolving bitbucket.org... 131.103.20.167, 131.103.20.168
+## Connecting to bitbucket.org|131.103.20.167|:443... connected.
+## HTTP request sent, awaiting response... 200 OK
+## Length: 59458 (58K) [application/zip]
+## Saving to: ‘lefse.zip’
+## 
+##      0K .......... .......... .......... .......... .......... 86%  447K 0s
+##     50K ........                                              100% 99.7M=0.1s
+## 
+## 2015-07-12 20:25:52 (518 KB/s) - ‘lefse.zip’ saved [59458/59458]
+## 
+## Archive:  lefse.zip
+##   inflating: nsegata-lefse-094f447691f0/.hg_archival.txt  
+##   inflating: nsegata-lefse-094f447691f0/.hgtags  
+##   inflating: nsegata-lefse-094f447691f0/__init__.py  
+##   inflating: nsegata-lefse-094f447691f0/example/run.sh  
+##   inflating: nsegata-lefse-094f447691f0/format_input.py  
+##   inflating: nsegata-lefse-094f447691f0/lefse.py  
+##   inflating: nsegata-lefse-094f447691f0/lefse2circlader.py  
+##   inflating: nsegata-lefse-094f447691f0/lefsebiom/AbundanceTable.py  
+##   inflating: nsegata-lefse-094f447691f0/lefsebiom/CClade.py  
+##   inflating: nsegata-lefse-094f447691f0/lefsebiom/ConstantsBreadCrumbs.py  
+##   inflating: nsegata-lefse-094f447691f0/lefsebiom/ValidateData.py  
+##   inflating: nsegata-lefse-094f447691f0/lefsebiom/__init__.py  
+##   inflating: nsegata-lefse-094f447691f0/plot_cladogram.py  
+##   inflating: nsegata-lefse-094f447691f0/plot_features.py  
+##   inflating: nsegata-lefse-094f447691f0/plot_res.py  
+##   inflating: nsegata-lefse-094f447691f0/qiime2lefse.py  
+##   inflating: nsegata-lefse-094f447691f0/requirements.txt  
+##   inflating: nsegata-lefse-094f447691f0/run_lefse.py  
+## Number of significantly discriminative features: 120 ( 120 ) before internal wilcoxon
+## Number of discriminative features with abs LDA score > 2.0 : 120
+## Number of significantly discriminative features: 37 ( 37 ) before internal wilcoxon
+## Number of discriminative features with abs LDA score > 2.0 : 37
+## Number of significantly discriminative features: 118 ( 118 ) before internal wilcoxon
+## Number of discriminative features with abs LDA score > 2.0 : 118
+```
+
+
+```r
+corn_lefse <- read.table("corn_lefse_result.txt", header = FALSE, sep = "\t")
+corn_lefse <- corn_lefse[complete.cases(corn_lefse), ]
+corn_lefse$V1 <- gsub("OTU", "", corn_lefse$V1)
+write.table(corn_lefse$V1, file = "corn_lefse_otus.txt", row.names = FALSE, 
+    col.names = FALSE, quote = FALSE)
+
+ramp_lefse_12 <- read.table("ramp_12_lefse_result.txt", header = FALSE, sep = "\t")
+ramp_lefse_12 <- ramp_lefse_12[complete.cases(ramp_lefse_12), ]
+ramp_lefse_12$V1 <- gsub("OTU", "", ramp_lefse_12$V1)
+write.table(ramp_lefse_12$V1, file = "ramp_12_lefse_otus.txt", row.names = FALSE, 
+    col.names = FALSE, quote = FALSE)
+
+ramp_lefse_23 <- read.table("ramp_23_lefse_result.txt", header = FALSE, sep = "\t")
+ramp_lefse_23 <- ramp_lefse_23[complete.cases(ramp_lefse_23), ]
+ramp_lefse_23$V1 <- gsub("OTU", "", ramp_lefse_23$V1)
+write.table(ramp_lefse_23$V1, file = "ramp_23_lefse_otus.txt", row.names = FALSE, 
+    col.names = FALSE, quote = FALSE)
+```
+
+
+```bash
+#replace "OTU"
+filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom -o corn_lefse.biom -e corn_lefse_otus.txt --negate_ids_to_exclude
+
+biom convert -i corn_lefse.biom -o corn_lefse.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+
+awk '{gsub("; ","\t",$0); print;}' corn_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-11,16 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > corn_lefse_tax.txt
+
+filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom -o ramp_12_lefse.biom -e ramp_12_lefse_otus.txt --negate_ids_to_exclude
+
+biom convert -i ramp_12_lefse.biom -o  ramp_12_lefse.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+
+awk '{gsub("; ","\t",$0); print;}' ramp_12_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-16,21 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > ramp_12_lefse_tax.txt
+
+filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom -o ramp_23_lefse.biom -e ramp_23_lefse_otus.txt --negate_ids_to_exclude
+
+biom convert -i ramp_23_lefse.biom -o  ramp_23_lefse.txt --table-type="OTU table" --to-tsv --header-key taxonomy
+
+awk '{gsub("; ","\t",$0); print;}' ramp_23_lefse.txt | awk  '{gsub("#OTU","OTU",$0); print;}' | cut -f-16,21 | tail -n +2 | awk '{if(NR==1){print $0,"\tfamily"}else{print }}' > ramp_23_lefse_tax.txt
+```
+
+One shift in the microbial community was identified for corn-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around this shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
+
+```r
+corn_otu <- read.table("corn_lefse_tax.txt", header = TRUE, sep = "\t", fill = TRUE)
+corn_otu$family <- sub("f__", "", corn_otu$family)
+corn_otu$family <- sub("\\]", "", corn_otu$family)
+corn_otu$family <- sub("\\[", "", corn_otu$family)
+corn_otu$family <- sub("^$", "No Assigned Family", corn_otu$family)
+row.names(corn_otu) <- corn_otu$OTU.ID
+corn_otu <- corn_otu[, -1]
+corn_fam <- subset(corn_otu, select = c(family))
+
+corn_lefse <- read.table("corn_lefse_result.txt", header = FALSE, sep = "\t")
+corn_lefse$V1 <- sub("OTU", "", corn_lefse$V1)
+colnames(corn_lefse) <- c("OTU.ID", "raw", "breaks", "LDA", "pval")
+row.names(corn_lefse) <- corn_lefse$OTU.ID
+corn_lefse <- corn_lefse[, -1]
+
+corn_fam_lefse <- merge(corn_fam, corn_lefse, by = "row.names")
+corn_fam_lefse <- corn_fam_lefse[with(corn_fam_lefse, order(breaks, -LDA)), 
+    ]
+corn_supp_table <- subset(corn_fam_lefse, select = c(family, breaks))
+write.table(corn_supp_table, file = "TableS2-1.txt", sep = "\t", quote = FALSE, 
+    col.names = NA)
+
+corn_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom")
+corn_table <- as.data.frame(as(biom_data(corn_biom), "matrix"))
+colnames(corn_table) <- c("CF_332", "C3_346", "C4_332", "CF_346", "C3_332", 
+    "C1_346", "C2_332", "C1_332", "C2_346", "C4_346")
+corn_table <- corn_table[c("C1_346", "C1_332", "C2_346", "C2_332", "C3_346", 
+    "C3_332", "C4_346", "C4_332", "CF_346", "CF_332")]
+corn_trans <- as.data.frame(t(corn_table))
+corn_rel <- corn_trans/rowSums(corn_trans)
+scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+maxab <- apply(corn_rel, 2, max)
+n1 <- names(which(maxab < 0.01))
+corn_rel2 <- corn_rel[, -which(names(corn_rel) %in% n1)]
+corn_rel2 <- as.data.frame(t(corn_rel2))
+
+corn_merge <- merge(corn_fam, corn_rel2, by = "row.names")
+row.names(corn_merge) <- corn_merge$Row.names
+corn_merge <- corn_merge[, -1]
+corn_merge2 <- merge(corn_merge, corn_lefse, by = "row.names")
+row.names(corn_merge2) <- corn_merge2$Row.names
+corn_merge2 <- corn_merge2[, -1]
+corn_merge2 <- corn_merge2[with(corn_merge2, order(breaks, -LDA)), ]
+
+lmat = rbind(c(4, 0, 0), c(2, 1, 3))
+lwid = c(0.6, 1.9, 0.3)
+lhei = c(0.3, 1.5)
+
+corn_fam2 <- subset(corn_merge2, select = c(family))
+corn_plot <- subset(corn_merge2, select = -c(family, breaks, LDA, raw, pval))
+corn_plot <- as.data.frame(t(corn_plot))
+
+pdf("Figure3_panelA.pdf", width = 12, height = 9)
+heatmap.2(as.matrix(corn_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, 
+    margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", 
+    ylab = "", main = "", srtCol = 67.5, cexCol = 1.3, cexRow = 2, lmat = lmat, 
+    lwid = lwid, lhei = lhei, labCol = corn_fam2$family)
+```
+
+```
+## NULL
+```
+
+```r
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+png("Figure3_panelA.png", width = 12, height = 9, units = "in", res = 300)
+heatmap.2(as.matrix(corn_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, 
+    margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", 
+    ylab = "", main = "", srtCol = 67.5, cexCol = 1.3, cexRow = 2, lmat = lmat, 
+    lwid = lwid, lhei = lhei, labCol = corn_fam2$family)
+```
+
+```
+## NULL
+```
+
+```r
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![corn_heatmap](Figure3_panelA.png)
+</div>
+
+Two shifts in the microbial community were identified for RAMP-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around the first shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
+
+```r
+ramp_12_otu <- read.table("ramp_12_lefse_tax.txt", header = TRUE, sep = "\t", 
+    fill = TRUE)
+ramp_12_otu$family <- sub("f__", "", ramp_12_otu$family)
+ramp_12_otu$family <- sub("\\]", "", ramp_12_otu$family)
+ramp_12_otu$family <- sub("\\[", "", ramp_12_otu$family)
+ramp_12_otu$family <- sub("^$", "No Assigned Family", ramp_12_otu$family)
+row.names(ramp_12_otu) <- ramp_12_otu$OTU.ID
+ramp_12_otu <- ramp_12_otu[, -1]
+ramp_12_fam <- subset(ramp_12_otu, select = c(family))
+
+ramp_12_lefse <- read.table("ramp_12_lefse_result.txt", header = FALSE, sep = "\t")
+ramp_12_lefse$V1 <- sub("OTU", "", ramp_12_lefse$V1)
+colnames(ramp_12_lefse) <- c("OTU.ID", "raw", "breaks", "LDA", "pval")
+row.names(ramp_12_lefse) <- ramp_12_lefse$OTU.ID
+ramp_12_lefse <- ramp_12_lefse[, -1]
+
+ramp_12_fam_lefse <- merge(ramp_12_fam, ramp_12_lefse, by = "row.names")
+ramp_12_fam_lefse <- ramp_12_fam_lefse[with(ramp_12_fam_lefse, order(breaks, 
+    -LDA)), ]
+ramp_12_supp_table <- subset(ramp_12_fam_lefse, select = c(family, breaks))
+write.table(ramp_12_supp_table, file = "TableS2-2.txt", sep = "\t", quote = FALSE, 
+    col.names = NA)
+
+ramp_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom")
+ramp_table <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+colnames(ramp_table) <- c("R3_259", "R2_343", "R4_343", "R4_259", "R1_222", 
+    "RF_343", "RF_222", "R2_222", "R1_343", "R3_343", "R2_259", "R3_222", "R4_222", 
+    "RF_259", "R1_259")
+ramp_table <- ramp_table[c("R1_222", "R1_259", "R1_343", "R2_222", "R2_259", 
+    "R2_343", "R3_222", "R3_259", "R3_343", "R4_222", "R4_259", "R4_343", "RF_222", 
+    "RF_259", "RF_343")]
+ramp_12_table <- subset(ramp_table, select = c("R1_222", "R1_259", "R1_343", 
+    "R2_222", "R2_259", "R2_343"))
+ramp_12_trans <- as.data.frame(t(ramp_12_table))
+ramp_12_rel <- ramp_12_trans/rowSums(ramp_12_trans)
+scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+maxab <- apply(ramp_12_rel, 2, max)
+n1 <- names(which(maxab < 0.01))
+ramp_12_rel2 <- ramp_12_rel[, -which(names(ramp_12_rel) %in% n1)]
+ramp_12_rel2 <- as.data.frame(t(ramp_12_rel2))
+
+ramp_12_merge <- merge(ramp_12_fam, ramp_12_rel2, by = "row.names")
+row.names(ramp_12_merge) <- ramp_12_merge$Row.names
+ramp_12_merge <- ramp_12_merge[, -1]
+ramp_12_merge2 <- merge(ramp_12_merge, ramp_12_lefse, by = "row.names")
+row.names(ramp_12_merge2) <- ramp_12_merge2$Row.names
+ramp_12_merge2 <- ramp_12_merge2[, -1]
+ramp_12_merge2 <- ramp_12_merge2[with(ramp_12_merge2, order(breaks, -LDA)), 
+    ]
+
+lmat = rbind(c(4, 0, 0), c(2, 1, 3))
+lwid = c(0.6, 1.9, 0.3)
+lhei = c(0.3, 1.5)
+
+ramp_12_fam2 <- subset(ramp_12_merge2, select = c(family))
+ramp_12_plot <- subset(ramp_12_merge2, select = -c(family, breaks, LDA, raw, 
+    pval))
+ramp_12_plot <- as.data.frame(t(ramp_12_plot))
+
+pdf("Figure3_panelB.pdf", width = 12, height = 9)
+heatmap.2(as.matrix(ramp_12_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, 
+    margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", 
+    ylab = "", main = "", srtCol = 67.5, cexCol = 1.3, cexRow = 2, lmat = lmat, 
+    lwid = lwid, lhei = lhei, labCol = ramp_12_fam2$family)
+```
+
+```
+## NULL
+```
+
+```r
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+png("Figure3_panelB.png", width = 12, height = 9, units = "in", res = 300)
+heatmap.2(as.matrix(ramp_12_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, 
+    margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", 
+    ylab = "", main = "", srtCol = 67.5, cexCol = 1.3, cexRow = 2, lmat = lmat, 
+    lwid = lwid, lhei = lhei, labCol = ramp_12_fam2$family)
+```
+
+```
+## NULL
+```
+
+```r
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![ramp_12_heatmap](Figure3_panelB.png)
+</div>
+
+Two shifts in the microbial community were identified for RAMP-adaptation. Plot the heatmap for OTUs identified as having a significantly different abundance around the second shift. Heatmap is for OTUs with a maximum relative abundance >1% and sorted by LDA score:
+
+```r
+ramp_23_otu <- read.table("ramp_23_lefse_tax.txt", header = TRUE, sep = "\t", 
+    fill = TRUE)
+ramp_23_otu$family <- sub("f__", "", ramp_23_otu$family)
+ramp_23_otu$family <- sub("\\]", "", ramp_23_otu$family)
+ramp_23_otu$family <- sub("\\[", "", ramp_23_otu$family)
+ramp_23_otu$family <- sub("^$", "No Assigned Family", ramp_23_otu$family)
+row.names(ramp_23_otu) <- ramp_23_otu$OTU.ID
+ramp_23_otu <- ramp_23_otu[, -1]
+ramp_23_fam <- subset(ramp_23_otu, select = c(family))
+
+ramp_23_lefse <- read.table("ramp_23_lefse_result.txt", header = FALSE, sep = "\t")
+ramp_23_lefse$V1 <- sub("OTU", "", ramp_23_lefse$V1)
+colnames(ramp_23_lefse) <- c("OTU.ID", "raw", "breaks", "LDA", "pval")
+row.names(ramp_23_lefse) <- ramp_23_lefse$OTU.ID
+ramp_23_lefse <- ramp_23_lefse[, -1]
+
+ramp_23_fam_lefse <- merge(ramp_23_fam, ramp_23_lefse, by = "row.names")
+ramp_23_fam_lefse <- ramp_23_fam_lefse[with(ramp_23_fam_lefse, order(breaks, 
+    -LDA)), ]
+ramp_23_supp_table <- subset(ramp_23_fam_lefse, select = c(family, breaks))
+write.table(ramp_23_supp_table, file = "TableS2-3.txt", sep = "\t", quote = FALSE, 
+    col.names = NA)
+
+ramp_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom")
+ramp_table <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
+colnames(ramp_table) <- c("R3_259", "R2_343", "R4_343", "R4_259", "R1_222", 
+    "RF_343", "RF_222", "R2_222", "R1_343", "R3_343", "R2_259", "R3_222", "R4_222", 
+    "RF_259", "R1_259")
+ramp_table <- ramp_table[c("R1_222", "R1_259", "R1_343", "R2_222", "R2_259", 
+    "R2_343", "R3_222", "R3_259", "R3_343", "R4_222", "R4_259", "R4_343", "RF_222", 
+    "RF_259", "RF_343")]
+ramp_23_table <- subset(ramp_table, select = c("R2_222", "R2_259", "R2_343", 
+    "R3_222", "R3_259", "R3_343", "R4_222", "R4_259", "R4_343", "RF_222", "RF_259", 
+    "RF_343"))
+ramp_23_trans <- as.data.frame(t(ramp_23_table))
+ramp_23_rel <- ramp_23_trans/rowSums(ramp_23_trans)
+scalewhiteblack <- colorRampPalette(c("white", "black"), space = "rgb")(100)
+maxab <- apply(ramp_23_rel, 2, max)
+n1 <- names(which(maxab < 0.01))
+ramp_23_rel2 <- ramp_23_rel[, -which(names(ramp_23_rel) %in% n1)]
+ramp_23_rel2 <- as.data.frame(t(ramp_23_rel2))
+
+ramp_23_merge <- merge(ramp_23_fam, ramp_23_rel2, by = "row.names")
+row.names(ramp_23_merge) <- ramp_23_merge$Row.names
+ramp_23_merge <- ramp_23_merge[, -1]
+ramp_23_merge2 <- merge(ramp_23_merge, ramp_23_lefse, by = "row.names")
+row.names(ramp_23_merge2) <- ramp_23_merge2$Row.names
+ramp_23_merge2 <- ramp_23_merge2[, -1]
+ramp_23_merge2 <- ramp_23_merge2[with(ramp_23_merge2, order(breaks, -LDA)), 
+    ]
+
+lmat = rbind(c(4, 0, 0), c(2, 1, 3))
+lwid = c(0.6, 1.9, 0.3)
+lhei = c(0.3, 1.5)
+
+ramp_23_fam2 <- subset(ramp_23_merge2, select = c(family))
+ramp_23_plot <- subset(ramp_23_merge2, select = -c(family, breaks, LDA, raw, 
+    pval))
+ramp_23_plot <- as.data.frame(t(ramp_23_plot))
+
+pdf("Figure3_panelC.pdf", width = 12, height = 9)
+heatmap.2(as.matrix(ramp_23_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, 
+    margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", 
+    ylab = "", main = "", srtCol = 67.5, cexCol = 1.3, cexRow = 2, lmat = lmat, 
+    lwid = lwid, lhei = lhei, labCol = ramp_23_fam2$family)
+```
+
+```
+## NULL
+```
+
+```r
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+```r
+png("Figure3_panelC.png", width = 12, height = 9, units = "in", res = 300)
+heatmap.2(as.matrix(ramp_23_plot), Rowv = FALSE, Colv = FALSE, col = scalewhiteblack, 
+    margins = c(13, 9.5), trace = "none", density.info = "none", xlab = "", 
+    ylab = "", main = "", srtCol = 67.5, cexCol = 1.3, cexRow = 2, lmat = lmat, 
+    lwid = lwid, lhei = lhei, labCol = ramp_23_fam2$family)
+```
+
+```
+## NULL
+```
+
+```r
+dev.off()
+```
+
+```
+## quartz_off_screen 
+##                 2
+```
+
+<div style="text-align:center" markdown="1">
+![ramp_23_heatmap](Figure3_panelC.png)
+</div>

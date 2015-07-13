@@ -13,7 +13,7 @@ Simply download the bash script from the github repository and run it (provide t
   2. chmod 775 setup.sh 
   3. ./setup.sh usearch_link
 
-**Miniconda is downloaded and prompts you during installataion of the packages above. The prompts are as follows:**
+**Anaconda is downloaded and prompts you during installataion of the packages above. The prompts are as follows:**
 
   1. Press enter to view the license agreement
   2. Press enter to read the license and q to exit
