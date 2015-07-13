@@ -411,7 +411,7 @@ adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map
 
 ```
 
-We used paired t-tests as a post-hoc method to compare the microbial community structure of stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
+We used Mann-Whitney U Test as a post-hoc method to compare the microbial community structure of stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
 ```{r}
 corn_unweighted_matrix <- as.matrix(corn_unweighted)
 m <- as.matrix(corn_unweighted)
@@ -444,44 +444,40 @@ mv treatment_distances.txt ramp_unweighted_treatment_distances.txt
 corn_unweighted <- read.table("corn_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
 corn_unweighted_pairs <- split(corn_unweighted, corn_unweighted$Sample1Diet_Sample2Diet)
 
-c1c2_c1c3 <- rbind(corn_unweighted_pairs$C1_C2, corn_unweighted_pairs$C1_C3)
-c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
+c1c1_c1c2_test <- wilcox.test(corn_unweighted_pairs$C1_C1$Distance, corn_unweighted_pairs$C1_C2$Distance)
+c1c1_c1c2_test
+lapply(c1c1_c1c2_test$p.value, write, "corn_unweighted_c1c1_c1c2_wilcox.txt", append=TRUE)
+
+c1c2_c1c3_test <- wilcox.test(corn_unweighted_pairs$C1_C2$Distance, corn_unweighted_pairs$C1_C3$Distance)
 c1c2_c1c3_test
-lapply(c1c2_c1c3_test, write, "corn_unweighted_c1c2_c1c3_ttest.txt", append=TRUE)
+lapply(c1c2_c1c3_test$p.value, write, "corn_unweighted_c1c2_c1c3_wilcox.txt", append=TRUE)
 
-c1c3_c1c4 <- rbind(corn_unweighted_pairs$C1_C3, corn_unweighted_pairs$C1_C4)
-c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
+c1c3_c1c4_test <- wilcox.test(corn_unweighted_pairs$C1_C3$Distance, corn_unweighted_pairs$C1_C4$Distance)
 c1c3_c1c4_test
-lapply(c1c3_c1c4_test, write, "corn_unweighted_c1c3_c1c4_ttest.txt", append=TRUE)
+lapply(c1c3_c1c4_test$p.value, write, "corn_unweighted_c1c3_c1c4_wilcox.txt", append=TRUE)
 
-c1c4_c1cf <- rbind(corn_unweighted_pairs$C1_C4, corn_unweighted_pairs$C1_CF)
-c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
+c1c4_c1cf_test <- wilcox.test(corn_unweighted_pairs$C1_C4$Distance, corn_unweighted_pairs$C1_CF$Distance)
 c1c4_c1cf_test
-lapply(c1c4_c1cf_test, write, "corn_unweighted_c1c4_c1cf_ttest.txt", append=TRUE)
+lapply(c1c4_c1cf_test$p.value, write, "corn_unweighted_c1c4_c1cf_wilcox.txt", append=TRUE)
 
 ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep="\t", header=TRUE)
 ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
 
-r1r1_r1r2 <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2)
-r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
+r1r1_r1r2_test <- wilcox.test(ramp_unweighted_pairs$R1_R1$Distance, ramp_unweighted_pairs$R1_R2$Distance)
 r1r1_r1r2_test
-lapply(r1r1_r1r2_test, write, "ramp_unweighted_r1r1_r1r2_ttest.txt", append=TRUE)
+lapply(r1r1_r1r2_test$p.value, write, "ramp_unweighted_r1r1_r1r2_wilcox.txt", append=TRUE)
 
-r1r2_r1r3 <- rbind(ramp_unweighted_pairs$R1_R2, ramp_unweighted_pairs$R1_R3)
-r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
+r1r2_r1r3_test <- wilcox.test(ramp_unweighted_pairs$R1_R2$Distance, ramp_unweighted_pairs$R1_R3$Distance)
 r1r2_r1r3_test
-lapply(r1r2_r1r3_test, write, "ramp_unweighted_r1r2_r1r3_ttest.txt", append=TRUE)
+lapply(r1r2_r1r3_test$p.value, write, "ramp_unweighted_r1r2_r1r3_wilcox.txt", append=TRUE)
 
-r1r3_r1r4 <- rbind(ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4)
-r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
+r1r3_r1r4_test <- wilcox.test(ramp_unweighted_pairs$R1_R3$Distance, ramp_unweighted_pairs$R1_R4$Distance)
 r1r3_r1r4_test
-lapply(r1r3_r1r4_test, write, "ramp_unweighted_r1r3_r1r4_ttest.txt", append=TRUE)
+lapply(r1r3_r1r4_test$p.value, write, "ramp_unweighted_r1r3_r1r4_wilcox.txt", append=TRUE)
 
-r1r4_r1rf <- rbind(ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
-r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
+r1r4_r1rf_test <- wilcox.test(ramp_unweighted_pairs$R1_R4$Distance, ramp_unweighted_pairs$R1_RF$Distance)
 r1r4_r1rf_test
-lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append=TRUE)
-
+lapply(r1r4_r1rf_test$p.value, write, "ramp_unweighted_r1r4_r1rf_wilcox.txt", append=TRUE)
 ```
 
 ## Shared OTUs and Sequences
@@ -697,14 +693,14 @@ filter_otus_from_otu_table.py -i split_total/rumen.adaptation.otu_table.tax.fina
 ```{r}
 corn_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.biom")
 corn_table <- as.data.frame(as(biom_data(corn_biom), "matrix"))
-corn_rel <- sweep(corn_table, 2, colSums(corn_table), FUN="/")
-rownames(corn_rel) <- paste("OTU", rownames(corn_rel), sep="")
-corn_rel2 <- corn_rel[0,]
-corn_rel2[nrow(corn_rel2) + 1, ] <- c( "break2", "break1", "break2", "break2", "break1", "break1", "break1", "break1", "break1", "break2")
-corn_rel2[nrow(corn_rel2) + 1, ] <- c( "A332", "A346", "A332", "A346", "A332", "A346", "A332", "A332", "A346", "A346")
-row.names(corn_rel2) <- c("break","animal")
-corn_rel_merge <- rbind(corn_rel2,corn_rel)
-write.table(corn_rel_merge, sep="\t", file="split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.relative.txt", row.names=TRUE, col.names=FALSE, quote = FALSE)
+corn_rel <- sweep(corn_table, 2, colSums(corn_table), FUN = "/")
+rownames(corn_rel) <- paste("OTU", rownames(corn_rel), sep = "")
+corn_rel2 <- corn_rel[0, ]
+corn_rel2[nrow(corn_rel2) + 1, ] <- c("break2", "break1", "break2", "break2", "break1", "break1", "break1", "break1", "break1", "break2")
+corn_rel2[nrow(corn_rel2) + 1, ] <- c("A332", "A346", "A332", "A346", "A332", "A346", "A332", "A332", "A346", "A346")
+row.names(corn_rel2) <- c("break", "animal")
+corn_rel_merge <- rbind(corn_rel2, corn_rel)
+write.table(corn_rel_merge, sep = "\t", file = "split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.filter.relative.txt", row.names = TRUE, col.names = FALSE, quote = FALSE)
 
 ramp_biom <- read_biom("split_total/rumen.adaptation.otu_table.tax.final__Diet_Ramp__.filter.biom")
 ramp_table <- as.data.frame(as(biom_data(ramp_biom), "matrix"))
