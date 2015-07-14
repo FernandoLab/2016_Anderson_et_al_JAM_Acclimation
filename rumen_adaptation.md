@@ -20,7 +20,7 @@ Simply download the bash script from the github repository and run it (provide t
   2. chmod 775 setup.sh 
   3. ./setup.sh usearch_link
 
-**Miniconda is downloaded and prompts you during installataion of the packages above. The prompts are as follows:**
+**Anaconda is downloaded and prompts you during installataion of the packages above. The prompts are as follows:**
 
   1. Press enter to view the license agreement
   2. Press enter to read the license and q to exit
@@ -51,9 +51,13 @@ install.packages("ggplot2", repos='http://cran.us.r-project.org')
 ```
 
 ```
+## also installing the dependencies 'colorspace', 'Rcpp', 'RColorBrewer', 'dichromat', 'munsell', 'labeling', 'plyr', 'gtable', 'reshape2', 'scales', 'proto'
+```
+
+```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -68,7 +72,7 @@ install.packages("matrixStats", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -81,9 +85,13 @@ install.packages("vegan", repos='http://cran.us.r-project.org')
 ```
 
 ```
+## also installing the dependency 'permute'
+```
+
+```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -98,7 +106,7 @@ install.packages("reshape", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -111,9 +119,13 @@ install.packages("biom", repos='http://cran.us.r-project.org')
 ```
 
 ```
+## also installing the dependency 'RJSONIO'
+```
+
+```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -126,9 +138,13 @@ install.packages("gplots", repos='http://cran.us.r-project.org')
 ```
 
 ```
+## also installing the dependencies 'gtools', 'gdata'
+```
+
+```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -143,7 +159,7 @@ install.packages("formatR", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -158,7 +174,7 @@ install.packages("knitr", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -173,7 +189,7 @@ install.packages("rmarkdown", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -188,7 +204,7 @@ install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -203,7 +219,7 @@ install.packages("mvtnorm", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -216,9 +232,13 @@ install.packages("coin", repos='http://cran.us.r-project.org')
 ```
 
 ```
+## also installing the dependency 'modeltools'
+```
+
+```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -231,6 +251,14 @@ source("http://bioconductor.org/biocLite.R")
 ```
 
 ```
+## 
+## The downloaded source packages are in
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+```
+
+```
+## Updating HTML index of packages in '.Library'
+## Making 'packages.html' ... done
 ## Bioconductor version 3.1 (BiocInstaller 1.18.3), ?biocLite for help
 ```
 
@@ -247,7 +275,7 @@ biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpLy6Twr/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
 ```
 
 ```
@@ -332,27 +360,27 @@ mothur "#reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)"
 ```
 
 ```
-## --2015-07-12 19:39:47--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
+## --2015-07-13 17:08:33--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
 ## Resolving raw.githubusercontent.com... 23.235.40.133
 ## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 2076 (2.0K) [text/plain]
 ## Saving to: ‘mapping.txt’
 ## 
-##      0K ..                                                    100%  220M=0s
+##      0K ..                                                    100%  660M=0s
 ## 
-## 2015-07-12 19:39:48 (220 MB/s) - ‘mapping.txt’ saved [2076/2076]
+## 2015-07-13 17:08:33 (660 MB/s) - ‘mapping.txt’ saved [2076/2076]
 ## 
-## --2015-07-12 19:39:48--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
+## --2015-07-13 17:08:33--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
 ## Resolving raw.githubusercontent.com... 23.235.40.133
 ## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 3575 (3.5K) [text/plain]
 ## Saving to: ‘qiime_parameters_working.txt’
 ## 
-##      0K ...                                                   100%  426M=0s
+##      0K ...                                                   100% 3.33G=0s
 ## 
-## 2015-07-12 19:39:48 (426 MB/s) - ‘qiime_parameters_working.txt’ saved [3575/3575]
+## 2015-07-13 17:08:33 (3.33 GB/s) - ‘qiime_parameters_working.txt’ saved [3575/3575]
 ## 
 ## 'xterm-256color': unknown terminal type.
 ## 
@@ -770,86 +798,86 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## A    usearch_python_scripts/uc.py
 ## A    usearch_python_scripts/uc.pyc
 ## A    usearch_python_scripts/uc2otutab.py
-## Exported revision 127.
-## --2015-07-12 20:00:28--  https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
-## Resolving github.com... 192.30.252.129
-## Connecting to github.com|192.30.252.129|:443... connected.
+## Exported revision 129.
+## --2015-07-13 17:23:36--  https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
+## Resolving github.com... 192.30.252.128
+## Connecting to github.com|192.30.252.128|:443... connected.
 ## HTTP request sent, awaiting response... 302 Found
 ## Location: https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz [following]
-## --2015-07-12 20:00:29--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz
-## Resolving raw.githubusercontent.com... 23.235.40.133
-## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
+## --2015-07-13 17:23:37--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz
+## Resolving raw.githubusercontent.com... 23.235.44.133
+## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 3293704 (3.1M) [application/octet-stream]
 ## Saving to: ‘gold.fasta.gz’
 ## 
-##      0K .......... .......... .......... .......... ..........  1%  528K 6s
-##     50K .......... .......... .......... .......... ..........  3% 1.73M 4s
-##    100K .......... .......... .......... .......... ..........  4% 1.56M 3s
-##    150K .......... .......... .......... .......... ..........  6% 1.56M 3s
-##    200K .......... .......... .......... .......... ..........  7% 1.85M 3s
-##    250K .......... .......... .......... .......... ..........  9% 5.60M 2s
-##    300K .......... .......... .......... .......... .......... 10% 2.29M 2s
-##    350K .......... .......... .......... .......... .......... 12% 1.76M 2s
-##    400K .......... .......... .......... .......... .......... 13% 7.10M 2s
-##    450K .......... .......... .......... .......... .......... 15% 2.46M 2s
-##    500K .......... .......... .......... .......... .......... 17% 5.65M 1s
-##    550K .......... .......... .......... .......... .......... 18% 5.38M 1s
-##    600K .......... .......... .......... .......... .......... 20% 4.07M 1s
-##    650K .......... .......... .......... .......... .......... 21% 4.88M 1s
-##    700K .......... .......... .......... .......... .......... 23% 8.05M 1s
-##    750K .......... .......... .......... .......... .......... 24% 3.68M 1s
-##    800K .......... .......... .......... .......... .......... 26% 3.80M 1s
-##    850K .......... .......... .......... .......... .......... 27% 7.60M 1s
-##    900K .......... .......... .......... .......... .......... 29% 6.58M 1s
-##    950K .......... .......... .......... .......... .......... 31% 6.19M 1s
-##   1000K .......... .......... .......... .......... .......... 32% 4.26M 1s
-##   1050K .......... .......... .......... .......... .......... 34% 7.11M 1s
-##   1100K .......... .......... .......... .......... .......... 35% 6.11M 1s
-##   1150K .......... .......... .......... .......... .......... 37% 3.58M 1s
-##   1200K .......... .......... .......... .......... .......... 38% 5.97M 1s
-##   1250K .......... .......... .......... .......... .......... 40% 9.61M 1s
-##   1300K .......... .......... .......... .......... .......... 41% 6.87M 1s
-##   1350K .......... .......... .......... .......... .......... 43% 5.21M 1s
-##   1400K .......... .......... .......... .......... .......... 45% 7.39M 1s
-##   1450K .......... .......... .......... .......... .......... 46% 6.05M 1s
-##   1500K .......... .......... .......... .......... .......... 48% 5.06M 1s
-##   1550K .......... .......... .......... .......... .......... 49% 6.94M 0s
-##   1600K .......... .......... .......... .......... .......... 51% 8.28M 0s
-##   1650K .......... .......... .......... .......... .......... 52% 4.15M 0s
-##   1700K .......... .......... .......... .......... .......... 54% 8.23M 0s
-##   1750K .......... .......... .......... .......... .......... 55% 8.21M 0s
-##   1800K .......... .......... .......... .......... .......... 57% 11.3M 0s
-##   1850K .......... .......... .......... .......... .......... 59% 4.27M 0s
-##   1900K .......... .......... .......... .......... .......... 60% 6.49M 0s
-##   1950K .......... .......... .......... .......... .......... 62% 7.24M 0s
-##   2000K .......... .......... .......... .......... .......... 63% 7.75M 0s
-##   2050K .......... .......... .......... .......... .......... 65% 12.2M 0s
-##   2100K .......... .......... .......... .......... .......... 66% 4.09M 0s
-##   2150K .......... .......... .......... .......... .......... 68% 7.66M 0s
-##   2200K .......... .......... .......... .......... .......... 69% 6.88M 0s
-##   2250K .......... .......... .......... .......... .......... 71% 12.5M 0s
-##   2300K .......... .......... .......... .......... .......... 73% 6.45M 0s
-##   2350K .......... .......... .......... .......... .......... 74% 5.95M 0s
-##   2400K .......... .......... .......... .......... .......... 76% 7.11M 0s
-##   2450K .......... .......... .......... .......... .......... 77% 6.38M 0s
-##   2500K .......... .......... .......... .......... .......... 79% 13.6M 0s
-##   2550K .......... .......... .......... .......... .......... 80% 8.25M 0s
-##   2600K .......... .......... .......... .......... .......... 82% 9.08M 0s
-##   2650K .......... .......... .......... .......... .......... 83% 8.92M 0s
-##   2700K .......... .......... .......... .......... .......... 85% 6.01M 0s
-##   2750K .......... .......... .......... .......... .......... 87% 5.66M 0s
-##   2800K .......... .......... .......... .......... .......... 88% 10.3M 0s
-##   2850K .......... .......... .......... .......... .......... 90% 14.5M 0s
-##   2900K .......... .......... .......... .......... .......... 91% 8.48M 0s
-##   2950K .......... .......... .......... .......... .......... 93% 6.90M 0s
-##   3000K .......... .......... .......... .......... .......... 94% 3.61M 0s
-##   3050K .......... .......... .......... .......... .......... 96% 11.1M 0s
-##   3100K .......... .......... .......... .......... .......... 97% 11.5M 0s
-##   3150K .......... .......... .......... .......... .......... 99% 9.03M 0s
-##   3200K .......... ......                                     100% 65.8M=0.7s
+##      0K .......... .......... .......... .......... ..........  1%  525K 6s
+##     50K .......... .......... .......... .......... ..........  3% 1.25M 4s
+##    100K .......... .......... .......... .......... ..........  4% 1.46M 3s
+##    150K .......... .......... .......... .......... ..........  6% 1.75M 3s
+##    200K .......... .......... .......... .......... ..........  7% 1.80M 3s
+##    250K .......... .......... .......... .......... ..........  9% 5.58M 2s
+##    300K .......... .......... .......... .......... .......... 10% 2.04M 2s
+##    350K .......... .......... .......... .......... .......... 12% 4.02M 2s
+##    400K .......... .......... .......... .......... .......... 13% 7.47M 2s
+##    450K .......... .......... .......... .......... .......... 15% 2.40M 2s
+##    500K .......... .......... .......... .......... .......... 17% 5.30M 1s
+##    550K .......... .......... .......... .......... .......... 18% 6.95M 1s
+##    600K .......... .......... .......... .......... .......... 20% 2.76M 1s
+##    650K .......... .......... .......... .......... .......... 21% 5.06M 1s
+##    700K .......... .......... .......... .......... .......... 23% 6.62M 1s
+##    750K .......... .......... .......... .......... .......... 24% 2.78M 1s
+##    800K .......... .......... .......... .......... .......... 26% 4.42M 1s
+##    850K .......... .......... .......... .......... .......... 27% 8.78M 1s
+##    900K .......... .......... .......... .......... .......... 29% 7.86M 1s
+##    950K .......... .......... .......... .......... .......... 31% 3.62M 1s
+##   1000K .......... .......... .......... .......... .......... 32% 4.58M 1s
+##   1050K .......... .......... .......... .......... .......... 34% 4.97M 1s
+##   1100K .......... .......... .......... .......... .......... 35% 12.6M 1s
+##   1150K .......... .......... .......... .......... .......... 37% 4.05M 1s
+##   1200K .......... .......... .......... .......... .......... 38% 4.38M 1s
+##   1250K .......... .......... .......... .......... .......... 40% 4.01M 1s
+##   1300K .......... .......... .......... .......... .......... 41% 8.42M 1s
+##   1350K .......... .......... .......... .......... .......... 43% 9.73M 1s
+##   1400K .......... .......... .......... .......... .......... 45% 4.74M 1s
+##   1450K .......... .......... .......... .......... .......... 46% 3.21M 1s
+##   1500K .......... .......... .......... .......... .......... 48% 6.91M 1s
+##   1550K .......... .......... .......... .......... .......... 49% 9.05M 1s
+##   1600K .......... .......... .......... .......... .......... 51% 9.15M 0s
+##   1650K .......... .......... .......... .......... .......... 52% 3.36M 0s
+##   1700K .......... .......... .......... .......... .......... 54% 7.63M 0s
+##   1750K .......... .......... .......... .......... .......... 55% 4.95M 0s
+##   1800K .......... .......... .......... .......... .......... 57% 12.1M 0s
+##   1850K .......... .......... .......... .......... .......... 59% 4.86M 0s
+##   1900K .......... .......... .......... .......... .......... 60% 8.01M 0s
+##   1950K .......... .......... .......... .......... .......... 62% 4.57M 0s
+##   2000K .......... .......... .......... .......... .......... 63% 4.11M 0s
+##   2050K .......... .......... .......... .......... .......... 65% 13.6M 0s
+##   2100K .......... .......... .......... .......... .......... 66% 7.09M 0s
+##   2150K .......... .......... .......... .......... .......... 68% 7.13M 0s
+##   2200K .......... .......... .......... .......... .......... 69% 11.6M 0s
+##   2250K .......... .......... .......... .......... .......... 71% 2.70M 0s
+##   2300K .......... .......... .......... .......... .......... 73% 13.6M 0s
+##   2350K .......... .......... .......... .......... .......... 74% 8.84M 0s
+##   2400K .......... .......... .......... .......... .......... 76% 10.3M 0s
+##   2450K .......... .......... .......... .......... .......... 77% 5.37M 0s
+##   2500K .......... .......... .......... .......... .......... 79% 3.03M 0s
+##   2550K .......... .......... .......... .......... .......... 80% 7.62M 0s
+##   2600K .......... .......... .......... .......... .......... 82% 14.7M 0s
+##   2650K .......... .......... .......... .......... .......... 83% 13.8M 0s
+##   2700K .......... .......... .......... .......... .......... 85% 7.77M 0s
+##   2750K .......... .......... .......... .......... .......... 87% 3.74M 0s
+##   2800K .......... .......... .......... .......... .......... 88% 3.00M 0s
+##   2850K .......... .......... .......... .......... .......... 90% 12.8M 0s
+##   2900K .......... .......... .......... .......... .......... 91% 11.8M 0s
+##   2950K .......... .......... .......... .......... .......... 93% 11.7M 0s
+##   3000K .......... .......... .......... .......... .......... 94% 11.6M 0s
+##   3050K .......... .......... .......... .......... .......... 96% 9.72M 0s
+##   3100K .......... .......... .......... .......... .......... 97% 2.07M 0s
+##   3150K .......... .......... .......... .......... .......... 99% 8.61M 0s
+##   3200K .......... ......                                     100%  144M=0.8s
 ## 
-## 2015-07-12 20:00:30 (4.45 MB/s) - ‘gold.fasta.gz’ saved [3293704/3293704]
+## 2015-07-13 17:23:38 (4.11 MB/s) - ‘gold.fasta.gz’ saved [3293704/3293704]
 ## 
 ## chmod: uc2otutab.py: No such file or directory
 ## chmod: fasta_number.py: No such file or directory
@@ -859,28 +887,28 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 966.7kb Reading rumen.adaptation.format.fasta, 116Mb
+## 00:00 917.5kb Reading rumen.adaptation.format.fasta, 116Mb
 ## 00:00 117Mb 272630 (272.6k) seqs, min 400, avg 400, max 400nt
 ## 00:02 134Mb 188248 (188.2k) uniques, avg cluster 1.4, median 1, max 1750
 ## 00:02 134Mb    0.0% Writing usearch_results/rumen.adaptation.derep.fasta
 00:03 134Mb   10.2% Writing usearch_results/rumen.adaptation.derep.fasta
-00:04 134Mb   25.9% Writing usearch_results/rumen.adaptation.derep.fasta
-00:05 134Mb   41.8% Writing usearch_results/rumen.adaptation.derep.fasta
-00:06 134Mb   58.0% Writing usearch_results/rumen.adaptation.derep.fasta
-00:07 134Mb   72.8% Writing usearch_results/rumen.adaptation.derep.fasta
-00:08 134Mb   88.5% Writing usearch_results/rumen.adaptation.derep.fasta
-00:08 134Mb  100.0% Writing usearch_results/rumen.adaptation.derep.fasta
+00:04 134Mb   29.1% Writing usearch_results/rumen.adaptation.derep.fasta
+00:05 134Mb   49.9% Writing usearch_results/rumen.adaptation.derep.fasta
+00:06 134Mb   70.5% Writing usearch_results/rumen.adaptation.derep.fasta
+00:07 134Mb   91.3% Writing usearch_results/rumen.adaptation.derep.fasta
+00:07 134Mb  100.0% Writing usearch_results/rumen.adaptation.derep.fasta
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
 ## http://drive5.com/usearch
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 917.5kb Reading usearch_results/rumen.adaptation.derep.fasta, 82Mb
-## 00:01  83Mb 188248 (188.2k) seqs, min 400, avg 400, max 400nt
+## 00:00 921.6kb Reading usearch_results/rumen.adaptation.derep.fasta, 82Mb
+## 00:00  83Mb 188248 (188.2k) seqs, min 400, avg 400, max 400nt
 ## 00:01  86Mb Getting sizes
-## 00:02  86Mb Sorting 15960 sequences
-## 00:02  86Mb    0.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
+## 00:01  86Mb Sorting 15960 sequences
+## 00:01  86Mb    0.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
+00:02  86Mb   54.6% Writing usearch_results/rumen.adaptation.derep.sort.fasta
 00:02  86Mb  100.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
@@ -888,28 +916,26 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:01 9.2Mb    0.1% 0 OTUs
-00:02  12Mb    1.0% 61 OTUs
-00:03  13Mb    1.3% 83 OTUs
-00:04  13Mb    1.6% 93 OTUs
-00:05  14Mb    4.7% 205 OTUs
-00:06  15Mb   19.0% 504 OTUs
-00:07  16Mb   32.7% 686 OTUs
-00:08  18Mb   45.3% 820 OTUs
-00:09  18Mb   56.9% 913 OTUs
-00:10  19Mb   67.2% 998 OTUs
-00:11  20Mb   76.8% 1070 OTUs
-00:12  20Mb   86.0% 1147 OTUs
-00:13  21Mb   95.0% 1229 OTUs
-00:13  21Mb  100.0% 1257 OTUs
+## 00:00 9.1Mb    0.1% 0 OTUs
+00:01  12Mb    0.9% 59 OTUs
+00:02  13Mb    1.4% 85 OTUs
+00:03  13Mb    1.7% 94 OTUs
+00:04  15Mb   13.2% 387 OTUs
+00:05  16Mb   31.8% 672 OTUs
+00:06  18Mb   48.6% 846 OTUs
+00:07  19Mb   62.7% 971 OTUs
+00:08  20Mb   75.8% 1066 OTUs
+00:09  20Mb   87.6% 1167 OTUs
+00:10  21Mb   99.0% 1253 OTUs
+00:10  21Mb  100.0% 1257 OTUs
 ##                              
 ## Input seqs  15960 (16.0k)
 ##       OTUs  1257
 ##    Members  9372
 ##   Chimeras  5331
 ##    Max mem  21Mb
-##       Time  12.0s
-## Throughput  1330.0 seqs/sec.
+##       Time  10.0s
+## Throughput  1596.0 seqs/sec.
 ## 
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
@@ -917,29 +943,27 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 946.2kb Reading usearch_results/rumen.adaptation.otus1.fasta, 550.1kb
-## 00:00 1.5Mb 1257 seqs, min 400, avg 400, max 400nt
+## 00:00 978.9kb Reading usearch_results/rumen.adaptation.otus1.fasta, 550.1kb
+## 00:00 1.6Mb 1257 seqs, min 400, avg 400, max 400nt
 ## 00:00 1.6Mb Reading gold.fasta, 16Mb
 ## 00:00  18Mb 10362 (10.4k) seqs, min 1205, avg 1470, max 1655nt
 ## 00:00  18Mb    0.0% Masking
-00:01  18Mb   35.8% Masking
-00:01  18Mb  100.0% Masking
-## 00:01  18Mb    0.0% Word stats
+00:00  18Mb  100.0% Masking
+## 00:00  18Mb    0.0% Word stats
+00:01  18Mb   43.4% Word stats
 00:01  18Mb  100.0% Word stats
 ## 00:01  18Mb    0.0% Building slots
 00:01  19Mb  100.0% Building slots
 ## 00:01  19Mb    0.0% Build index   
-00:02  63Mb    3.9% Build index
-00:02  82Mb  100.0% Build index
-## 00:02  82Mb    0.1% Search 0/1 chimeras found (0.0%)
-00:03  85Mb    3.6% Search 0/45 chimeras found (0.0%)
-00:04  88Mb   27.1% Search 2/341 chimeras found (0.6%)
-00:05  91Mb   48.4% Search 9/609 chimeras found (1.5%)
-00:06  92Mb   67.2% Search 26/845 chimeras found (3.1%)
-00:07  94Mb   84.7% Search 47/1065 chimeras found (4.4%)
-00:07  96Mb  100.0% Search 60/1257 chimeras found (4.8%)
-## 00:07  96Mb    0.1% Writing 1197 non-chimeras           
-00:07  96Mb  100.0% Writing 1197 non-chimeras
+00:01  82Mb  100.0% Build index
+## 00:01  82Mb    0.1% Search 0/1 chimeras found (0.0%)
+00:02  85Mb    0.7% Search 0/9 chimeras found (0.0%)
+00:03  89Mb   31.2% Search 2/393 chimeras found (0.5%)
+00:04  92Mb   57.6% Search 17/725 chimeras found (2.3%)
+00:05  94Mb   83.4% Search 48/1049 chimeras found (4.6%)
+00:05  96Mb  100.0% Search 60/1257 chimeras found (4.8%)
+## 00:05  96Mb    0.1% Writing 1197 non-chimeras           
+00:05  96Mb  100.0% Writing 1197 non-chimeras
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
 ## http://drive5.com/usearch
@@ -957,73 +981,58 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 00:00  19Mb    0.1% Build index   
 00:00  22Mb  100.0% Build index
 ## 00:00  22Mb    0.1% Searching, 0.0% matched
-00:01  24Mb    1.2% Searching, 64.2% matched
-00:02  24Mb    2.9% Searching, 64.4% matched
-00:03  24Mb    4.4% Searching, 59.8% matched
-00:04  24Mb    6.0% Searching, 56.7% matched
-00:05  24Mb    7.4% Searching, 54.5% matched
-00:06  24Mb    9.1% Searching, 53.8% matched
-00:07  25Mb   10.5% Searching, 52.9% matched
-00:08  25Mb   12.3% Searching, 52.4% matched
-00:09  25Mb   13.8% Searching, 51.9% matched
-00:10  25Mb   16.0% Searching, 53.6% matched
-00:11  25Mb   17.8% Searching, 54.3% matched
-00:12  25Mb   19.3% Searching, 53.9% matched
-00:13  25Mb   20.4% Searching, 53.7% matched
-00:14  25Mb   21.7% Searching, 53.4% matched
-00:15  25Mb   23.7% Searching, 54.0% matched
-00:16  25Mb   25.3% Searching, 54.2% matched
-00:17  25Mb   27.2% Searching, 54.7% matched
-00:18  25Mb   29.3% Searching, 55.6% matched
-00:19  25Mb   31.1% Searching, 55.9% matched
-00:20  25Mb   32.7% Searching, 55.8% matched
-00:21  25Mb   34.4% Searching, 55.7% matched
-00:22  25Mb   35.8% Searching, 55.7% matched
-00:23  25Mb   37.6% Searching, 55.9% matched
-00:24  25Mb   41.0% Searching, 58.7% matched
-00:25  25Mb   43.2% Searching, 59.4% matched
-00:26  25Mb   45.5% Searching, 59.8% matched
-00:27  25Mb   47.1% Searching, 59.8% matched
-00:28  25Mb   49.3% Searching, 60.0% matched
-00:29  25Mb   51.2% Searching, 60.1% matched
-00:30  25Mb   52.7% Searching, 59.9% matched
-00:31  25Mb   54.8% Searching, 59.8% matched
-00:32  25Mb   56.3% Searching, 59.6% matched
-00:33  25Mb   58.1% Searching, 59.4% matched
-00:34  25Mb   59.6% Searching, 59.3% matched
-00:35  25Mb   61.0% Searching, 59.0% matched
-00:36  25Mb   62.6% Searching, 58.9% matched
-00:37  25Mb   64.0% Searching, 58.5% matched
-00:38  25Mb   65.4% Searching, 58.2% matched
-00:39  25Mb   66.9% Searching, 58.0% matched
-00:40  25Mb   68.6% Searching, 57.9% matched
-00:41  25Mb   70.4% Searching, 58.0% matched
-00:42  25Mb   71.8% Searching, 57.9% matched
-00:43  25Mb   72.9% Searching, 57.9% matched
-00:44  25Mb   74.6% Searching, 58.0% matched
-00:45  25Mb   76.0% Searching, 57.8% matched
-00:46  25Mb   77.6% Searching, 57.6% matched
-00:47  25Mb   79.1% Searching, 57.4% matched
-00:48  25Mb   80.5% Searching, 57.3% matched
-00:49  25Mb   82.4% Searching, 57.3% matched
-00:50  25Mb   83.8% Searching, 57.2% matched
-00:51  25Mb   85.8% Searching, 57.2% matched
-00:52  25Mb   87.4% Searching, 57.1% matched
-00:53  25Mb   89.2% Searching, 57.2% matched
-00:54  25Mb   90.8% Searching, 57.2% matched
-00:55  25Mb   92.8% Searching, 57.3% matched
-00:56  25Mb   94.3% Searching, 57.2% matched
-00:57  25Mb   96.1% Searching, 57.1% matched
-00:58  25Mb   97.5% Searching, 57.0% matched
-00:59  25Mb   99.3% Searching, 56.9% matched
-00:59  25Mb  100.0% Searching, 56.8% matched
+00:01  24Mb    2.2% Searching, 64.5% matched
+00:02  24Mb    4.3% Searching, 59.9% matched
+00:03  24Mb    6.4% Searching, 55.9% matched
+00:04  24Mb    8.4% Searching, 54.1% matched
+00:05  24Mb   10.3% Searching, 53.0% matched
+00:06  24Mb   12.5% Searching, 52.4% matched
+00:07  24Mb   14.7% Searching, 52.8% matched
+00:08  24Mb   17.4% Searching, 54.3% matched
+00:09  24Mb   19.4% Searching, 53.9% matched
+00:10  24Mb   21.2% Searching, 53.3% matched
+00:11  24Mb   23.8% Searching, 54.0% matched
+00:12  24Mb   25.7% Searching, 54.1% matched
+00:13  24Mb   28.2% Searching, 55.1% matched
+00:14  24Mb   29.9% Searching, 55.7% matched
+00:15  24Mb   32.0% Searching, 55.9% matched
+00:16  24Mb   34.3% Searching, 55.8% matched
+00:17  24Mb   36.4% Searching, 55.8% matched
+00:18  24Mb   39.9% Searching, 57.8% matched
+00:19  24Mb   43.2% Searching, 59.4% matched
+00:20  24Mb   46.0% Searching, 59.8% matched
+00:21  24Mb   48.3% Searching, 59.9% matched
+00:22  24Mb   51.0% Searching, 60.1% matched
+00:23  24Mb   53.1% Searching, 59.9% matched
+00:24  24Mb   55.5% Searching, 59.8% matched
+00:25  24Mb   57.6% Searching, 59.4% matched
+00:26  24Mb   59.8% Searching, 59.2% matched
+00:27  24Mb   61.8% Searching, 59.0% matched
+00:28  24Mb   63.8% Searching, 58.5% matched
+00:29  24Mb   65.7% Searching, 58.2% matched
+00:30  24Mb   67.6% Searching, 57.9% matched
+00:31  24Mb   70.2% Searching, 58.0% matched
+00:32  24Mb   72.4% Searching, 57.9% matched
+00:33  24Mb   74.7% Searching, 58.0% matched
+00:34  24Mb   76.7% Searching, 57.7% matched
+00:35  24Mb   78.8% Searching, 57.5% matched
+00:36  24Mb   80.7% Searching, 57.3% matched
+00:37  24Mb   83.1% Searching, 57.3% matched
+00:38  24Mb   85.3% Searching, 57.2% matched
+00:39  24Mb   87.4% Searching, 57.1% matched
+00:40  24Mb   88.9% Searching, 57.2% matched
+00:41  24Mb   91.2% Searching, 57.2% matched
+00:42  24Mb   93.5% Searching, 57.3% matched
+00:43  24Mb   95.6% Searching, 57.1% matched
+00:44  24Mb   97.6% Searching, 57.0% matched
+00:45  24Mb   99.8% Searching, 56.8% matched
+00:45  24Mb  100.0% Searching, 56.8% matched
 ## usearch_results/rumen.adaptation.otu_map.uc   0.0%   
-usearch_results/rumen.adaptation.otu_map.uc  15.5%   
-usearch_results/rumen.adaptation.otu_map.uc  31.0%   
-usearch_results/rumen.adaptation.otu_map.uc  48.2%   
-usearch_results/rumen.adaptation.otu_map.uc  63.3%   
-usearch_results/rumen.adaptation.otu_map.uc  78.2%   
-usearch_results/rumen.adaptation.otu_map.uc  93.4%   
+usearch_results/rumen.adaptation.otu_map.uc  20.3%   
+usearch_results/rumen.adaptation.otu_map.uc  41.1%   
+usearch_results/rumen.adaptation.otu_map.uc  60.8%   
+usearch_results/rumen.adaptation.otu_map.uc  79.3%   
+usearch_results/rumen.adaptation.otu_map.uc  99.0%   
 usearch_results/rumen.adaptation.otu_map.uc 100.0%
 ```
 
@@ -1103,7 +1112,7 @@ mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
 ## Using 1 processors.
 ## 
 ## Reading in the Silva.nr_v119.align template sequences...	DONE.
-## It took 331 to read  153307 sequences.
+## It took 256 to read  153307 sequences.
 ## Aligning sequences from usearch_results/rumen.adaptation.otus2.fasta ...
 ## 100
 ## 200
@@ -1118,7 +1127,7 @@ mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
 ## 1100
 ## 1165
 ## Some of you sequences generated alignments that eliminated too many bases, a list is provided in usearch_results/rumen.adaptation.otus2.flip.accnos. If you set the flip parameter to true mothur will try aligning the reverse compliment as well.
-## It took 31 secs to align 1165 sequences.
+## It took 26 secs to align 1165 sequences.
 ## 
 ## 
 ## Output File Names: 
@@ -1249,21 +1258,21 @@ sed -i -e 's/AAAAAAAAAA//g' rumen.adaptation.otus2.phylip.tre
 ## 0	0
 ## 100	0
 ## 200	1
-## 300	3
-## 400	6
-## 500	9
-## 600	13
-## 700	18
-## 800	23
-## 900	28
-## 1000	34
-## 1100	39
-## 1164	43
+## 300	2
+## 400	3
+## 500	5
+## 600	8
+## 700	11
+## 800	14
+## 900	18
+## 1000	22
+## 1100	26
+## 1164	29
 ## 
 ## Output File Names: 
 ## rumen.adaptation.otus2.phylip.dist
 ## 
-## It took 43 seconds to calculate the distances for 1165 sequences.
+## It took 29 seconds to calculate the distances for 1165 sequences.
 ## 
 ## mothur > quit()
 ## 'xterm-256color': unknown terminal type.
@@ -1568,11 +1577,11 @@ adonis(corn_unweighted ~ Treatment + Individual, permutations = 999, data = corn
 ## 
 ## Terms added sequentially (first to last)
 ## 
-##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)  
-## Treatment   4   1.38775 0.34694  2.0756 0.60325  0.011 *
-## Individual  1   0.24408 0.24408  1.4602 0.10610  0.151  
-## Residuals   4   0.66861 0.16715         0.29065         
-## Total       9   2.30044                 1.00000         
+##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)   
+## Treatment   4   1.39890 0.34972  2.0741 0.60159  0.010 **
+## Individual  1   0.25195 0.25195  1.4942 0.10835  0.144   
+## Residuals   4   0.67447 0.16862         0.29006          
+## Total       9   2.32532                 1.00000          
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -1591,11 +1600,11 @@ adonis(ramp_unweighted ~ Treatment + Individual, permutations = 999, data = ramp
 ## 
 ## Terms added sequentially (first to last)
 ## 
-##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)   
-## Treatment   4    1.2816 0.32041  1.7631 0.38995  0.002 **
-## Individual  1    0.3695 0.36953  2.0335 0.11243  0.004 **
-## Residuals   9    1.6355 0.18173         0.49762          
-## Total      14    3.2867                 1.00000          
+##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
+## Treatment   4    1.2205 0.30513  1.6382 0.37056  0.001 ***
+## Individual  1    0.3968 0.39684  2.1306 0.12049  0.008 ** 
+## Residuals   9    1.6763 0.18626         0.50895           
+## Total      14    3.2937                 1.00000           
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -1604,7 +1613,7 @@ adonis(ramp_unweighted ~ Treatment + Individual, permutations = 999, data = ramp
 # Check for assumptions (DO!!):
 ```
 
-We used paired t-tests as a post-hoc method to compare the microbial community structure of stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
+We used Mann-Whitney U Test as a post-hoc method to compare the microbial community structure of stages within an adaptation program.  To do this, we compared the pairwise distances relative to step 1.  For instance, to test for a difference in community structure between step 2 and step 3, we compared all the pairwise distances from step 1 samples to step 2 samples to the distance from step 1 samples to step 3 samples:
 
 ```r
 corn_unweighted_matrix <- as.matrix(corn_unweighted)
@@ -1636,16 +1645,16 @@ mv treatment_distances.txt ramp_unweighted_treatment_distances.txt
 ```
 
 ```
-## --2015-07-12 20:25:22--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
+## --2015-07-13 17:42:10--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
 ## Resolving raw.githubusercontent.com... 23.235.44.133
 ## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 6979 (6.8K) [text/plain]
 ## Saving to: ‘treatment_distances.pl’
 ## 
-##      0K ......                                                100%  740M=0s
+##      0K ......                                                100% 2.17G=0s
 ## 
-## 2015-07-12 20:25:23 (740 MB/s) - ‘treatment_distances.pl’ saved [6979/6979]
+## 2015-07-13 17:42:11 (2.17 GB/s) - ‘treatment_distances.pl’ saved [6979/6979]
 ## 
 ## 
 ## Number of pairwise comparisons read in: 45
@@ -1660,110 +1669,98 @@ corn_unweighted <- read.table("corn_unweighted_treatment_distances.txt", sep = "
     header = TRUE)
 corn_unweighted_pairs <- split(corn_unweighted, corn_unweighted$Sample1Diet_Sample2Diet)
 
-c1c2_c1c3 <- rbind(corn_unweighted_pairs$C1_C2, corn_unweighted_pairs$C1_C3)
-c1c2_c1c3_test <- pairwise.t.test(c1c2_c1c3$Distance, c1c2_c1c3$Sample1Diet_Sample2Diet)
+c1c1_c1c2_test <- wilcox.test(corn_unweighted_pairs$C1_C1$Distance, corn_unweighted_pairs$C1_C2$Distance)
+c1c1_c1c2_test
+```
+
+```
+## 
+## 	Wilcoxon rank sum test
+## 
+## data:  corn_unweighted_pairs$C1_C1$Distance and corn_unweighted_pairs$C1_C2$Distance
+## W = 2, p-value = 1
+## alternative hypothesis: true location shift is not equal to 0
+```
+
+```r
+lapply(c1c1_c1c2_test$p.value, write, "corn_unweighted_c1c1_c1c2_wilcox.txt", 
+    append = TRUE)
+```
+
+```
+## [[1]]
+## NULL
+```
+
+```r
+c1c2_c1c3_test <- wilcox.test(corn_unweighted_pairs$C1_C2$Distance, corn_unweighted_pairs$C1_C3$Distance)
 c1c2_c1c3_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  c1c2_c1c3$Distance and c1c2_c1c3$Sample1Diet_Sample2Diet 
-## 
-##       C1_C2
-## C1_C3 0.57 
-## 
-## P value adjustment method: holm
+## data:  corn_unweighted_pairs$C1_C2$Distance and corn_unweighted_pairs$C1_C3$Distance
+## W = 4, p-value = 0.3429
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(c1c2_c1c3_test, write, "corn_unweighted_c1c2_c1c3_ttest.txt", append = TRUE)
+lapply(c1c2_c1c3_test$p.value, write, "corn_unweighted_c1c2_c1c3_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
 ```r
-c1c3_c1c4 <- rbind(corn_unweighted_pairs$C1_C3, corn_unweighted_pairs$C1_C4)
-c1c3_c1c4_test <- pairwise.t.test(c1c3_c1c4$Distance, c1c3_c1c4$Sample1Diet_Sample2Diet)
+c1c3_c1c4_test <- wilcox.test(corn_unweighted_pairs$C1_C3$Distance, corn_unweighted_pairs$C1_C4$Distance)
 c1c3_c1c4_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  c1c3_c1c4$Distance and c1c3_c1c4$Sample1Diet_Sample2Diet 
-## 
-##       C1_C3 
-## C1_C4 0.0061
-## 
-## P value adjustment method: holm
+## data:  corn_unweighted_pairs$C1_C3$Distance and corn_unweighted_pairs$C1_C4$Distance
+## W = 0, p-value = 0.02857
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(c1c3_c1c4_test, write, "corn_unweighted_c1c3_c1c4_ttest.txt", append = TRUE)
+lapply(c1c3_c1c4_test$p.value, write, "corn_unweighted_c1c3_c1c4_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
 ```r
-c1c4_c1cf <- rbind(corn_unweighted_pairs$C1_C4, corn_unweighted_pairs$C1_CF)
-c1c4_c1cf_test <- pairwise.t.test(c1c4_c1cf$Distance, c1c4_c1cf$Sample1Diet_Sample2Diet)
+c1c4_c1cf_test <- wilcox.test(corn_unweighted_pairs$C1_C4$Distance, corn_unweighted_pairs$C1_CF$Distance)
 c1c4_c1cf_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  c1c4_c1cf$Distance and c1c4_c1cf$Sample1Diet_Sample2Diet 
-## 
-##       C1_C4
-## C1_CF 0.036
-## 
-## P value adjustment method: holm
+## data:  corn_unweighted_pairs$C1_C4$Distance and corn_unweighted_pairs$C1_CF$Distance
+## W = 2, p-value = 0.1143
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(c1c4_c1cf_test, write, "corn_unweighted_c1c4_c1cf_ttest.txt", append = TRUE)
+lapply(c1c4_c1cf_test$p.value, write, "corn_unweighted_c1c4_c1cf_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
@@ -1772,146 +1769,98 @@ ramp_unweighted <- read.table("ramp_unweighted_treatment_distances.txt", sep = "
     header = TRUE)
 ramp_unweighted_pairs <- split(ramp_unweighted, ramp_unweighted$Sample1Diet_Sample2Diet)
 
-r1r1_r1r2 <- rbind(ramp_unweighted_pairs$R1_R1, ramp_unweighted_pairs$R1_R2)
-r1r1_r1r2_test <- pairwise.t.test(r1r1_r1r2$Distance, r1r1_r1r2$Sample1Diet_Sample2Diet)
+r1r1_r1r2_test <- wilcox.test(ramp_unweighted_pairs$R1_R1$Distance, ramp_unweighted_pairs$R1_R2$Distance)
 r1r1_r1r2_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  r1r1_r1r2$Distance and r1r1_r1r2$Sample1Diet_Sample2Diet 
-## 
-##       R1_R1 
-## R1_R2 0.0043
-## 
-## P value adjustment method: holm
+## data:  ramp_unweighted_pairs$R1_R1$Distance and ramp_unweighted_pairs$R1_R2$Distance
+## W = 3, p-value = 0.06364
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(r1r1_r1r2_test, write, "ramp_unweighted_r1r1_r1r2_ttest.txt", append = TRUE)
+lapply(r1r1_r1r2_test$p.value, write, "ramp_unweighted_r1r1_r1r2_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
 ```r
-r1r2_r1r3 <- rbind(ramp_unweighted_pairs$R1_R2, ramp_unweighted_pairs$R1_R3)
-r1r2_r1r3_test <- pairwise.t.test(r1r2_r1r3$Distance, r1r2_r1r3$Sample1Diet_Sample2Diet)
+r1r2_r1r3_test <- wilcox.test(ramp_unweighted_pairs$R1_R2$Distance, ramp_unweighted_pairs$R1_R3$Distance)
 r1r2_r1r3_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  r1r2_r1r3$Distance and r1r2_r1r3$Sample1Diet_Sample2Diet 
-## 
-##       R1_R2  
-## R1_R3 2.7e-05
-## 
-## P value adjustment method: holm
+## data:  ramp_unweighted_pairs$R1_R2$Distance and ramp_unweighted_pairs$R1_R3$Distance
+## W = 0, p-value = 4.114e-05
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(r1r2_r1r3_test, write, "ramp_unweighted_r1r2_r1r3_ttest.txt", append = TRUE)
+lapply(r1r2_r1r3_test$p.value, write, "ramp_unweighted_r1r2_r1r3_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
 ```r
-r1r3_r1r4 <- rbind(ramp_unweighted_pairs$R1_R3, ramp_unweighted_pairs$R1_R4)
-r1r3_r1r4_test <- pairwise.t.test(r1r3_r1r4$Distance, r1r3_r1r4$Sample1Diet_Sample2Diet)
+r1r3_r1r4_test <- wilcox.test(ramp_unweighted_pairs$R1_R3$Distance, ramp_unweighted_pairs$R1_R4$Distance)
 r1r3_r1r4_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  r1r3_r1r4$Distance and r1r3_r1r4$Sample1Diet_Sample2Diet 
-## 
-##       R1_R3
-## R1_R4 0.27 
-## 
-## P value adjustment method: holm
+## data:  ramp_unweighted_pairs$R1_R3$Distance and ramp_unweighted_pairs$R1_R4$Distance
+## W = 47, p-value = 0.6048
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(r1r3_r1r4_test, write, "ramp_unweighted_r1r3_r1r4_ttest.txt", append = TRUE)
+lapply(r1r3_r1r4_test$p.value, write, "ramp_unweighted_r1r3_r1r4_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
 ```r
-r1r4_r1rf <- rbind(ramp_unweighted_pairs$R1_R4, ramp_unweighted_pairs$R1_RF)
-r1r4_r1rf_test <- pairwise.t.test(r1r4_r1rf$Distance, r1r4_r1rf$Sample1Diet_Sample2Diet)
+r1r4_r1rf_test <- wilcox.test(ramp_unweighted_pairs$R1_R4$Distance, ramp_unweighted_pairs$R1_RF$Distance)
 r1r4_r1rf_test
 ```
 
 ```
 ## 
-## 	Pairwise comparisons using t tests with pooled SD 
+## 	Wilcoxon rank sum test
 ## 
-## data:  r1r4_r1rf$Distance and r1r4_r1rf$Sample1Diet_Sample2Diet 
-## 
-##       R1_R4
-## R1_RF 0.11 
-## 
-## P value adjustment method: holm
+## data:  ramp_unweighted_pairs$R1_R4$Distance and ramp_unweighted_pairs$R1_RF$Distance
+## W = 30, p-value = 0.3865
+## alternative hypothesis: true location shift is not equal to 0
 ```
 
 ```r
-lapply(r1r4_r1rf_test, write, "ramp_unweighted_r1r4_r1rf_ttest.txt", append = TRUE)
+lapply(r1r4_r1rf_test$p.value, write, "ramp_unweighted_r1r4_r1rf_wilcox.txt", 
+    append = TRUE)
 ```
 
 ```
-## $method
-## NULL
-## 
-## $data.name
-## NULL
-## 
-## $p.value
-## NULL
-## 
-## $p.adjust.method
+## [[1]]
 ## NULL
 ```
 
@@ -2323,17 +2272,17 @@ python lefse/run_lefse.py ramp_23_lefse_format.txt ramp_23_lefse_result.txt
 ```
 
 ```
-## --2015-07-12 20:25:51--  https://bitbucket.org/nsegata/lefse/get/default.zip
-## Resolving bitbucket.org... 131.103.20.167, 131.103.20.168
-## Connecting to bitbucket.org|131.103.20.167|:443... connected.
+## --2015-07-13 17:42:33--  https://bitbucket.org/nsegata/lefse/get/default.zip
+## Resolving bitbucket.org... 131.103.20.168, 131.103.20.167
+## Connecting to bitbucket.org|131.103.20.168|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 59458 (58K) [application/zip]
 ## Saving to: ‘lefse.zip’
 ## 
-##      0K .......... .......... .......... .......... .......... 86%  447K 0s
-##     50K ........                                              100% 99.7M=0.1s
+##      0K .......... .......... .......... .......... .......... 86%  358K 0s
+##     50K ........                                              100% 45.8M=0.1s
 ## 
-## 2015-07-12 20:25:52 (518 KB/s) - ‘lefse.zip’ saved [59458/59458]
+## 2015-07-13 17:42:35 (416 KB/s) - ‘lefse.zip’ saved [59458/59458]
 ## 
 ## Archive:  lefse.zip
 ##   inflating: nsegata-lefse-094f447691f0/.hg_archival.txt  
