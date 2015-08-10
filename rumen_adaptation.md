@@ -57,7 +57,7 @@ install.packages("ggplot2", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -72,7 +72,7 @@ install.packages("matrixStats", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -91,7 +91,7 @@ install.packages("vegan", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -106,7 +106,7 @@ install.packages("reshape", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -125,7 +125,7 @@ install.packages("biom", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -144,7 +144,7 @@ install.packages("gplots", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -159,7 +159,7 @@ install.packages("formatR", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -174,7 +174,7 @@ install.packages("knitr", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -189,7 +189,7 @@ install.packages("rmarkdown", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -204,7 +204,7 @@ install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -219,7 +219,7 @@ install.packages("mvtnorm", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -238,7 +238,7 @@ install.packages("coin", repos='http://cran.us.r-project.org')
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -253,13 +253,13 @@ source("http://bioconductor.org/biocLite.R")
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
 ## Updating HTML index of packages in '.Library'
 ## Making 'packages.html' ... done
-## Bioconductor version 3.1 (BiocInstaller 1.18.3), ?biocLite for help
+## Bioconductor version 3.1 (BiocInstaller 1.18.4), ?biocLite for help
 ```
 
 ```r
@@ -268,14 +268,14 @@ biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
 
 ```
 ## BioC_mirror: http://bioconductor.org
-## Using Bioconductor version 3.1 (BiocInstaller 1.18.3), R version 3.2.0.
+## Using Bioconductor version 3.1 (BiocInstaller 1.18.4), R version 3.2.1.
 ## Installing package(s) 'Heatplus'
 ```
 
 ```
 ## 
 ## The downloaded source packages are in
-## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpKiOZjC/downloaded_packages'
+## 	'/private/var/folders/8n/_m4k_8jd5vg605g7cmmbdq8r0000gn/T/RtmpkY1uc5/downloaded_packages'
 ```
 
 ```
@@ -288,9 +288,9 @@ sessionInfo()
 ```
 
 ```
-## R version 3.2.0 (2015-04-16)
+## R version 3.2.1 (2015-06-18)
 ## Platform: x86_64-apple-darwin11.4.2 (64-bit)
-## Running under: OS X 10.9.5 (Mavericks)
+## Running under: OS X 10.10.4 (Yosemite)
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -299,10 +299,10 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] BiocInstaller_1.18.3 rmarkdown_0.7        knitr_1.10.5        
+## [1] BiocInstaller_1.18.4 knitr_1.10.5         rmarkdown_0.7       
 ## 
 ## loaded via a namespace (and not attached):
-## [1] magrittr_1.5    formatR_1.2     htmltools_0.2.6 tools_3.2.0    
+## [1] magrittr_1.5    formatR_1.2     htmltools_0.2.6 tools_3.2.1    
 ## [5] yaml_2.1.13     stringi_0.5-5   stringr_1.0.0   digest_0.6.8   
 ## [9] evaluate_0.7
 ```
@@ -326,7 +326,8 @@ opts_chunk$set("cache" = TRUE)
 Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
 
 ```bash
-wget 129.93.221.145:/public/rumen.adaptation.fasta
+wget https://github.com/chrisLanderson/rumen_adaptation/raw/master/rumen.adaptation.tar.gz
+tar -zxvf rumen.adaptation.tar.gz
 ```
 
 Now  get the SILVA reference alignment and trim it to the V1-V3 region (region was determined using 27F and 518R primers) of the 16S rRNA gene.
@@ -360,27 +361,27 @@ mothur "#reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)"
 ```
 
 ```
-## --2015-07-13 17:08:33--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
-## Resolving raw.githubusercontent.com... 23.235.40.133
-## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
+## --2015-08-10 11:16:31--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/mapping.txt
+## Resolving raw.githubusercontent.com... 23.235.44.133
+## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 2076 (2.0K) [text/plain]
 ## Saving to: ‘mapping.txt’
 ## 
-##      0K ..                                                    100%  660M=0s
+##      0K ..                                                    100%  330M=0s
 ## 
-## 2015-07-13 17:08:33 (660 MB/s) - ‘mapping.txt’ saved [2076/2076]
+## 2015-08-10 11:16:31 (330 MB/s) - ‘mapping.txt’ saved [2076/2076]
 ## 
-## --2015-07-13 17:08:33--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
-## Resolving raw.githubusercontent.com... 23.235.40.133
-## Connecting to raw.githubusercontent.com|23.235.40.133|:443... connected.
+## --2015-08-10 11:16:31--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_parameters_working.txt
+## Resolving raw.githubusercontent.com... 23.235.44.133
+## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 3575 (3.5K) [text/plain]
 ## Saving to: ‘qiime_parameters_working.txt’
 ## 
-##      0K ...                                                   100% 3.33G=0s
+##      0K ...                                                   100%  487M=0s
 ## 
-## 2015-07-13 17:08:33 (3.33 GB/s) - ‘qiime_parameters_working.txt’ saved [3575/3575]
+## 2015-08-10 11:16:31 (487 MB/s) - ‘qiime_parameters_working.txt’ saved [3575/3575]
 ## 
 ## 'xterm-256color': unknown terminal type.
 ## 
@@ -798,86 +799,86 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## A    usearch_python_scripts/uc.py
 ## A    usearch_python_scripts/uc.pyc
 ## A    usearch_python_scripts/uc2otutab.py
-## Exported revision 129.
-## --2015-07-13 17:23:36--  https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
+## Exported revision 132.
+## --2015-08-10 11:33:38--  https://github.com/chrisLanderson/rumen_adaptation/raw/master/gold.fasta.gz
 ## Resolving github.com... 192.30.252.128
 ## Connecting to github.com|192.30.252.128|:443... connected.
 ## HTTP request sent, awaiting response... 302 Found
 ## Location: https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz [following]
-## --2015-07-13 17:23:37--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz
+## --2015-08-10 11:33:39--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/gold.fasta.gz
 ## Resolving raw.githubusercontent.com... 23.235.44.133
 ## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 3293704 (3.1M) [application/octet-stream]
 ## Saving to: ‘gold.fasta.gz’
 ## 
-##      0K .......... .......... .......... .......... ..........  1%  525K 6s
-##     50K .......... .......... .......... .......... ..........  3% 1.25M 4s
-##    100K .......... .......... .......... .......... ..........  4% 1.46M 3s
-##    150K .......... .......... .......... .......... ..........  6% 1.75M 3s
-##    200K .......... .......... .......... .......... ..........  7% 1.80M 3s
-##    250K .......... .......... .......... .......... ..........  9% 5.58M 2s
-##    300K .......... .......... .......... .......... .......... 10% 2.04M 2s
-##    350K .......... .......... .......... .......... .......... 12% 4.02M 2s
-##    400K .......... .......... .......... .......... .......... 13% 7.47M 2s
-##    450K .......... .......... .......... .......... .......... 15% 2.40M 2s
-##    500K .......... .......... .......... .......... .......... 17% 5.30M 1s
-##    550K .......... .......... .......... .......... .......... 18% 6.95M 1s
-##    600K .......... .......... .......... .......... .......... 20% 2.76M 1s
-##    650K .......... .......... .......... .......... .......... 21% 5.06M 1s
-##    700K .......... .......... .......... .......... .......... 23% 6.62M 1s
-##    750K .......... .......... .......... .......... .......... 24% 2.78M 1s
-##    800K .......... .......... .......... .......... .......... 26% 4.42M 1s
-##    850K .......... .......... .......... .......... .......... 27% 8.78M 1s
-##    900K .......... .......... .......... .......... .......... 29% 7.86M 1s
-##    950K .......... .......... .......... .......... .......... 31% 3.62M 1s
-##   1000K .......... .......... .......... .......... .......... 32% 4.58M 1s
-##   1050K .......... .......... .......... .......... .......... 34% 4.97M 1s
-##   1100K .......... .......... .......... .......... .......... 35% 12.6M 1s
-##   1150K .......... .......... .......... .......... .......... 37% 4.05M 1s
-##   1200K .......... .......... .......... .......... .......... 38% 4.38M 1s
-##   1250K .......... .......... .......... .......... .......... 40% 4.01M 1s
-##   1300K .......... .......... .......... .......... .......... 41% 8.42M 1s
-##   1350K .......... .......... .......... .......... .......... 43% 9.73M 1s
-##   1400K .......... .......... .......... .......... .......... 45% 4.74M 1s
-##   1450K .......... .......... .......... .......... .......... 46% 3.21M 1s
-##   1500K .......... .......... .......... .......... .......... 48% 6.91M 1s
-##   1550K .......... .......... .......... .......... .......... 49% 9.05M 1s
-##   1600K .......... .......... .......... .......... .......... 51% 9.15M 0s
-##   1650K .......... .......... .......... .......... .......... 52% 3.36M 0s
-##   1700K .......... .......... .......... .......... .......... 54% 7.63M 0s
-##   1750K .......... .......... .......... .......... .......... 55% 4.95M 0s
-##   1800K .......... .......... .......... .......... .......... 57% 12.1M 0s
-##   1850K .......... .......... .......... .......... .......... 59% 4.86M 0s
-##   1900K .......... .......... .......... .......... .......... 60% 8.01M 0s
-##   1950K .......... .......... .......... .......... .......... 62% 4.57M 0s
-##   2000K .......... .......... .......... .......... .......... 63% 4.11M 0s
-##   2050K .......... .......... .......... .......... .......... 65% 13.6M 0s
-##   2100K .......... .......... .......... .......... .......... 66% 7.09M 0s
-##   2150K .......... .......... .......... .......... .......... 68% 7.13M 0s
-##   2200K .......... .......... .......... .......... .......... 69% 11.6M 0s
-##   2250K .......... .......... .......... .......... .......... 71% 2.70M 0s
-##   2300K .......... .......... .......... .......... .......... 73% 13.6M 0s
-##   2350K .......... .......... .......... .......... .......... 74% 8.84M 0s
-##   2400K .......... .......... .......... .......... .......... 76% 10.3M 0s
-##   2450K .......... .......... .......... .......... .......... 77% 5.37M 0s
-##   2500K .......... .......... .......... .......... .......... 79% 3.03M 0s
-##   2550K .......... .......... .......... .......... .......... 80% 7.62M 0s
-##   2600K .......... .......... .......... .......... .......... 82% 14.7M 0s
-##   2650K .......... .......... .......... .......... .......... 83% 13.8M 0s
-##   2700K .......... .......... .......... .......... .......... 85% 7.77M 0s
-##   2750K .......... .......... .......... .......... .......... 87% 3.74M 0s
-##   2800K .......... .......... .......... .......... .......... 88% 3.00M 0s
-##   2850K .......... .......... .......... .......... .......... 90% 12.8M 0s
-##   2900K .......... .......... .......... .......... .......... 91% 11.8M 0s
-##   2950K .......... .......... .......... .......... .......... 93% 11.7M 0s
-##   3000K .......... .......... .......... .......... .......... 94% 11.6M 0s
-##   3050K .......... .......... .......... .......... .......... 96% 9.72M 0s
-##   3100K .......... .......... .......... .......... .......... 97% 2.07M 0s
-##   3150K .......... .......... .......... .......... .......... 99% 8.61M 0s
-##   3200K .......... ......                                     100%  144M=0.8s
+##      0K .......... .......... .......... .......... ..........  1% 1.30M 2s
+##     50K .......... .......... .......... .......... ..........  3% 1.42M 2s
+##    100K .......... .......... .......... .......... ..........  4% 6.69M 2s
+##    150K .......... .......... .......... .......... ..........  6% 1.61M 2s
+##    200K .......... .......... .......... .......... ..........  7% 6.77M 1s
+##    250K .......... .......... .......... .......... ..........  9% 3.88M 1s
+##    300K .......... .......... .......... .......... .......... 10% 1.93M 1s
+##    350K .......... .......... .......... .......... .......... 12% 3.36M 1s
+##    400K .......... .......... .......... .......... .......... 13% 6.69M 1s
+##    450K .......... .......... .......... .......... .......... 15% 8.46M 1s
+##    500K .......... .......... .......... .......... .......... 17% 6.15M 1s
+##    550K .......... .......... .......... .......... .......... 18% 4.10M 1s
+##    600K .......... .......... .......... .......... .......... 20% 6.73M 1s
+##    650K .......... .......... .......... .......... .......... 21% 4.09M 1s
+##    700K .......... .......... .......... .......... .......... 23% 4.64M 1s
+##    750K .......... .......... .......... .......... .......... 24% 5.08M 1s
+##    800K .......... .......... .......... .......... .......... 26% 6.46M 1s
+##    850K .......... .......... .......... .......... .......... 27% 6.19M 1s
+##    900K .......... .......... .......... .......... .......... 29% 6.20M 1s
+##    950K .......... .......... .......... .......... .......... 31% 5.96M 1s
+##   1000K .......... .......... .......... .......... .......... 32% 4.44M 1s
+##   1050K .......... .......... .......... .......... .......... 34% 6.36M 1s
+##   1100K .......... .......... .......... .......... .......... 35% 8.86M 1s
+##   1150K .......... .......... .......... .......... .......... 37% 5.38M 1s
+##   1200K .......... .......... .......... .......... .......... 38% 7.21M 0s
+##   1250K .......... .......... .......... .......... .......... 40% 3.46M 0s
+##   1300K .......... .......... .......... .......... .......... 41% 7.53M 0s
+##   1350K .......... .......... .......... .......... .......... 43% 7.24M 0s
+##   1400K .......... .......... .......... .......... .......... 45% 5.76M 0s
+##   1450K .......... .......... .......... .......... .......... 46% 1.23M 0s
+##   1500K .......... .......... .......... .......... .......... 48% 7.08M 0s
+##   1550K .......... .......... .......... .......... .......... 49% 5.13M 0s
+##   1600K .......... .......... .......... .......... .......... 51% 8.53M 0s
+##   1650K .......... .......... .......... .......... .......... 52% 7.05M 0s
+##   1700K .......... .......... .......... .......... .......... 54%  639K 0s
+##   1750K .......... .......... .......... .......... .......... 55% 9.17M 0s
+##   1800K .......... .......... .......... .......... .......... 57% 46.1M 0s
+##   1850K .......... .......... .......... .......... .......... 59% 54.5M 0s
+##   1900K .......... .......... .......... .......... .......... 60% 57.4M 0s
+##   1950K .......... .......... .......... .......... .......... 62% 53.3M 0s
+##   2000K .......... .......... .......... .......... .......... 63% 56.1M 0s
+##   2050K .......... .......... .......... .......... .......... 65% 62.4M 0s
+##   2100K .......... .......... .......... .......... .......... 66% 5.30M 0s
+##   2150K .......... .......... .......... .......... .......... 68% 6.30M 0s
+##   2200K .......... .......... .......... .......... .......... 69% 4.21M 0s
+##   2250K .......... .......... .......... .......... .......... 71% 7.34M 0s
+##   2300K .......... .......... .......... .......... .......... 73% 3.66M 0s
+##   2350K .......... .......... .......... .......... .......... 74% 6.82M 0s
+##   2400K .......... .......... .......... .......... .......... 76% 6.83M 0s
+##   2450K .......... .......... .......... .......... .......... 77% 5.54M 0s
+##   2500K .......... .......... .......... .......... .......... 79% 3.98M 0s
+##   2550K .......... .......... .......... .......... .......... 80% 5.64M 0s
+##   2600K .......... .......... .......... .......... .......... 82% 3.29M 0s
+##   2650K .......... .......... .......... .......... .......... 83% 7.39M 0s
+##   2700K .......... .......... .......... .......... .......... 85% 6.53M 0s
+##   2750K .......... .......... .......... .......... .......... 87% 5.41M 0s
+##   2800K .......... .......... .......... .......... .......... 88% 3.95M 0s
+##   2850K .......... .......... .......... .......... .......... 90% 6.70M 0s
+##   2900K .......... .......... .......... .......... .......... 91% 4.65M 0s
+##   2950K .......... .......... .......... .......... .......... 93% 5.50M 0s
+##   3000K .......... .......... .......... .......... .......... 94% 5.07M 0s
+##   3050K .......... .......... .......... .......... .......... 96% 6.35M 0s
+##   3100K .......... .......... .......... .......... .......... 97% 6.56M 0s
+##   3150K .......... .......... .......... .......... .......... 99% 1.08M 0s
+##   3200K .......... ......                                     100% 27.1M=0.7s
 ## 
-## 2015-07-13 17:23:38 (4.11 MB/s) - ‘gold.fasta.gz’ saved [3293704/3293704]
+## 2015-08-10 11:33:40 (4.21 MB/s) - ‘gold.fasta.gz’ saved [3293704/3293704]
 ## 
 ## chmod: uc2otutab.py: No such file or directory
 ## chmod: fasta_number.py: No such file or directory
@@ -887,28 +888,30 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 917.5kb Reading rumen.adaptation.format.fasta, 116Mb
-## 00:00 117Mb 272630 (272.6k) seqs, min 400, avg 400, max 400nt
+## 00:01 978.9kb Reading rumen.adaptation.format.fasta, 116Mb
+## 00:01 117Mb 272630 (272.6k) seqs, min 400, avg 400, max 400nt
 ## 00:02 134Mb 188248 (188.2k) uniques, avg cluster 1.4, median 1, max 1750
 ## 00:02 134Mb    0.0% Writing usearch_results/rumen.adaptation.derep.fasta
-00:03 134Mb   10.2% Writing usearch_results/rumen.adaptation.derep.fasta
-00:04 134Mb   29.1% Writing usearch_results/rumen.adaptation.derep.fasta
-00:05 134Mb   49.9% Writing usearch_results/rumen.adaptation.derep.fasta
-00:06 134Mb   70.5% Writing usearch_results/rumen.adaptation.derep.fasta
-00:07 134Mb   91.3% Writing usearch_results/rumen.adaptation.derep.fasta
-00:07 134Mb  100.0% Writing usearch_results/rumen.adaptation.derep.fasta
+00:03 134Mb    2.5% Writing usearch_results/rumen.adaptation.derep.fasta
+00:04 134Mb   18.3% Writing usearch_results/rumen.adaptation.derep.fasta
+00:05 134Mb   33.9% Writing usearch_results/rumen.adaptation.derep.fasta
+00:06 134Mb   49.4% Writing usearch_results/rumen.adaptation.derep.fasta
+00:07 134Mb   65.0% Writing usearch_results/rumen.adaptation.derep.fasta
+00:08 134Mb   80.4% Writing usearch_results/rumen.adaptation.derep.fasta
+00:09 134Mb   95.6% Writing usearch_results/rumen.adaptation.derep.fasta
+00:09 134Mb  100.0% Writing usearch_results/rumen.adaptation.derep.fasta
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
 ## http://drive5.com/usearch
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 921.6kb Reading usearch_results/rumen.adaptation.derep.fasta, 82Mb
+## 00:00 954.4kb Reading usearch_results/rumen.adaptation.derep.fasta, 82Mb
 ## 00:00  83Mb 188248 (188.2k) seqs, min 400, avg 400, max 400nt
 ## 00:01  86Mb Getting sizes
 ## 00:01  86Mb Sorting 15960 sequences
 ## 00:01  86Mb    0.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
-00:02  86Mb   54.6% Writing usearch_results/rumen.adaptation.derep.sort.fasta
+00:02  86Mb   21.3% Writing usearch_results/rumen.adaptation.derep.sort.fasta
 00:02  86Mb  100.0% Writing usearch_results/rumen.adaptation.derep.sort.fasta
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
@@ -916,26 +919,27 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 9.1Mb    0.1% 0 OTUs
-00:01  12Mb    0.9% 59 OTUs
-00:02  13Mb    1.4% 85 OTUs
-00:03  13Mb    1.7% 94 OTUs
-00:04  15Mb   13.2% 387 OTUs
-00:05  16Mb   31.8% 672 OTUs
-00:06  18Mb   48.6% 846 OTUs
-00:07  19Mb   62.7% 971 OTUs
-00:08  20Mb   75.8% 1066 OTUs
-00:09  20Mb   87.6% 1167 OTUs
-00:10  21Mb   99.0% 1253 OTUs
-00:10  21Mb  100.0% 1257 OTUs
+## 00:00 9.2Mb    0.1% 0 OTUs
+00:01  11Mb    0.7% 53 OTUs
+00:02  12Mb    1.2% 79 OTUs
+00:03  13Mb    1.5% 90 OTUs
+00:04  13Mb    3.0% 147 OTUs
+00:05  15Mb   19.9% 522 OTUs
+00:06  17Mb   36.3% 727 OTUs
+00:07  18Mb   50.7% 865 OTUs
+00:08  19Mb   63.0% 972 OTUs
+00:09  20Mb   74.7% 1057 OTUs
+00:10  20Mb   85.1% 1142 OTUs
+00:11  21Mb   95.3% 1230 OTUs
+00:11  21Mb  100.0% 1257 OTUs
 ##                              
 ## Input seqs  15960 (16.0k)
 ##       OTUs  1257
 ##    Members  9372
 ##   Chimeras  5331
 ##    Max mem  21Mb
-##       Time  10.0s
-## Throughput  1596.0 seqs/sec.
+##       Time  11.0s
+## Throughput  1450.9 seqs/sec.
 ## 
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
@@ -943,27 +947,28 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 
 ## Licensed to: canderson30@unl.edu
 ## 
-## 00:00 978.9kb Reading usearch_results/rumen.adaptation.otus1.fasta, 550.1kb
+## 00:00 983.0kb Reading usearch_results/rumen.adaptation.otus1.fasta, 550.1kb
 ## 00:00 1.6Mb 1257 seqs, min 400, avg 400, max 400nt
 ## 00:00 1.6Mb Reading gold.fasta, 16Mb
 ## 00:00  18Mb 10362 (10.4k) seqs, min 1205, avg 1470, max 1655nt
 ## 00:00  18Mb    0.0% Masking
-00:00  18Mb  100.0% Masking
-## 00:00  18Mb    0.0% Word stats
-00:01  18Mb   43.4% Word stats
+00:01  18Mb   24.2% Masking
+00:01  18Mb  100.0% Masking
+## 00:01  18Mb    0.0% Word stats
 00:01  18Mb  100.0% Word stats
 ## 00:01  18Mb    0.0% Building slots
 00:01  19Mb  100.0% Building slots
 ## 00:01  19Mb    0.0% Build index   
-00:01  82Mb  100.0% Build index
-## 00:01  82Mb    0.1% Search 0/1 chimeras found (0.0%)
-00:02  85Mb    0.7% Search 0/9 chimeras found (0.0%)
-00:03  89Mb   31.2% Search 2/393 chimeras found (0.5%)
-00:04  92Mb   57.6% Search 17/725 chimeras found (2.3%)
-00:05  94Mb   83.4% Search 48/1049 chimeras found (4.6%)
-00:05  96Mb  100.0% Search 60/1257 chimeras found (4.8%)
-## 00:05  96Mb    0.1% Writing 1197 non-chimeras           
-00:05  96Mb  100.0% Writing 1197 non-chimeras
+00:02  67Mb   11.6% Build index
+00:02  82Mb  100.0% Build index
+## 00:02  82Mb    0.1% Search 0/1 chimeras found (0.0%)
+00:03  86Mb   10.6% Search 0/133 chimeras found (0.0%)
+00:04  89Mb   36.6% Search 4/461 chimeras found (0.9%)
+00:05  92Mb   59.5% Search 17/749 chimeras found (2.3%)
+00:06  94Mb   81.5% Search 47/1025 chimeras found (4.6%)
+00:06  96Mb  100.0% Search 60/1257 chimeras found (4.8%)
+## 00:06  96Mb    0.1% Writing 1197 non-chimeras           
+00:06  96Mb  100.0% Writing 1197 non-chimeras
 ## usearch v7.0.1090_i86osx32, 4.0Gb RAM (8.6Gb total), 4 cores
 ## (C) Copyright 2013 Robert C. Edgar, all rights reserved.
 ## http://drive5.com/usearch
@@ -981,58 +986,59 @@ cp usearch_results/rumen.adaptation.otu_table.txt ./
 ## 00:00  19Mb    0.1% Build index   
 00:00  22Mb  100.0% Build index
 ## 00:00  22Mb    0.1% Searching, 0.0% matched
-00:01  24Mb    2.2% Searching, 64.5% matched
-00:02  24Mb    4.3% Searching, 59.9% matched
-00:03  24Mb    6.4% Searching, 55.9% matched
-00:04  24Mb    8.4% Searching, 54.1% matched
-00:05  24Mb   10.3% Searching, 53.0% matched
-00:06  24Mb   12.5% Searching, 52.4% matched
-00:07  24Mb   14.7% Searching, 52.8% matched
-00:08  24Mb   17.4% Searching, 54.3% matched
-00:09  24Mb   19.4% Searching, 53.9% matched
-00:10  24Mb   21.2% Searching, 53.3% matched
-00:11  24Mb   23.8% Searching, 54.0% matched
-00:12  24Mb   25.7% Searching, 54.1% matched
-00:13  24Mb   28.2% Searching, 55.1% matched
-00:14  24Mb   29.9% Searching, 55.7% matched
-00:15  24Mb   32.0% Searching, 55.9% matched
-00:16  24Mb   34.3% Searching, 55.8% matched
-00:17  24Mb   36.4% Searching, 55.8% matched
-00:18  24Mb   39.9% Searching, 57.8% matched
-00:19  24Mb   43.2% Searching, 59.4% matched
-00:20  24Mb   46.0% Searching, 59.8% matched
-00:21  24Mb   48.3% Searching, 59.9% matched
-00:22  24Mb   51.0% Searching, 60.1% matched
-00:23  24Mb   53.1% Searching, 59.9% matched
-00:24  24Mb   55.5% Searching, 59.8% matched
-00:25  24Mb   57.6% Searching, 59.4% matched
-00:26  24Mb   59.8% Searching, 59.2% matched
-00:27  24Mb   61.8% Searching, 59.0% matched
-00:28  24Mb   63.8% Searching, 58.5% matched
-00:29  24Mb   65.7% Searching, 58.2% matched
-00:30  24Mb   67.6% Searching, 57.9% matched
-00:31  24Mb   70.2% Searching, 58.0% matched
-00:32  24Mb   72.4% Searching, 57.9% matched
-00:33  24Mb   74.7% Searching, 58.0% matched
-00:34  24Mb   76.7% Searching, 57.7% matched
-00:35  24Mb   78.8% Searching, 57.5% matched
-00:36  24Mb   80.7% Searching, 57.3% matched
-00:37  24Mb   83.1% Searching, 57.3% matched
-00:38  24Mb   85.3% Searching, 57.2% matched
-00:39  24Mb   87.4% Searching, 57.1% matched
-00:40  24Mb   88.9% Searching, 57.2% matched
-00:41  24Mb   91.2% Searching, 57.2% matched
-00:42  24Mb   93.5% Searching, 57.3% matched
-00:43  24Mb   95.6% Searching, 57.1% matched
-00:44  24Mb   97.6% Searching, 57.0% matched
-00:45  24Mb   99.8% Searching, 56.8% matched
-00:45  24Mb  100.0% Searching, 56.8% matched
+00:01  24Mb    1.9% Searching, 64.5% matched
+00:02  24Mb    3.8% Searching, 61.5% matched
+00:03  24Mb    5.9% Searching, 56.9% matched
+00:04  24Mb    7.8% Searching, 54.4% matched
+00:05  24Mb    9.8% Searching, 53.6% matched
+00:06  24Mb   11.8% Searching, 52.5% matched
+00:07  24Mb   13.6% Searching, 51.8% matched
+00:08  24Mb   16.4% Searching, 53.9% matched
+00:09  24Mb   18.5% Searching, 54.1% matched
+00:10  24Mb   20.6% Searching, 53.6% matched
+00:11  24Mb   22.6% Searching, 53.6% matched
+00:12  24Mb   25.0% Searching, 54.2% matched
+00:13  24Mb   26.8% Searching, 54.5% matched
+00:14  24Mb   29.5% Searching, 55.6% matched
+00:15  24Mb   31.5% Searching, 55.9% matched
+00:16  24Mb   33.8% Searching, 55.8% matched
+00:17  24Mb   35.7% Searching, 55.7% matched
+00:18  24Mb   38.3% Searching, 56.5% matched
+00:19  24Mb   42.4% Searching, 59.3% matched
+00:20  24Mb   45.2% Searching, 59.7% matched
+00:21  24Mb   47.2% Searching, 59.8% matched
+00:22  24Mb   49.6% Searching, 60.1% matched
+00:23  24Mb   50.8% Searching, 60.1% matched
+00:24  24Mb   52.8% Searching, 59.9% matched
+00:25  24Mb   55.2% Searching, 59.8% matched
+00:26  24Mb   57.1% Searching, 59.5% matched
+00:27  24Mb   59.3% Searching, 59.3% matched
+00:28  24Mb   61.1% Searching, 59.0% matched
+00:29  24Mb   63.0% Searching, 58.7% matched
+00:30  24Mb   64.8% Searching, 58.3% matched
+00:31  24Mb   66.8% Searching, 58.0% matched
+00:32  24Mb   69.1% Searching, 57.9% matched
+00:33  24Mb   71.2% Searching, 57.9% matched
+00:34  24Mb   73.7% Searching, 58.0% matched
+00:35  24Mb   75.6% Searching, 57.8% matched
+00:36  24Mb   77.7% Searching, 57.6% matched
+00:37  24Mb   79.5% Searching, 57.3% matched
+00:38  24Mb   81.8% Searching, 57.3% matched
+00:39  24Mb   83.8% Searching, 57.2% matched
+00:40  24Mb   86.2% Searching, 57.2% matched
+00:41  24Mb   88.2% Searching, 57.1% matched
+00:42  24Mb   90.3% Searching, 57.2% matched
+00:43  24Mb   92.8% Searching, 57.3% matched
+00:44  24Mb   94.8% Searching, 57.2% matched
+00:45  24Mb   96.9% Searching, 57.0% matched
+00:46  24Mb   99.1% Searching, 56.9% matched
+00:46  24Mb  100.0% Searching, 56.8% matched
 ## usearch_results/rumen.adaptation.otu_map.uc   0.0%   
-usearch_results/rumen.adaptation.otu_map.uc  20.3%   
-usearch_results/rumen.adaptation.otu_map.uc  41.1%   
-usearch_results/rumen.adaptation.otu_map.uc  60.8%   
-usearch_results/rumen.adaptation.otu_map.uc  79.3%   
-usearch_results/rumen.adaptation.otu_map.uc  99.0%   
+usearch_results/rumen.adaptation.otu_map.uc  20.4%   
+usearch_results/rumen.adaptation.otu_map.uc  41.0%   
+usearch_results/rumen.adaptation.otu_map.uc  59.8%   
+usearch_results/rumen.adaptation.otu_map.uc  77.7%   
+usearch_results/rumen.adaptation.otu_map.uc  95.5%   
 usearch_results/rumen.adaptation.otu_map.uc 100.0%
 ```
 
@@ -1112,7 +1118,7 @@ mothur "#summary.seqs(fasta=rumen.adaptation.otus2.align)"
 ## Using 1 processors.
 ## 
 ## Reading in the Silva.nr_v119.align template sequences...	DONE.
-## It took 256 to read  153307 sequences.
+## It took 265 to read  153307 sequences.
 ## Aligning sequences from usearch_results/rumen.adaptation.otus2.fasta ...
 ## 100
 ## 200
@@ -1259,20 +1265,20 @@ sed -i -e 's/AAAAAAAAAA//g' rumen.adaptation.otus2.phylip.tre
 ## 100	0
 ## 200	1
 ## 300	2
-## 400	3
-## 500	5
+## 400	4
+## 500	6
 ## 600	8
 ## 700	11
-## 800	14
-## 900	18
-## 1000	22
-## 1100	26
-## 1164	29
+## 800	15
+## 900	19
+## 1000	23
+## 1100	28
+## 1164	31
 ## 
 ## Output File Names: 
 ## rumen.adaptation.otus2.phylip.dist
 ## 
-## It took 29 seconds to calculate the distances for 1165 sequences.
+## It took 31 seconds to calculate the distances for 1165 sequences.
 ## 
 ## mothur > quit()
 ## 'xterm-256color': unknown terminal type.
@@ -1578,10 +1584,10 @@ adonis(corn_unweighted ~ Treatment + Individual, permutations = 999, data = corn
 ## Terms added sequentially (first to last)
 ## 
 ##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)   
-## Treatment   4   1.39890 0.34972  2.0741 0.60159  0.010 **
-## Individual  1   0.25195 0.25195  1.4942 0.10835  0.144   
-## Residuals   4   0.67447 0.16862         0.29006          
-## Total       9   2.32532                 1.00000          
+## Treatment   4   1.40076 0.35019  2.1296 0.60592  0.005 **
+## Individual  1   0.25330 0.25330  1.5404 0.10957  0.133   
+## Residuals   4   0.65774 0.16444         0.28451          
+## Total       9   2.31180                 1.00000          
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -1601,10 +1607,10 @@ adonis(ramp_unweighted ~ Treatment + Individual, permutations = 999, data = ramp
 ## Terms added sequentially (first to last)
 ## 
 ##            Df SumsOfSqs MeanSqs F.Model      R2 Pr(>F)    
-## Treatment   4    1.2205 0.30513  1.6382 0.37056  0.001 ***
-## Individual  1    0.3968 0.39684  2.1306 0.12049  0.008 ** 
-## Residuals   9    1.6763 0.18626         0.50895           
-## Total      14    3.2937                 1.00000           
+## Treatment   4    1.2623 0.31557  1.7577 0.38607  0.001 ***
+## Individual  1    0.3915 0.39147  2.1804 0.11973  0.005 ** 
+## Residuals   9    1.6158 0.17954         0.49420           
+## Total      14    3.2696                 1.00000           
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -1645,16 +1651,16 @@ mv treatment_distances.txt ramp_unweighted_treatment_distances.txt
 ```
 
 ```
-## --2015-07-13 17:42:10--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
+## --2015-08-10 11:53:37--  https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/treatment_distances.pl
 ## Resolving raw.githubusercontent.com... 23.235.44.133
 ## Connecting to raw.githubusercontent.com|23.235.44.133|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 6979 (6.8K) [text/plain]
 ## Saving to: ‘treatment_distances.pl’
 ## 
-##      0K ......                                                100% 2.17G=0s
+##      0K ......                                                100% 3.25G=0s
 ## 
-## 2015-07-13 17:42:11 (2.17 GB/s) - ‘treatment_distances.pl’ saved [6979/6979]
+## 2015-08-10 11:53:38 (3.25 GB/s) - ‘treatment_distances.pl’ saved [6979/6979]
 ## 
 ## 
 ## Number of pairwise comparisons read in: 45
@@ -1678,7 +1684,7 @@ c1c1_c1c2_test
 ## 	Wilcoxon rank sum test
 ## 
 ## data:  corn_unweighted_pairs$C1_C1$Distance and corn_unweighted_pairs$C1_C2$Distance
-## W = 2, p-value = 1
+## W = 1, p-value = 0.8
 ## alternative hypothesis: true location shift is not equal to 0
 ```
 
@@ -1778,7 +1784,7 @@ r1r1_r1r2_test
 ## 	Wilcoxon rank sum test
 ## 
 ## data:  ramp_unweighted_pairs$R1_R1$Distance and ramp_unweighted_pairs$R1_R2$Distance
-## W = 3, p-value = 0.06364
+## W = 1, p-value = 0.01818
 ## alternative hypothesis: true location shift is not equal to 0
 ```
 
@@ -1850,7 +1856,7 @@ r1r4_r1rf_test
 ## 	Wilcoxon rank sum test
 ## 
 ## data:  ramp_unweighted_pairs$R1_R4$Distance and ramp_unweighted_pairs$R1_RF$Distance
-## W = 30, p-value = 0.3865
+## W = 22, p-value = 0.1135
 ## alternative hypothesis: true location shift is not equal to 0
 ```
 
@@ -2272,17 +2278,17 @@ python lefse/run_lefse.py ramp_23_lefse_format.txt ramp_23_lefse_result.txt
 ```
 
 ```
-## --2015-07-13 17:42:33--  https://bitbucket.org/nsegata/lefse/get/default.zip
-## Resolving bitbucket.org... 131.103.20.168, 131.103.20.167
-## Connecting to bitbucket.org|131.103.20.168|:443... connected.
+## --2015-08-10 11:54:02--  https://bitbucket.org/nsegata/lefse/get/default.zip
+## Resolving bitbucket.org... 131.103.20.167, 131.103.20.168
+## Connecting to bitbucket.org|131.103.20.167|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
-## Length: 59458 (58K) [application/zip]
+## Length: unspecified [application/zip]
 ## Saving to: ‘lefse.zip’
 ## 
-##      0K .......... .......... .......... .......... .......... 86%  358K 0s
-##     50K ........                                              100% 45.8M=0.1s
+##      0K .......... .......... .......... .......... ..........  452K
+##     50K ........                                               86.5M=0.1s
 ## 
-## 2015-07-13 17:42:35 (416 KB/s) - ‘lefse.zip’ saved [59458/59458]
+## 2015-08-10 11:54:02 (525 KB/s) - ‘lefse.zip’ saved [59458]
 ## 
 ## Archive:  lefse.zip
 ##   inflating: nsegata-lefse-094f447691f0/.hg_archival.txt  
