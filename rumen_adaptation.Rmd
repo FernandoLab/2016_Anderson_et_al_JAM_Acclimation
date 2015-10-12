@@ -63,6 +63,8 @@ install.packages("rmarkdown", repos='http://cran.us.r-project.org')
 install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
 install.packages("mvtnorm", repos='http://cran.us.r-project.org')
 install.packages("coin", repos='http://cran.us.r-project.org')
+install.packages("spaa", repos='http://cran.us.r-project.org')
+
 
 source("http://bioconductor.org/biocLite.R")
 biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
@@ -234,7 +236,7 @@ Remember, from QIIME: "If the lines for some categories do not extend all the wa
 ```{r, engine='bash'}
 multiple_rarefactions.py -i rumen.adaptation.otu_table.tax.final.biom -o alpha_rare -m 10 -x 6600 -s 500 -n 10
  
-alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1 
+alpha_diversity.py -i alpha_rare/ -o alpha_rare_otu_chao -m observed_otus,chao1
  
 collate_alpha.py -i alpha_rare_otu_chao/ -o alpha_rare_collate
  
@@ -242,9 +244,12 @@ make_rarefaction_plots.py -i alpha_rare_collate/ -m mapping.txt -e stderr --gene
  
 multiple_rarefactions_even_depth.py -i rumen.adaptation.otu_table.tax.final.biom -n 10 -d 2160 -o mult_even
  
-alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1 
+alpha_diversity.py -i mult_even/ -o alpha_even -m observed_otus,chao1,goods_coverage 
  
 collate_alpha.py -i alpha_even -o alpha_even_collate
+
+alpha_diversity.py -i rumen.adaptation.otu_table.tax.final.biom -o goods.txt -m goods_coverage
+
 ```
 
 ```{r}
@@ -362,12 +367,32 @@ dev.off()
 summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
 
 plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
+
+grep "g__[a-zA-Z0-9]" rumen.adaptation.otu_table.tax.final.txt >> rumen.adaptation.otu_table.tax.final.genus.txt
+
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.final.genus.txt -o rumen.adaptation.otu_table.tax.final.genus.biom --process-obs-metadata taxonomy --to-json
+
+biom summarize-table -i rumen.adaptation.otu_table.tax.final.genus.biom -o rumen.adaptation.otu_table.tax.final.genus.summarize.txt
+
+
+head -n 2 rumen.adaptation.otu_table.tax.final.txt > rumen.adaptation.otu_table.tax.final.family.txt
+
+grep "f__[a-zA-Z0-9]" rumen.adaptation.otu_table.tax.final.txt >> rumen.adaptation.otu_table.tax.final.family.txt 
+
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.final.family.txt -o rumen.adaptation.otu_table.tax.final.family.biom --process-obs-metadata taxonomy --to-json
+
+biom summarize-table -i rumen.adaptation.otu_table.tax.final.family.biom -o rumen.adaptation.otu_table.tax.final.family.summarize.txt
+
 ```
 
 ## Beta Diversity
 
 Split the OTU table into RAMP and CORN adapted samples then generate the beta diversity outputs for each:
 ```{r, engine='bash'}
+biom summarize-table -i rumen.adaptation.otu_table.tax.final.biom -o rumen.adaptation.otu_table.tax.final.summarize.txt
+
+beta_diversity_through_plots.py -i rumen.adaptation.otu_table.tax.final.biom -o beta_div -t rumen.adaptation.otus2.phylip.tre -m mapping.txt -p qiime_parameters_working.txt -e 2160
+
 split_otu_table.py -i rumen.adaptation.otu_table.tax.final.biom -o split_total -m mapping.txt -f Diet
  
 biom summarize-table -i split_total/rumen.adaptation.otu_table.tax.final__Diet_Corn__.biom -o split_total/control.summarize.txt
@@ -407,7 +432,23 @@ adonis(corn_unweighted ~ Treatment + Individual, permutations=999, data=corn_map
 
 adonis(ramp_unweighted ~ Treatment + Individual, permutations=999, data=ramp_map)
 
-#Check for assumptions (DO!!):
+```
+
+
+Need to check that the data does not violate the assumptions of PERMANOVA, however, the results below for corn-adapted animals are not reliable because the is no variance within group due to low n (that is, within a group there is only one value, i.e. C1-C1, C2-C2, etc.)
+```{r}
+anova(betadisper(corn_unweighted,corn_map$Treatment))
+anova(betadisper(corn_unweighted,corn_map$Individual))
+
+permutest(betadisper(corn_unweighted,corn_map$Treatment))
+permutest(betadisper(corn_unweighted,corn_map$Individual))
+
+anova(betadisper(ramp_unweighted,ramp_map$Treatment))
+anova(betadisper(ramp_unweighted,ramp_map$Individual))
+
+permutest(betadisper(ramp_unweighted,ramp_map$Treatment))
+permutest(betadisper(ramp_unweighted,ramp_map$Individual))
+
 
 ```
 
@@ -539,13 +580,28 @@ dev.off()
 ![ramp_venn](Figure4_panelB.png)
 </div>
 
-Get shared OTUs between samples:
+Get shared number of OTUs and sequences per sample:
 ```{r, engine='bash'}
 shared_phylotypes.py -i rumen.adaptation.collapse_samples.biom -o collapse_samples_shared_otus.txt
 ```
 
-Get shared number of sequences per sample:
 ```{r}
+library(spaa)
+share_otu <- read.table("collapse_samples_shared_otus.txt", sep="\t", row.names=1, header=TRUE)
+share_dist <- as.dist(share_otu)
+share_list <- dist2list(as.dist(t(share_dist)))
+share_list_cut <- share_list[as.numeric(share_list$col) > as.numeric(share_list$row),]
+
+for (i in 1:nrow(share_list_cut)) {
+	row <- as.character(share_list_cut[i,1])
+	col <- as.character(share_list_cut[i,2])
+	value <- as.numeric(share_list_cut[i,3])
+	max_otu <- max(share_otu[row,row], share_otu[col,col])
+	per <- (value / max_otu) * 100
+	otu_out <- c(row, col, value, per)
+	write(otu_out, file = "TableS4.txt", sep = "\t", ncolumns = 4, append = TRUE)
+}
+
 collapse_biom <- read_biom("rumen.adaptation.collapse_samples.biom")
 collapse <- as.matrix(as(biom_data(collapse_biom), "matrix"))
 collapse_df <- as.data.frame(collapse)
@@ -668,12 +724,30 @@ guides(size=FALSE) +
 scale_shape_manual(name = "", values = shape_ramp) +
 labs(fill="")
 
-pdf("Figure1.pdf", height=12, width=12)
-multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols=2)
+con <- file('beta_div/unweighted_unifrac_pc.txt')
+total_pc <- read.table(con, skip=9, nrow=25, sep="\t")
+total_pc <- total_pc[,c("V1","V2","V3")]
+colnames(total_pc) <- c("SampleID", "PC1", "PC2")
+
+total_pc_map <- merge(total_pc, mapping, by = "SampleID")
+
+shape_all <- c("R1" = 15, "R2" = 16, "R3" = 17, "R4" = 18, "RF" = 8, "C1" = 15, "C2" = 16, "C3" = 17, "C4" = 18, "CF" = 8)
+color_all <- c("R1" = "red", "R2" = "red", "R3" = "red", "R4" = "red", "RF" = "red", "C1" = "blue", "C2" = "blue", "C3" = "blue", "C4" = "blue", "CF" = "blue")
+total_pc_plot <- ggplot(total_pc_map, aes(PC1, PC2)) +
+geom_point(aes(size=4, color = factor(Treatment), shape = factor(Treatment))) +    xlab("PC1 (21.1%)") +
+ylab("PC2 (10.0%)") +
+guides(size=FALSE) + 
+scale_shape_manual(name = "", values = shape_all) +
+scale_colour_manual(name = "", values = color_all) +
+labs(fill="")
+
+
+pdf("Figure1.pdf", height=6, width=16)
+multiplot(total_pc_plot, corn_distance, ramp_distance, cols=3)
 dev.off()
 
-png("Figure1.png", height=12, width=12, units='in', res=300)
-multiplot(corn_pc_plot, ramp_pc_plot, corn_distance, ramp_distance, cols=2)
+png("Figure1.png", height=6, width=16, units='in', res=300)
+multiplot(total_pc_plot, corn_distance, ramp_distance, cols=3)
 dev.off()
 ```
 
