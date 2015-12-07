@@ -52,7 +52,6 @@ To convert the R markdown to html use the command: **render("rumen_acclimation.R
 The following packages and knitR settings were used to compile this document:
 
 ```{r, results="hide"}
-source("http://bioconductor.org/biocLite.R")
 biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
 install.packages("ggplot2", repos='http://cran.us.r-project.org')
 install.packages("matrixStats", repos='http://cran.us.r-project.org')
