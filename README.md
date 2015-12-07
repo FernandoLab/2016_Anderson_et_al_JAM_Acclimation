@@ -1,4 +1,4 @@
-All of the commands to generate the Anderson et al. JAM manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads).
+The analysis from the Anderson et al. JAM manuscript can be recreated by using the associated R Markdown file. This is setup to be ran on Mac OS X and was initially performed with 8 GB RAM (less should be fine though). No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads).
 
   1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the anaconda package manager. This will recreate the same enivronment I used.
     
