@@ -1,7 +1,6 @@
 The analysis from the **Anderson et al. JAM manuscript ("Rumen bacterial communities can be acclimated faster to high concentrate diets than currently implemented feedlot programs"**) can be recreated by using the associated R Markdown file. This is setup to be ran on Mac OS X and was initially performed with 8 GB RAM (less should be fine though). No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager - [download page](http://continuum.io/downloads).
 
-  1. Run the bash script to create a virtual environment and download/install programs **LOCALLY** with the anaconda package manager. This will recreate the same enivronment I used.
-    
+  1. Run the bash script to create a virtual environment and download/install programs **LOCALLY** with the anaconda package manager.
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
 Due to licensing issues, USEARCH can not be included in the setup. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for Mac OSX. **A link (expires after 30 days) will be sent to the provided email. Use the link as an argument for shell script below**.
