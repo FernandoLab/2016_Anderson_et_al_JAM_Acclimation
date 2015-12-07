@@ -44,5 +44,4 @@ rm Mothur.mac_64.OSX-10.9.zip
 rm -rf mothur
 rm -rf __MACOSX
 
-wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/rumen_acclimation.Rmd
-
+https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/rumen_accilimation.Rmd
