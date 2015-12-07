@@ -1,4 +1,4 @@
-To recreate the anlaysis used in the Anderson et al. manuscript, "Adaptation of the rumen microbiota during a finishing study",
+To recreate the anlaysis used in the Anderson et al. manuscript, "Acclimation of the rumen microbiota during a finishing study",
  there are two steps (follow the guidelines below). All of the commands to generate the manuscript outputs have been ran on Mac OS X 10.9 (others systems should work fine) with 8 GB RAM. No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads). The only two dependencies I believe are X11 (remember if logging onto a server) and perl (version shouldnt matter).
 
   1. Run the bash script to create a virtual enironment and download/install programs **LOCALLY** with the anaconda package manager. This will recreate the same enivronment I used.
