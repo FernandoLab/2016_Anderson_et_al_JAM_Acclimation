@@ -5,11 +5,11 @@ To recreate the anlaysis used in the Anderson et al. manuscript, "Acclimation of
     
   2. Render the R Markdown file with knitR to recreate the workflow and outputs.
 
-Due to licensing issues, USEARCH can not be included in the setup. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for linux. **A link (expires after 30 days) will be sent to the provided email. Use the link as an argument for shell script below**.
+Due to licensing issues, USEARCH can not be included in the setup. To obtain a download link, go to the USEARCH [download page](http://www.drive5.com/usearch/download.html) and select version USEARCH v7.0.1090 for Mac OSX. **A link (expires after 30 days) will be sent to the provided email. Use the link as an argument for shell script below**.
 
 Simply download the bash script from the github repository and run it (provide the link to download your licensed USEARCH version as an argument for setup.sh):
 
-  1. wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/setup.sh
+  1. wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/setup.sh
   2. chmod 775 setup.sh 
   3. ./setup.sh usearch_link
 
@@ -25,7 +25,7 @@ Simply download the bash script from the github repository and run it (provide t
   7. After installation, enter 'source anaconda/bin/activate rumenEnv' on the command line to activate the virtual enviornment with all dependencies.
   
 
-To convert the R markdown to html use the command: **render("rumen_adaptation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
+To convert the R markdown to html use the command: **render("rumen_acclimation.Rmd")**. To start a R session and run the workflow, use these commands from within the  direcotry you initiated installation:
 
   1. source anaconda/bin/activate rumenEnv
   2. R
@@ -33,8 +33,8 @@ To convert the R markdown to html use the command: **render("rumen_adaptation.Rm
   4. install.packages("knitr", repos='http://cran.us.r-project.org')
   5. library(rmarkdown)
   6. library(knitr)
-  7. render("rumen_adaptation.Rmd")
+  7. render("rumen_acclimation.Rmd")
   
 
 
-The rendered html version can be found [here](https://rawgit.com/chrisLanderson/rumen_adaptation/master/rumen_adaptation.html)
+The rendered html version can be found [here](https://rawgit.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/rumen_acclimation.html)
