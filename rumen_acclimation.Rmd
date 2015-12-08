@@ -68,13 +68,12 @@ install.packages("coin", repos='http://cran.us.r-project.org')
 install.packages("spaa", repos='http://cran.us.r-project.org')
 
 
-sessionInfo()
-
 perm = 1e4
 ```
 
 
 ```{r knitr.settings, eval=TRUE, echo=TRUE, cache=TRUE}
+sessionInfo()
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = TRUE)
 opts_chunk$set("eval" = TRUE)
