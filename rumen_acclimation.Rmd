@@ -44,15 +44,15 @@ To convert the R markdown to html use the command: **render("rumen_acclimation.R
   3. install.packages("rmarkdown", repos='http://cran.us.r-project.org')
   4. install.packages("knitr", repos='http://cran.us.r-project.org')
   5. source("http://bioconductor.org/biocLite.R")
-  6. library(rmarkdown)
-  7. library(knitr)
-  8. render("rumen_acclimation.Rmd")
+  6. biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
+  7. library(rmarkdown)
+  8. library(knitr)
+  9. render("rumen_acclimation.Rmd")
   
 
 The following packages and knitR settings were used to compile this document:
 
 ```{r, results="hide"}
-biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
 install.packages("ggplot2", repos='http://cran.us.r-project.org')
 install.packages("matrixStats", repos='http://cran.us.r-project.org')
 install.packages("vegan", repos='http://cran.us.r-project.org')
@@ -123,7 +123,7 @@ mothur "#reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)"
 Use a custom perl script from our lab to convert the fasta file from QIIME format to a format that works with UPARSE to generate the OTU table:
 
 ```{r, engine='bash', results='hide'}
-wget https://raw.githubusercontent.com/chrisLanderson/rumen_adaptation/master/qiime_to_usearch.pl
+wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/qiime_to_usearch.pl
 
 chmod 775 qiime_to_usearch.pl
 
@@ -137,8 +137,6 @@ Run the sequences through the UPARSE pipeline to pick OTUs:
 svn export https://github.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/trunk/usearch_python_scripts --non-interactive --trust-server-cert
 chmod -R 775 usearch_python_scripts
 wget https://github.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/raw/master/gold.fasta.gz
-chmod 775 uc2otutab.py
-chmod 775 fasta_number.py
 gzip -d gold.fasta.gz
 chmod 775 gold.fasta
 mkdir usearch_results

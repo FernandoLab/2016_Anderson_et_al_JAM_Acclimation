@@ -30,9 +30,10 @@ To convert the R markdown to html use the command: **render("rumen_acclimation.R
   3. install.packages("rmarkdown", repos='http://cran.us.r-project.org')
   4. install.packages("knitr", repos='http://cran.us.r-project.org')
   5. source("http://bioconductor.org/biocLite.R")
-  6. library(rmarkdown)
-  7. library(knitr)
-  8. render("rumen_acclimation.Rmd")
+  6. biocLite("Heatplus", ask=FALSE, suppressUpdates=TRUE)
+  7. library(rmarkdown)
+  8. library(knitr)
+  9. render("rumen_acclimation.Rmd")
   
 
 
