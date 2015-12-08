@@ -12,6 +12,7 @@ bash Anaconda-2.3.0-MacOSX-x86_64.sh
 
 anaconda/bin/conda create -n rumenEnv python pip numpy matplotlib scipy pandas cython mock nose
 source anaconda/bin/activate rumenEnv
+pip install https://pypi.python.org/packages/source/m/matplotlib/matplotlib-1.4.3.tar.gz
 pip install https://github.com/biocore/qiime/archive/1.9.0.tar.gz
 #conda install -c https://conda.binstar.org/jorge qiime
 anaconda/bin/conda install -c r r r-xml

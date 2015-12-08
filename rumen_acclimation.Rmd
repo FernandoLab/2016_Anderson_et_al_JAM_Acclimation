@@ -364,7 +364,7 @@ dev.off()
 ```{r, engine='bash'}
 summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
 
-plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area,pie -o plot_taxa
+plot_taxa_summary.py -i summarize_taxa/rumen.adaptation.otu_table.tax.final_L2.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L3.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L4.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L5.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L6.txt,summarize_taxa/rumen.adaptation.otu_table.tax.final_L7.txt -l Phylum,Class,Order,Family,Genus,Species -c bar,area -o plot_taxa
 
 grep "g__[a-zA-Z0-9]" rumen.adaptation.otu_table.tax.final.txt >> rumen.adaptation.otu_table.tax.final.genus.txt
 
