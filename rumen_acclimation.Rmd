@@ -29,7 +29,7 @@ Simply download the bash script from the github repository and run it (provide t
 
   1. Press enter to view the license agreement
   2. Press enter to read the license and q to exit
-  3. Accept the terms
+  3. Accept the terms by entering yes
   4. Prompts you where to install anaconda.  Simply type anaconda to create a directory within the current directory. Should be:
   [/Users/user/anaconda] >>> anaconda
   5. No to prepend anaconda to your path. Choosing yes should not impact the installation though.
