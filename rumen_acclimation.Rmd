@@ -356,7 +356,7 @@ dev.off()
 ```
 
 <div style="text-align:center" markdown="1">
-![alpha_div](FigureS1.png)
+![alpha_div](FigureS2.png)
 </div>
 
 ## Taxonomy
