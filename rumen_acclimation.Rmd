@@ -362,7 +362,7 @@ dev.off()
 ## Taxonomy
 
 ```{r, engine='bash'}
-biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.final.biom -o rumen.adaptation.otu_table.tax.final.txt --process-obs-metadata taxonomy --to-tsv
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.final.biom -o rumen.adaptation.otu_table.tax.final.txt --header-key taxonomy --output-metadata-id "taxonomy" --to-tsv
 
 head -n 2 rumen.adaptation.otu_table.tax.final.txt > rumen.adaptation.otu_table.tax.final.genus.txt
 
