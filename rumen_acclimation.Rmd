@@ -362,7 +362,9 @@ dev.off()
 ## Taxonomy
 
 ```{r, engine='bash'}
-summarize_taxa.py -i rumen.adaptation.otu_table.tax.final.biom -o summarize_taxa -L 2,3,4,5,6,7
+biom convert --table-type "OTU table" -i rumen.adaptation.otu_table.tax.final.biom -o rumen.adaptation.otu_table.tax.final.txt --process-obs-metadata taxonomy --to-tsv
+
+head -n 2 rumen.adaptation.otu_table.tax.final.txt > rumen.adaptation.otu_table.tax.final.genus.txt
 
 grep "g__[a-zA-Z0-9]" rumen.adaptation.otu_table.tax.final.txt >> rumen.adaptation.otu_table.tax.final.genus.txt
 
