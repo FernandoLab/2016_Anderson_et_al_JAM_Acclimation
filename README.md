@@ -7,7 +7,7 @@ Due to licensing issues, USEARCH can not be included in the setup. To obtain a d
 
 Simply download the bash script from the github repository and run it (provide the link to download your licensed USEARCH version as an argument for setup.sh):
 
-  1. wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/setup.sh
+  1. wget https://raw.githubusercontent.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/master/setup.sh
   2. chmod 775 setup.sh 
   3. ./setup.sh usearch_link
 
@@ -37,4 +37,3 @@ To convert the R markdown to html use the command: **render("rumen_acclimation.R
   
 
 
-The rendered html version can be found [here](https://rawgit.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/rumen_acclimation.html)
