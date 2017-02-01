@@ -7,7 +7,7 @@ output:
     keep_md: yes
 ---
 ## Introduction
-This is a R Markdown file to accompany the mansucript 2016 Anderson et al. JAM manuscript. It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation). 
+This is a R Markdown file to accompany the mansucript 2016 Anderson et al. JAM manuscript. It was written in [R markdown](http://rmarkdown.rstudio.com) and converted to html using the R knitr package. This enables us to embed the results of our analyses directly into the text to allow for a reproducible data analysis pipeline. A [github repository is available](https://github.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation). 
 
 ## **BEFORE YOU RENDER**: 
 The analysis from the Anderson et al. JAM manuscript can be recreated by using the associated R Markdown file. This is setup to be ran on Mac OS X and was initially performed with 8 GB RAM (less should be fine though). No root access is needed. This should all work in a linux enviornmnet as well if you use a linux version of USEARCH and the anaconda package manager [download page](http://continuum.io/downloads).
@@ -21,7 +21,7 @@ Due to licensing issues, USEARCH can not be included in the setup. To obtain a d
 
 Simply download the bash script from the github repository and run it (provide the link to download your licensed USEARCH version as an argument for setup.sh):
 
-  1. wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/setup.sh
+  1. wget https://raw.githubusercontent.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/master/setup.sh
   2. chmod 775 setup.sh 
   3. ./setup.sh usearch_link
 
@@ -85,7 +85,7 @@ opts_chunk$set("cache" = TRUE)
 
 Download the 454 data (not really raw data though because the sequencing center had done some initial quality control on them...see manuscript for details):
 ```{r, engine='bash', results='hide'}
-wget https://github.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/raw/master/rumen.acclimation.tar.gz
+wget https://github.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/raw/master/rumen.acclimation.tar.gz
 tar -zxvf rumen.acclimation.tar.gz
 ```
 
@@ -102,9 +102,9 @@ The code chunk below demulitplexes the sequencing library using the provided map
 
 ```{r, engine='bash', results='hide'}
 
-wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/mapping.txt
+wget https://raw.githubusercontent.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/master/mapping.txt
   
-wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/qiime_parameters_working.txt
+wget https://raw.githubusercontent.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/master/qiime_parameters_working.txt
   
 split_libraries.py -m mapping.txt -f rumen.adaptation.fasta -b hamming_8 -l 0 -L 1000 -M 1 -o rumen_adaptation_demultiplex
   
@@ -122,7 +122,7 @@ mothur "#reverse.seqs(fasta=rumen.adaptation.qc.trim.fasta)"
 Use a custom perl script from our lab to convert the fasta file from QIIME format to a format that works with UPARSE to generate the OTU table:
 
 ```{r, engine='bash', results='hide'}
-wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/qiime_to_usearch.pl
+wget https://raw.githubusercontent.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/master/qiime_to_usearch.pl
 
 chmod 775 qiime_to_usearch.pl
 
@@ -133,9 +133,9 @@ mv format.fasta rumen.adaptation.format.fasta
 
 Run the sequences through the UPARSE pipeline to pick OTUs:
 ```{r, engine='bash', results='hide'}
-svn export https://github.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/trunk/usearch_python_scripts --non-interactive --trust-server-cert
+svn export https://github.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/trunk/usearch_python_scripts --non-interactive --trust-server-cert
 chmod -R 775 usearch_python_scripts
-wget https://github.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/raw/master/gold.fasta.gz
+wget https://github.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/raw/master/gold.fasta.gz
 gzip -d gold.fasta.gz
 chmod 775 gold.fasta
 mkdir usearch_results
@@ -466,7 +466,7 @@ write.table(m2, "ramp_unweighted_pariwise_dist.txt", sep="\t", row.names=FALSE)
 ```
 
 ```{r, engine='bash'}
-wget https://raw.githubusercontent.com/chrisLanderson/2016_Anderson_et_al_JAM_Acclimation/master/treatment_distances.pl
+wget https://raw.githubusercontent.com/FernandoLab/2016_Anderson_et_al_JAM_Acclimation/master/treatment_distances.pl
  
 chmod 775 treatment_distances.pl
  
